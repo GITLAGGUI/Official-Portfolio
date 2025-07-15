@@ -9,7 +9,6 @@ import {
   useColorModeValue,
   useDisclosure,
   Collapse,
-  Avatar,
   Spinner,
   useToast,
   HStack,

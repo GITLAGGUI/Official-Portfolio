@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Box, Divider, Grid, GridItem, Show } from "@chakra-ui/react";
 import ToolBar from "./components/ToolBar";
 import ActivityBar from "./components/ActivityBar";
 import Explorer from "./components/Explorer";
