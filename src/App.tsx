@@ -11,7 +11,8 @@ import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import Theme from "./pages/Theme";
 
-import ChatBot from "./components/ChatBot";
+import Footer from "./components/Footer";
+import ChatBotEnhanced from "./components/ChatBotEnhanced";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState("home.js");
@@ -73,9 +74,11 @@ function App() {
       </GridItem>
 
       <GridItem area="footer" marginX="2px" height="32px">
-        {/* ChatBot replaces the footer */}
-        <ChatBot />
+        <Footer />
       </GridItem>
+
+      {/* Floating AI Assistant */}
+      <ChatBotEnhanced />
     </Grid>
   );
 }
