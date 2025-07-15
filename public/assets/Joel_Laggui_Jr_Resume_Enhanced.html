@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel Laggui Jr. - Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #2D3748;
+            padding-bottom: 1rem;
+        }
+        
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-size: 1.3rem;
+            color: #4A5568;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            color: #2D3748;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2D3748;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 0.3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #4A5568;
+            text-align: justify;
+        }
+        
+        .certifications {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cert-item {
+            background: #F7FAFC;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #3182CE;
+        }
+        
+        .cert-title {
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 0.3rem;
+        }
+        
+        .cert-date {
+            color: #3182CE;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .cert-desc {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .skill-category {
+            margin-bottom: 1rem;
+        }
+        
+        .skill-category-title {
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .skill-item {
+            margin-bottom: 0.3rem;
+            color: #4A5568;
+        }
+        
+        .skill-label {
+            font-weight: 600;
+            color: #2D3748;
+        }
+        
+        .project {
+            margin-bottom: 1.5rem;
+            background: #F7FAFC;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #38A169;
+        }
+        
+        .project-title {
+            font-weight: 700;
+            color: #2D3748;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .project-tech {
+            color: #3182CE;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+        
+        .project-desc {
+            color: #4A5568;
+            line-height: 1.6;
+        }
+        
+        .project-desc ul {
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .experience-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .job-title {
+            font-weight: 700;
+            color: #2D3748;
+            font-size: 1.1rem;
+        }
+        
+        .job-period {
+            color: #3182CE;
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-desc {
+            color: #4A5568;
+            line-height: 1.6;
+        }
+        
+        .job-desc ul {
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .achievements {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .achievement {
+            color: #4A5568;
+            margin-bottom: 0.3rem;
+        }
+        
+        .languages, .interests {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .lang-item, .interest-item {
+            color: #4A5568;
+        }
+        
+        .lang-label, .interest-label {
+            font-weight: 600;
+            color: #2D3748;
+        }
+        
+        @media print {
+            body {
+                padding: 0.3in;
+            }
+            .section {
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .skills-grid, .certifications, .achievements {
+                grid-template-columns: 1fr;
+            }
+            .contact-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .languages, .interests {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="name">JOEL LAGGUI JR.</h1>
+        <div class="title">Full-Stack Developer & Data Analyst</div>
+        <div class="contact-info">
+            <div class="contact-item">📧 jlaggui47@gmail.com</div>
+            <div class="contact-item">📱 +63 915 368 3496</div>
+            <div class="contact-item">🌐 GitHub: GITLAGGUI</div>
+            <div class="contact-item">📍 Philippines</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Professional Summary</h2>
+        <p class="summary">
+            Passionate and versatile Full-Stack Developer and Data Analyst with expertise in modern web technologies, mobile development, and data science. Proven track record in building scalable applications, creating insightful data visualizations, and delivering innovative digital solutions. Recently certified in Innovation & Transformation and Algorithm & Program Design, demonstrating commitment to continuous learning and technical excellence.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Recent Certifications</h2>
+        <div class="certifications">
+            <div class="cert-item">
+                <div class="cert-title">🏆 SPUP Innovation & Transformation Certificate</div>
+                <div class="cert-date">March 2025</div>
+                <div class="cert-desc">Advanced methodologies in innovation management and digital transformation</div>
+            </div>
+            <div class="cert-item">
+                <div class="cert-title">🏆 Huawei Algorithm & Program Design Certificate</div>
+                <div class="cert-date">February 2025</div>
+                <div class="cert-desc">Advanced algorithmic thinking and efficient program design principles</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div>
+                <div class="skill-category">
+                    <div class="skill-category-title">Frontend Development</div>
+                    <div class="skill-item"><span class="skill-label">Languages:</span> JavaScript (ES6+), TypeScript, HTML5, CSS3</div>
+                    <div class="skill-item"><span class="skill-label">Frameworks:</span> React.js, Next.js, Vue.js</div>
+                    <div class="skill-item"><span class="skill-label">UI Libraries:</span> Chakra UI, Material-UI, Tailwind CSS</div>
+                    <div class="skill-item"><span class="skill-label">State Management:</span> Redux, Context API, Zustand</div>
+                </div>
+                
+                <div class="skill-category">
+                    <div class="skill-category-title">Backend Development</div>
+                    <div class="skill-item"><span class="skill-label">Languages:</span> Node.js, Python, PHP</div>
+                    <div class="skill-item"><span class="skill-label">Frameworks:</span> Express.js, FastAPI, Django</div>
+                    <div class="skill-item"><span class="skill-label">Databases:</span> MongoDB, PostgreSQL, MySQL, Firebase</div>
+                    <div class="skill-item"><span class="skill-label">APIs:</span> RESTful APIs, GraphQL</div>
+                </div>
+                
+                <div class="skill-category">
+                    <div class="skill-category-title">Mobile Development</div>
+                    <div class="skill-item"><span class="skill-label">Frameworks:</span> React Native, Flutter</div>
+                    <div class="skill-item"><span class="skill-label">Platforms:</span> iOS, Android</div>
+                    <div class="skill-item"><span class="skill-label">Tools:</span> Expo, Android Studio, Xcode</div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="skill-category">
+                    <div class="skill-category-title">Data Analysis & Visualization</div>
+                    <div class="skill-item"><span class="skill-label">Languages:</span> Python (Pandas, NumPy), R, SQL</div>
+                    <div class="skill-item"><span class="skill-label">Tools:</span> Power BI, Tableau, Excel (Advanced)</div>
+                    <div class="skill-item"><span class="skill-label">Machine Learning:</span> Scikit-learn, TensorFlow, Keras</div>
+                    <div class="skill-item"><span class="skill-label">Statistical Analysis:</span> Hypothesis testing, Regression</div>
+                </div>
+                
+                <div class="skill-category">
+                    <div class="skill-category-title">Development Tools</div>
+                    <div class="skill-item"><span class="skill-label">Version Control:</span> Git, GitHub, GitLab</div>
+                    <div class="skill-item"><span class="skill-label">Cloud Platforms:</span> AWS, Google Cloud, Vercel</div>
+                    <div class="skill-item"><span class="skill-label">Containerization:</span> Docker, Kubernetes</div>
+                    <div class="skill-item"><span class="skill-label">Testing:</span> Jest, Cypress, Pytest</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Featured Projects</h2>
+        
+        <div class="project">
+            <div class="project-title">🎓 Eskwelahan.ph - Educational Mobile Application</div>
+            <div class="project-tech">React Native | Firebase | Educational Technology</div>
+            <div class="project-desc">
+                <ul>
+                    <li>Developed a comprehensive mobile learning platform for Filipino students</li>
+                    <li>Implemented real-time data synchronization and offline capabilities</li>
+                    <li>Features include interactive lessons, progress tracking, and gamification elements</li>
+                    <li>Optimized for performance across various mobile devices</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="project">
+            <div class="project-title">📊 Advanced Power BI Analytics Dashboard</div>
+            <div class="project-tech">Power BI | DAX | Data Modeling</div>
+            <div class="project-desc">
+                <ul>
+                    <li>Created dynamic business intelligence dashboard with complex data relationships</li>
+                    <li>Implemented advanced DAX calculations for KPI tracking and trend analysis</li>
+                    <li>Designed interactive visualizations for executive-level reporting</li>
+                    <li>Integrated multiple data sources for comprehensive business insights</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="project">
+            <div class="project-title">🏨 Maria Lourdes Mansion - Luxury Hotel Website</div>
+            <div class="project-tech">React | TypeScript | Chakra UI | EmailJS</div>
+            <div class="project-desc">
+                <ul>
+                    <li>Built responsive, elegant website for luxury accommodation business</li>
+                    <li>Implemented booking inquiry system with email integration</li>
+                    <li>Optimized for SEO and mobile responsiveness</li>
+                    <li>Features image galleries, room showcases, and contact forms</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Professional Experience</h2>
+        
+        <div class="experience-item">
+            <div class="job-title">Freelance Full-Stack Developer & Data Analyst</div>
+            <div class="job-period">2023 - Present</div>
+            <div class="job-desc">
+                <ul>
+                    <li>Develop custom web applications and mobile solutions for diverse clients</li>
+                    <li>Create data visualization dashboards and perform statistical analysis</li>
+                    <li>Collaborate with clients to understand requirements and deliver tailored solutions</li>
+                    <li>Maintain and optimize existing applications for improved performance</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="experience-item">
+            <div class="job-title">Independent Software Developer</div>
+            <div class="job-period">2022 - Present</div>
+            <div class="job-desc">
+                <ul>
+                    <li>Design and implement end-to-end software solutions</li>
+                    <li>Conduct data analysis projects for business intelligence</li>
+                    <li>Build responsive web applications using modern frameworks</li>
+                    <li>Manage project timelines and client communications</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Key Achievements</h2>
+        <div class="achievements">
+            <div class="achievement">🚀 Successfully deployed multiple production applications with 99.9% uptime</div>
+            <div class="achievement">📈 Improved client business processes through custom data analysis solutions</div>
+            <div class="achievement">🎯 Completed advanced certifications in Innovation & Algorithm Design (2025)</div>
+            <div class="achievement">💡 Developed innovative mobile learning platform for educational sector</div>
+            <div class="achievement">🏆 Built scalable web applications serving hundreds of concurrent users</div>
+            <div class="achievement">💻 Active contributor to open source projects and technology communities</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Languages & Interests</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3 style="color: #2D3748; margin-bottom: 0.5rem;">Languages</h3>
+                <div class="languages">
+                    <div class="lang-item"><span class="lang-label">English:</span> Fluent</div>
+                    <div class="lang-item"><span class="lang-label">Filipino:</span> Native</div>
+                </div>
+            </div>
+            <div>
+                <h3 style="color: #2D3748; margin-bottom: 0.5rem;">Interests</h3>
+                <div class="interests">
+                    <div class="interest-item">💻 Open Source</div>
+                    <div class="interest-item">📚 Tech Learning</div>
+                    <div class="interest-item">🎮 Game Dev</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; color: #718096; font-style: italic;">
+        References available upon request
+    </div>
+</body>
+</html>
