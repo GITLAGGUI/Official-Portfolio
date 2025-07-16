@@ -8,6 +8,7 @@ import {
   VscBell,
 } from "react-icons/vsc";
 import FooterButton from "./FooterButton";
+import ChatBotFooterButton from "./ChatBotFooterButton";
 
 const Footer = () => {
   return (
@@ -29,6 +30,7 @@ const Footer = () => {
             Content="JavaScript JSX"
             TooltipLabel=""
           />
+          <ChatBotFooterButton />
           <FooterButton Icon={VscCheck} Content="Prettier" TooltipLabel="" />
           <FooterButton Icon={VscBell} Content="" TooltipLabel="" />
         </Box>

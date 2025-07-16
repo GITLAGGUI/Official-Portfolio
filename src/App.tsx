@@ -2,7 +2,7 @@ import { Box, Divider, Grid, GridItem, Show } from "@chakra-ui/react";
 import ToolBar from "./components/ToolBar";
 import ActivityBar from "./components/ActivityBar";
 import Explorer from "./components/Explorer";
-import Home from "./pages/Home";
+import HomeEnhanced from "./pages/HomeEnhanced";
 import TabsBar from "./components/TabsBar";
 import { useState } from "react";
 import About from "./pages/About";
@@ -12,7 +12,6 @@ import Contact from "./pages/Contact";
 import Theme from "./pages/Theme";
 
 import Footer from "./components/Footer";
-import ChatBotEnhanced from "./components/ChatBotEnhanced";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState("home.js");
@@ -51,7 +50,7 @@ function App() {
         <TabsBar selectedTab={selectedPage} onSelectTab={setSelectedPage} />
         <Box overflowY="auto" height="calc(100% - 40px)" pb="32px">
           <Routes>
-            <Route path="/" element={<Home setPage={setSelectedPage} />} />
+            <Route path="/" element={<HomeEnhanced setPage={setSelectedPage} />} />
             <Route
               path="/about"
               element={<About setPage={setSelectedPage} />}
@@ -77,8 +76,7 @@ function App() {
         <Footer />
       </GridItem>
 
-      {/* Floating AI Assistant */}
-      <ChatBotEnhanced />
+
     </Grid>
   );
 }

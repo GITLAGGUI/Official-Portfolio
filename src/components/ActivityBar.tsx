@@ -6,7 +6,6 @@ import {
   VscAccount,
   VscSettingsGear,
   VscMail,
-  VscBook,
 } from "react-icons/vsc";
 import ActivityBarIcon from "./ActivityBarIcon";
 
@@ -30,12 +29,7 @@ const ActivityBar = ({ selectedPage, onSelectPage }: Props) => {
     //   Navigate: "github.css",
     //   Link: "/github",
     // },
-    {
-      Label: "Resume",
-      Icon: VscBook,
-      Navigate: "resume.tsx",
-      Link: "/resume",
-    },
+
     {
       Label: "Contact me",
       Icon: VscMail,
