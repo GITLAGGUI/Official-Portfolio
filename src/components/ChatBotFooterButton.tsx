@@ -49,13 +49,6 @@ interface OpenRouterResponse {
   };
 }
 
-interface TokenManager {
-  token: string;
-  lastUsed: Date;
-  isValid: boolean;
-  refreshCount: number;
-}
-
 const ChatBotFooterButton = () => {
   const { isOpen, onToggle } = useDisclosure();
   
@@ -183,38 +176,23 @@ const ChatBotFooterButton = () => {
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'retrying' | 'error' | 'offline'>('connected');
   const [useOfflineMode, setUseOfflineMode] = useState(false);
   const [currentModel, setCurrentModel] = useState<string>("");
-  // Activity tracking for session management
-  const [, setLastActivityTime] = useState<Date>(new Date());
-  const [tokenManager, setTokenManager] = useState<TokenManager>({
-    token: import.meta.env.VITE_OPENROUTER_API_KEY || "",
-    lastUsed: new Date(),
-    isValid: true,
-    refreshCount: 0
-  });
+  const [apiErrorCount, setApiErrorCount] = useState(0);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const sessionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const tokenRefreshRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const toast = useToast();
 
-  // Enhanced Token Management Configuration
-  const TOKEN_CONFIG = {
-    SESSION_TIMEOUT: 60000, // 1 minute in milliseconds
-    TOKEN_REFRESH_INTERVAL: 300000, // 5 minutes for token validation
-    MAX_REFRESH_ATTEMPTS: 3,
-    API_RETRY_DELAY: 1000,
+  // Simplified Configuration - Reduced aggressive timeouts
+  const CONFIG = {
+    MAX_API_ERRORS: 3, // Allow 3 consecutive errors before switching to offline
+    API_RETRY_DELAY: 2000, // 2 seconds between retries
+    ERROR_RESET_TIME: 300000, // Reset error count after 5 minutes
   };
 
   // Proper OpenRouter API Configuration
   const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
   
-  // Updated model list with proper OpenRouter model IDs
-  const OPENROUTER_MODELS = [
-    "moonshotai/kimi-k2:free",
-    "cognitivecomputations/dolphin-mistral-24b-venice-edition:free", 
-    "moonshotai/kimi-dev-72b:free",
-    "tngtech/deepseek-r1t2-chimera:free"
-  ];
+  // Primary model only to avoid rate limiting from multiple model attempts
+  const PRIMARY_MODEL = "moonshotai/kimi-k2:free";
 
   // Updated system prompt with actual portfolio data
   const systemPrompt = `You are an AI assistant for Joel Laggui Jr's portfolio website. You help visitors understand Joel's expertise and how he can solve their development challenges.
@@ -266,192 +244,74 @@ INSTRUCTIONS:
     scrollToBottom();
   }, [messages]);
 
-  // Enhanced Token Management System
-  const validateToken = useCallback(async (token: string): Promise<boolean> => {
-    if (!token || !token.startsWith('sk-or-v1-')) {
-      console.log('🔑 Invalid token format or missing token');
-      return false;
-    }
-
-    try {
-      console.log('🔍 Validating token...');
-      const response = await fetch(`${OPENROUTER_BASE_URL}/models`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'HTTP-Referer': window.location.origin,
-        },
-      });
-
-      const isValid = response.ok;
-      console.log(`🔑 Token validation: ${isValid ? 'Valid' : 'Invalid'}`);
-      return isValid;
-    } catch (error) {
-      console.error('🔑 Token validation error:', error);
-      return false;
-    }
-  }, []);
-
-  const refreshToken = useCallback(async (): Promise<string> => {
-    console.log('🔄 Attempting token refresh...');
-    
-    // In a real implementation, this would call your backend to get a new token
-    // For now, we'll validate the existing token and mark it as refreshed
-    const currentToken = import.meta.env.VITE_OPENROUTER_API_KEY || "";
-    
-    if (await validateToken(currentToken)) {
-      console.log('✅ Token refreshed successfully');
-      setTokenManager(prev => ({
-        ...prev,
-        token: currentToken,
-        lastUsed: new Date(),
-        isValid: true,
-        refreshCount: prev.refreshCount + 1
-      }));
-      return currentToken;
-    } else {
-      console.error('❌ Token refresh failed');
-      throw new Error('Token refresh failed');
-    }
-  }, [validateToken]);
-
-  // Session Timeout Management
-  const resetSessionTimeout = useCallback(() => {
-    if (sessionTimeoutRef.current) {
-      clearTimeout(sessionTimeoutRef.current);
-    }
-
-    sessionTimeoutRef.current = setTimeout(() => {
-      console.log('⏰ Session timeout - resetting chat');
-      setMessages([]);
-      setLastActivityTime(new Date());
-      
-      toast({
-        title: "Session Reset",
-        description: "Chat session reset due to inactivity (1 minute)",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-      });
-    }, TOKEN_CONFIG.SESSION_TIMEOUT);
-  }, [toast]);
-
-  // Update activity time and reset timeout on any user interaction
-  const updateActivity = useCallback(() => {
-    setLastActivityTime(new Date());
-    resetSessionTimeout();
-  }, [resetSessionTimeout]);
-
-  // Token refresh interval management
-  const setupTokenRefresh = useCallback(() => {
-    if (tokenRefreshRef.current) {
-      clearInterval(tokenRefreshRef.current);
-    }
-
-    tokenRefreshRef.current = setInterval(async () => {
-      try {
-        await refreshToken();
-      } catch (error) {
-        console.error('🔄 Scheduled token refresh failed:', error);
-        setConnectionStatus('error');
-      }
-    }, TOKEN_CONFIG.TOKEN_REFRESH_INTERVAL);
-  }, [refreshToken]);
-
-  // Initialize token management and session timeout when chat opens
+  // Reset error count after specified time
   useEffect(() => {
-    if (isOpen) {
-      console.log('💬 Chat opened - initializing session management');
-      updateActivity();
-      setupTokenRefresh();
-      checkConnectionStatus();
-    } else {
-      // Clear timeouts when chat is closed
-      if (sessionTimeoutRef.current) {
-        clearTimeout(sessionTimeoutRef.current);
-      }
-      if (tokenRefreshRef.current) {
-        clearInterval(tokenRefreshRef.current);
-      }
+    if (apiErrorCount > 0) {
+      const resetTimer = setTimeout(() => {
+        console.log('🔄 Resetting API error count');
+        setApiErrorCount(0);
+        if (connectionStatus === 'error' && navigator.onLine) {
+          setConnectionStatus('connected');
+          setUseOfflineMode(false);
+        }
+      }, CONFIG.ERROR_RESET_TIME);
+
+      return () => clearTimeout(resetTimer);
     }
+  }, [apiErrorCount, connectionStatus]);
 
-    return () => {
-      if (sessionTimeoutRef.current) {
-        clearTimeout(sessionTimeoutRef.current);
-      }
-      if (tokenRefreshRef.current) {
-        clearInterval(tokenRefreshRef.current);
-      }
-    };
-  }, [isOpen, updateActivity, setupTokenRefresh]);
-
-  // Performance optimization: Reduce API call delays
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-  // Enhanced connection status check with better debugging
-  const checkConnectionStatus = async () => {
-    console.log(`🔍 Checking connection status...`);
-    console.log(`🌐 Navigator online: ${navigator.onLine}`);
-    console.log(`🔑 Token available: ${tokenManager.token ? 'Yes' : 'No'}`);
+  // Simple connection status check
+  const checkConnectionStatus = useCallback(async () => {
+    console.log('🔍 Checking connection status...');
     
-    // Always start as connected for better user experience
-    setConnectionStatus('connected');
-    setUseOfflineMode(false);
-
-    // Only check if browser is online - if offline, switch to offline mode
+    // Check browser online status
     if (!navigator.onLine) {
-      console.log(`📴 Browser offline - switching to offline mode`);
+      console.log('📴 Browser offline - switching to offline mode');
       setConnectionStatus('offline');
       setUseOfflineMode(true);
       return;
     }
 
-    // Validate token
-    if (!tokenManager.token) {
-      console.warn(' OpenRouter API key not found - using fallback responses');
-      console.log('To fix: Set VITE_OPENROUTER_API_KEY in environment variables');
+    // Check if we have an API key
+    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+    if (!apiKey) {
+      console.warn('⚠️ OpenRouter API key not found - using offline mode');
+      setUseOfflineMode(true);
       return;
     }
 
-    // Validate token format and connectivity
-    try {
-      const isValid = await validateToken(tokenManager.token);
-      if (!isValid) {
-        console.warn('Token validation failed - attempting refresh');
-        await refreshToken();
-      }
-    } catch (error) {
-      console.warn('Token validation error:', error);
+    // If we have too many errors, stay in offline mode
+    if (apiErrorCount >= CONFIG.MAX_API_ERRORS) {
+      console.log('❌ Too many API errors - staying in offline mode');
+      setConnectionStatus('error');
+      setUseOfflineMode(true);
+      return;
     }
-  };
+
+    // Otherwise, we're ready to try API calls
+    setConnectionStatus('connected');
+    setUseOfflineMode(false);
+    console.log('✅ Connection status: ready for API calls');
+  }, [apiErrorCount]);
+
+  // Initialize connection check when chat opens
+  useEffect(() => {
+    if (isOpen) {
+      checkConnectionStatus();
+    }
+  }, [isOpen, checkConnectionStatus]);
 
   const findBestResponse = (userInput: string): string => {
     // Use portfolio data service for accurate responses based on actual files
     return portfolioService.analyzeQuery(userInput);
   };
 
-  // Enhanced API debugging and error logging with proper token management
-  const makeOpenRouterAPICall = async (model: string, conversationMessages: Message[]): Promise<string> => {
-    // Check if token needs refresh
-    const timeSinceLastUse = Date.now() - tokenManager.lastUsed.getTime();
-    if (timeSinceLastUse > TOKEN_CONFIG.TOKEN_REFRESH_INTERVAL) {
-      console.log('🔄 Token refresh needed due to age');
-      try {
-        await refreshToken();
-      } catch (error) {
-        console.error('🔄 Token refresh failed:', error);
-        throw new Error("Token refresh failed");
-      }
-    }
-
-    if (!tokenManager.token) {
-      console.error("❌ OpenRouter API key not found. Check environment variables.");
+  // Simplified API call with better error handling
+  const makeOpenRouterAPICall = async (conversationMessages: Message[]): Promise<string> => {
+    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+    
+    if (!apiKey) {
       throw new Error("OpenRouter API key not configured");
-    }
-
-    if (!tokenManager.isValid) {
-      console.error("❌ Token is marked as invalid");
-      throw new Error("Invalid token");
     }
 
     // Prepare messages in the correct format for OpenRouter
@@ -463,12 +323,11 @@ INSTRUCTIONS:
       }))
     ];
 
-    console.log(`🔄 Attempting API call to model: ${model}`);
-    console.log(`📡 API Endpoint: ${OPENROUTER_BASE_URL}/chat/completions`);
+    console.log(`🔄 Making API call to ${PRIMARY_MODEL}`);
 
     try {
       const requestBody = {
-        model: model,
+        model: PRIMARY_MODEL,
         messages: apiMessages,
         max_tokens: 300,
         temperature: 0.7,
@@ -482,7 +341,7 @@ INSTRUCTIONS:
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenManager.token}`,
+          'Authorization': `Bearer ${apiKey}`,
           'HTTP-Referer': window.location.origin,
           'X-Title': 'Joel Laggui Jr Portfolio',
         },
@@ -497,54 +356,39 @@ INSTRUCTIONS:
         
         // Handle specific error cases
         if (response.status === 401) {
-          console.error('❌ Unauthorized - token may be invalid');
-          setTokenManager(prev => ({ ...prev, isValid: false }));
-          throw new Error('Authentication failed - invalid token');
+          throw new Error('Authentication failed - invalid API key');
         }
         
         if (response.status === 429) {
-          console.error('❌ Rate limited - too many requests');
-          throw new Error('Rate limit exceeded - please wait');
+          throw new Error('Rate limit exceeded - please wait a moment');
         }
         
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
       const data: OpenRouterResponse = await response.json();
-      console.log(`✅ API Response received from ${model}`);
+      console.log(`✅ API Response received`);
 
       if (!data.choices || data.choices.length === 0) {
-        console.error(`❌ No choices in response:`, data);
-        throw new Error("No choices returned from API");
+        throw new Error("No response choices returned from API");
       }
 
       const content = data.choices[0]?.message?.content;
       if (!content) {
-        console.error(`❌ No content in response:`, data.choices[0]);
         throw new Error("No content in API response");
       }
 
-      // Update token manager on successful use
-      setTokenManager(prev => ({
-        ...prev,
-        lastUsed: new Date(),
-        isValid: true
-      }));
-
-      console.log(`✅ Successfully got response from ${model}`);
+      console.log(`✅ Successfully got response from ${PRIMARY_MODEL}`);
       return content.trim();
 
     } catch (error) {
-      console.error(`❌ API call failed for model ${model}:`, error);
+      console.error(`❌ API call failed:`, error);
       throw error;
     }
   };
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
-
-    // Update activity on message send
-    updateActivity();
 
     const userMessage: Message = {
       role: 'user',
@@ -558,7 +402,8 @@ INSTRUCTIONS:
     setIsLoading(true);
 
     // Check if we should use offline mode
-    if (useOfflineMode || connectionStatus === 'offline') {
+    if (useOfflineMode || connectionStatus === 'offline' || !navigator.onLine) {
+      console.log('📴 Using offline mode');
       setTimeout(() => {
         const response = findBestResponse(currentInput);
         const assistantMessage: Message = {
@@ -569,50 +414,56 @@ INSTRUCTIONS:
         };
         setMessages(prev => [...prev, assistantMessage]);
         setIsLoading(false);
-        updateActivity(); // Update activity on response
-      }, 300);
+      }, 500);
       return;
     }
 
-    // Try OpenRouter API calls with proper error handling
-    let responseReceived = false;
+    // Try API call
     setConnectionStatus('retrying');
-
-    for (const model of OPENROUTER_MODELS) {
-      try {
-        // Include the current user message in the conversation
-        const currentConversation = [...messages, userMessage];
-        const content = await makeOpenRouterAPICall(model, currentConversation);
-        
-        const assistantMessage: Message = {
-          role: 'assistant',
-          content: content,
-          timestamp: new Date(),
-          model: model
-        };
-
-        setMessages(prev => [...prev, assistantMessage]);
-        setConnectionStatus('connected');
-        setCurrentModel(model);
-        setIsLoading(false);
-        responseReceived = true;
-        updateActivity(); // Update activity on response
-
-        console.log(`Successfully got response from model: ${model}`);
-        return;
-        
-      } catch (error) {
-        console.error(`Error with model ${model}:`, error);
-        await delay(TOKEN_CONFIG.API_RETRY_DELAY);
-      }
-    }
-
-    // Fallback to offline mode if all API calls failed
-    if (!responseReceived) {
-      console.log("All API calls failed, switching to offline mode");
-      setConnectionStatus('offline');
-      setUseOfflineMode(true);
+    
+    try {
+      // Include the current user message in the conversation
+      const currentConversation = [...messages, userMessage];
+      const content = await makeOpenRouterAPICall(currentConversation);
       
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: content,
+        timestamp: new Date(),
+        model: PRIMARY_MODEL
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      setConnectionStatus('connected');
+      setCurrentModel(PRIMARY_MODEL);
+      setIsLoading(false);
+
+      // Reset error count on successful API call
+      setApiErrorCount(0);
+      
+    } catch (error) {
+      console.error(`❌ API call failed:`, error);
+      
+      // Increment error count
+      const newErrorCount = apiErrorCount + 1;
+      setApiErrorCount(newErrorCount);
+      
+      // If we've hit the error limit, switch to offline mode
+      if (newErrorCount >= CONFIG.MAX_API_ERRORS) {
+        console.log('❌ Too many API errors - switching to offline mode');
+        setConnectionStatus('error');
+        setUseOfflineMode(true);
+        
+        toast({
+          title: "Switched to Offline Mode",
+          description: "API temporarily unavailable. Using offline responses.",
+          status: "warning",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+      
+      // Provide offline response
       const response = findBestResponse(currentInput);
       const assistantMessage: Message = {
         role: 'assistant',
@@ -623,15 +474,13 @@ INSTRUCTIONS:
       
       setMessages(prev => [...prev, assistantMessage]);
       setIsLoading(false);
-      updateActivity(); // Update activity on response
       
-      toast({
-        title: "Switched to Offline Mode",
-        description: "OpenRouter API unavailable. Using offline responses.",
-        status: "warning",
-        duration: 4000,
-        isClosable: true,
-      });
+      // Wait before next retry
+      if (newErrorCount < CONFIG.MAX_API_ERRORS) {
+        setTimeout(() => {
+          setConnectionStatus('connected');
+        }, CONFIG.API_RETRY_DELAY);
+      }
     }
   };
 
@@ -644,11 +493,10 @@ INSTRUCTIONS:
 
   const resetChat = () => {
     setMessages([]);
-    updateActivity(); // Reset activity timer
-    // Re-check connection status when resetting
-    checkConnectionStatus();
     setCurrentModel("");
-    console.log('Chat reset completed');
+    setApiErrorCount(0); // Reset error count
+    checkConnectionStatus(); // Re-check connection
+    console.log('🔄 Chat reset completed');
   };
 
   const getStatusText = () => {
@@ -656,11 +504,20 @@ INSTRUCTIONS:
     switch (connectionStatus) {
       case 'connected': 
         const modelName = currentModel ? currentModel.split('/')[0] : '';
-        const tokenStatus = tokenManager.isValid ? 'Active' : 'Refreshing';
-        return `Assistant Ready (${tokenStatus}${modelName ? ` - ${modelName}` : ''})`;
+        return `Assistant Ready${modelName ? ` (${modelName})` : ''}`;
       case 'retrying': return 'Connecting...';
-      case 'error': return 'Connection Error';
+      case 'error': return `Connection Error (${apiErrorCount}/${CONFIG.MAX_API_ERRORS})`;
       default: return 'Checking Connection...';
+    }
+  };
+
+  const getStatusColor = () => {
+    if (useOfflineMode || connectionStatus === 'offline') return 'blue';
+    switch (connectionStatus) {
+      case 'connected': return 'green';
+      case 'retrying': return 'yellow';
+      case 'error': return 'red';
+      default: return 'gray';
     }
   };
 
@@ -728,11 +585,8 @@ INSTRUCTIONS:
               <Text fontWeight="500" fontSize="13px" color={chatTextColor}>
                 Joel's AI Assistant
               </Text>
-              <Badge 
-                size="sm" 
-                colorScheme={useOfflineMode || connectionStatus === 'offline' ? 'blue' : connectionStatus === 'connected' ? 'green' : connectionStatus === 'retrying' ? 'yellow' : 'red'}
-              >
-                {useOfflineMode || connectionStatus === 'offline' ? 'Offline' : tokenManager.isValid ? 'Active' : 'Refreshing'}
+              <Badge size="sm" colorScheme={getStatusColor()}>
+                {useOfflineMode || connectionStatus === 'offline' ? 'Offline' : 'Online'}
               </Badge>
             </HStack>
             <HStack spacing={1}>
@@ -770,7 +624,7 @@ INSTRUCTIONS:
             <Alert status="warning" size="sm" py={2}>
               <AlertIcon />
               <Text fontSize="11px">
-                Connection issues detected. Using offline responses.
+                API temporarily unavailable. Using offline responses. Will retry automatically.
               </Text>
             </Alert>
           )}
@@ -855,10 +709,7 @@ INSTRUCTIONS:
             <HStack spacing={2}>
               <Input
                 value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  updateActivity(); // Update activity on typing
-                }}
+                onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask about Joel's skills, projects, or contact info..."
                 size="sm"
