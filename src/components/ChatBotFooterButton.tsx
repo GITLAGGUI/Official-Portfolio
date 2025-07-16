@@ -518,13 +518,7 @@ INSTRUCTIONS:
   };
 
   const resetChat = () => {
-    setMessages([
-      {
-        role: 'assistant',
-        content: "Hi! I'm Joel's AI assistant. I can provide accurate information about his **technical skills**, **projects** like Eskwelahan.ph and Maria Lourdes Mansion, **certifications**, and **contact details**. What would you like to know?",
-        timestamp: new Date()
-      }
-    ]);
+    setMessages([]);
     // Re-check connection status when resetting
     checkConnectionStatus();
     setCurrentModel("");
@@ -532,12 +526,12 @@ INSTRUCTIONS:
   };
 
   const getStatusText = () => {
-    if (useOfflineMode || connectionStatus === 'offline') return '🔵 Offline Mode';
+    if (useOfflineMode || connectionStatus === 'offline') return 'Offline Mode';
     switch (connectionStatus) {
-      case 'connected': return `🟢 Assistant Ready${currentModel ? ` (${currentModel.split('/')[0]})` : ''}`;
-      case 'retrying': return '🟡 Connecting...';
-      case 'error': return '🔴 Connection Error';
-      default: return '⚪ Checking Connection...';
+      case 'connected': return `Assistant Ready${currentModel ? ` (${currentModel.split('/')[0]})` : ''}`;
+      case 'retrying': return 'Connecting...';
+      case 'error': return 'Connection Error';
+      default: return 'Checking Connection...';
     }
   };
 

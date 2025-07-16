@@ -1,49 +1,33 @@
-/* Global styles for scrollbar management */
+/* Global styles for complete scrollbar removal */
 
-/* Hide scrollbars in fullscreen mode while maintaining scroll functionality */
-:fullscreen {
-  /* Hide scrollbars for webkit browsers (Chrome, Safari, Edge) */
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Hide scrollbars for Firefox */
-  scrollbar-width: none;
-  
-  /* Ensure scrolling still works */
-  overflow: auto;
+/* Hide scrollbars completely while maintaining scroll functionality */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  overflow: auto; /* Ensure scrolling still works */
 }
 
-:fullscreen * {
-  /* Apply to all elements in fullscreen */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* Hide scrollbars for webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  display: none;
 }
 
-:fullscreen *::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Opera */
-}
-
-/* Alternative approach using fullscreen pseudo-class for better browser support */
-html:fullscreen,
-html:fullscreen body,
-html:fullscreen * {
+/* Apply to all elements */
+* {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
 
-html:fullscreen ::-webkit-scrollbar,
-html:fullscreen body::-webkit-scrollbar,
-html:fullscreen *::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Ensure the main content area scrollbars are hidden in fullscreen */
-:fullscreen [data-overlayscrollbars-viewport] {
+/* Ensure specific content areas also have hidden scrollbars */
+[data-overlayscrollbars-viewport] {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-:fullscreen [data-overlayscrollbars-viewport]::-webkit-scrollbar {
+[data-overlayscrollbars-viewport]::-webkit-scrollbar {
   display: none;
 }
