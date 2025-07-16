@@ -19,7 +19,7 @@
 
 ### Screenshot
 
-![](./public/assets/My%20Portfolio.png)
+![](./public/assets/Latest_Portfolio.png)
 
 ### Links
 
