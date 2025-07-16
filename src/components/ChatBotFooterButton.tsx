@@ -251,14 +251,19 @@ INSTRUCTIONS:
   // Performance optimization: Reduce API call delays
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // Function to check if we're online and API is available
+  // Enhanced connection status check with better debugging
   const checkConnectionStatus = async () => {
+    console.log(`🔍 Checking connection status...`);
+    console.log(`🌐 Navigator online: ${navigator.onLine}`);
+    console.log(`🔑 API Key available: ${OPENROUTER_API_KEY ? 'Yes' : 'No'}`);
+    
     // Always start as connected for better user experience
     setConnectionStatus('connected');
     setUseOfflineMode(false);
 
     // Only check if browser is online - if offline, switch to offline mode
     if (!navigator.onLine) {
+      console.log(`📴 Browser offline - switching to offline mode`);
       setConnectionStatus('offline');
       setUseOfflineMode(true);
       return;
@@ -266,14 +271,26 @@ INSTRUCTIONS:
 
     // If API key is missing, stay connected but show warning in console
     if (!OPENROUTER_API_KEY) {
-      console.warn('OpenRouter API key not found - using fallback responses');
+      console.warn('⚠️ OpenRouter API key not found - using fallback responses');
+      console.log('💡 To fix: Set VITE_OPENROUTER_API_KEY in environment variables');
+      console.log('💡 For Vercel: Add environment variable in dashboard');
+      console.log('💡 For local: Create .env file with VITE_OPENROUTER_API_KEY=your_key');
       // Keep connected status for better UX
+      return;
+    }
+
+    // Validate API key format
+    if (!OPENROUTER_API_KEY.startsWith('sk-or-v1-')) {
+      console.error('❌ Invalid API key format. OpenRouter keys should start with "sk-or-v1-"');
+      console.log('💡 Check your API key in OpenRouter dashboard');
       return;
     }
 
     // Try a simple API test call
     try {
+      console.log(`🧪 Testing API connection...`);
       setConnectionStatus('retrying');
+      
       const testResponse = await fetch(`${OPENROUTER_BASE_URL}/models`, {
         method: 'GET',
         headers: {
@@ -282,16 +299,20 @@ INSTRUCTIONS:
         },
       });
 
+      console.log(`🧪 Test response: ${testResponse.status} ${testResponse.statusText}`);
+
       if (testResponse.ok) {
+        console.log(`✅ API connection successful`);
         setConnectionStatus('connected');
         setUseOfflineMode(false);
       } else {
-        // Stay connected even if API test fails
-        console.warn('API test failed but staying connected');
+        const errorText = await testResponse.text();
+        console.warn(`⚠️ API test failed but staying connected: ${testResponse.status} - ${errorText}`);
+        // Stay connected even if API test fails for better UX
       }
     } catch (error) {
-      // Stay connected even if there's an error
-      console.warn('Connection test failed but staying connected:', error);
+      console.warn(`⚠️ Connection test failed but staying connected:`, error);
+      // Stay connected even if there's an error for better UX
     }
   };
 
@@ -300,10 +321,19 @@ INSTRUCTIONS:
     return portfolioService.analyzeQuery(userInput);
   };
 
-  // Corrected OpenRouter API call with proper TypeScript types and error handling
+  // Enhanced API debugging and error logging
   const makeOpenRouterAPICall = async (model: string, conversationMessages: Message[]): Promise<string> => {
     if (!OPENROUTER_API_KEY) {
+      console.error("❌ OpenRouter API key not found. Check environment variables.");
+      console.log("Expected variable: VITE_OPENROUTER_API_KEY");
+      console.log("Current value:", OPENROUTER_API_KEY ? "Set (hidden)" : "Not set");
       throw new Error("OpenRouter API key not configured");
+    }
+
+    // Validate API key format
+    if (!OPENROUTER_API_KEY.startsWith('sk-or-v1-')) {
+      console.error("❌ Invalid OpenRouter API key format. Should start with 'sk-or-v1-'");
+      throw new Error("Invalid API key format");
     }
 
     // Prepare messages in the correct format for OpenRouter
@@ -315,9 +345,24 @@ INSTRUCTIONS:
       }))
     ];
 
-    console.log(`Attempting API call to model: ${model}`);
+    console.log(`🔄 Attempting API call to model: ${model}`);
+    console.log(`📡 API Endpoint: ${OPENROUTER_BASE_URL}/chat/completions`);
+    console.log(`🔑 API Key: ${OPENROUTER_API_KEY.substring(0, 12)}...`);
 
     try {
+      const requestBody = {
+        model: model,
+        messages: apiMessages,
+        max_tokens: 300,
+        temperature: 0.7,
+        stream: false,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+      };
+
+      console.log(`📤 Request body:`, JSON.stringify(requestBody, null, 2));
+
       const response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
         method: 'POST',
         headers: {
@@ -326,38 +371,52 @@ INSTRUCTIONS:
           'HTTP-Referer': window.location.origin,
           'X-Title': 'Joel Laggui Jr Portfolio',
         },
-        body: JSON.stringify({
-          model: model,
-          messages: apiMessages,
-          max_tokens: 300,
-          temperature: 0.7,
-          stream: false,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0
-        })
+        body: JSON.stringify(requestBody)
       });
+
+      console.log(`📥 Response status: ${response.status} ${response.statusText}`);
+      console.log(`📥 Response headers:`, Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error(`❌ API Error Response:`, errorText);
+        
+        // Parse error details if possible
+        try {
+          const errorData = JSON.parse(errorText);
+          console.error(`❌ Parsed error:`, errorData);
+        } catch (e) {
+          console.error(`❌ Raw error text:`, errorText);
+        }
+        
         throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const data: OpenRouterResponse = await response.json();
+      console.log(`✅ API Response:`, data);
 
       if (!data.choices || data.choices.length === 0) {
+        console.error(`❌ No choices in response:`, data);
         throw new Error("No choices returned from API");
       }
 
       const content = data.choices[0]?.message?.content;
       if (!content) {
+        console.error(`❌ No content in response:`, data.choices[0]);
         throw new Error("No content in API response");
       }
 
+      console.log(`✅ Successfully got response from ${model}: ${content.substring(0, 100)}...`);
       return content.trim();
 
     } catch (error) {
-      console.error(`API call failed for model ${model}:`, error);
+      console.error(`❌ API call failed for model ${model}:`, error);
+      
+      // Log additional debugging info
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        console.error(`❌ Network error - check internet connection and CORS settings`);
+      }
+      
       throw error;
     }
   };
