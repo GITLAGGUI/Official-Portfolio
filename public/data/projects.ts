@@ -1,5 +1,24 @@
 export const projects = [
   {
+    ImageURL: "/assets/hotplate.png",
+    Title: "Hotplate",
+    Description:
+      "A modern food delivery application built with Flutter, connecting food lovers with their favorite local restaurants and providing seamless ordering experiences. Features secure authentication, restaurant discovery, intuitive cart management, and real-time order tracking.",
+    Technologies: [
+      "flutter",
+      "dart",
+      "firebase",
+      "firestore",
+      "firebase auth",
+      "mobile",
+      "android",
+      "ios",
+      "material design",
+    ],
+    Source: "https://github.com/GITLAGGUI/App_1",
+    Demo: "https://drive.google.com/drive/folders/1Wyf-q_ztdd8iYRnQupUZ9Je6mhrAjnqH?usp=sharing",
+  },
+  {
     // You can add your own project screenshots by placing them in /public/assets
     // For now using placeholder images - you can replace these with your actual screenshots
     ImageURL: "/assets/eskwelahanph.png", // You can replace this with your actual screenshot
