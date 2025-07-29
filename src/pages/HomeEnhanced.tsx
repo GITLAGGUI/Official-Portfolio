@@ -24,6 +24,9 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+// Firebase imports
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, runTransaction, onValue } from "firebase/database";
 import { 
   FaReact, 
   FaNodeJs, 
@@ -41,6 +44,22 @@ import {
 import { SiTypescript, SiNextdotjs, SiMongodb, SiPostgresql, SiAmazonaws, SiDocker, SiPowerbi } from "react-icons/si";
 import HomeItem from "../components/HomeItem";
 import { homeData } from "../../public/data/home";
+
+// Firebase configuration using environment variables
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 interface Props {
   setPage: (page: string) => void;
@@ -62,15 +81,30 @@ const pulse = keyframes`
 `;
 
 const HomeEnhanced = ({ setPage }: Props) => {
-  const [visitorCount, setVisitorCount] = useState(1247);
+  const [visitorCount, setVisitorCount] = useState(0);
 
   useEffect(() => {
     setPage("home.js");
-    // Simulate visitor count increment
-    const timer = setTimeout(() => {
-      setVisitorCount(prev => prev + 1);
-    }, 2000);
-    return () => clearTimeout(timer);
+    // Firebase visitor counter logic
+    const visitorsRef = ref(db, "portfolioVisitors/count");
+
+    // Increment visitor count atomically
+    runTransaction(visitorsRef, (currentCount) => {
+      if (currentCount === null || typeof currentCount !== "number") {
+        return 1;
+      }
+      return currentCount + 1;
+    });
+
+    // Listen for real-time updates
+    const unsubscribe = onValue(visitorsRef, (snapshot) => {
+      const count = snapshot.val();
+      setVisitorCount(typeof count === "number" ? count : 0);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const accentColor = useColorModeValue("syntax.keyword", "#0BCEAF");
@@ -320,7 +354,7 @@ const HomeEnhanced = ({ setPage }: Props) => {
               color={accentColor}
               mb={4}
             >
-              Full-Stack Developer (Web & Mobile) | Data Analyst
+              Data Analyst | Python, SQL, Power BI Expert | Business Intelligence Specialist
             </Text>
             <Text
               fontSize={{ base: "md", md: "lg" }}

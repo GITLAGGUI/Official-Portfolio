@@ -8,11 +8,11 @@ import {
   Box,
   Heading,
   keyframes,
-  Badge,
 } from "@chakra-ui/react";
-import { FaDownload, FaCertificate } from "react-icons/fa6";
+import { FaDownload } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { aboutMe, technicalSkills, certifications } from "../../public/data/about";
+import { aboutMe, technicalSkills } from "../../public/data/about";
+import CertificationTestimonial from "../components/CertificationTestimonial";
 
 interface Props {
   setPage: (page: string) => void;
@@ -86,56 +86,7 @@ const About = ({ setPage }: Props) => {
         <Text marginLeft={2}>Download CV</Text>
       </Button>
 
-      <Box width="100%">
-        <Heading
-          as="h2"
-          fontSize={{ base: "xl", md: "2xl" }}
-          fontWeight="bold"
-          mb={8}
-          color="#0BCEAF"
-        >
-          Certifications
-        </Heading>
-        <Grid
-          templateColumns={{
-            base: "1fr",
-            md: "repeat(2, 1fr)",
-          }}
-          gap={6}
-          mb={12}
-        >
-          {certifications.map((cert, idx) => (
-            <GridItem
-              key={idx}
-              bg="whiteAlpha.50"
-              borderRadius="xl"
-              p={6}
-              boxShadow="sm"
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "md",
-              }}
-              transition="all 0.3s"
-            >
-              <HStack mb={3}>
-                <FaCertificate color="#0BCEAF" />
-                <Badge colorScheme="teal" variant="subtle">
-                  {cert.date}
-                </Badge>
-              </HStack>
-              <Text fontWeight="bold" fontSize="lg" color="#0BCEAF" mb={2}>
-                {cert.title}
-              </Text>
-              <Text fontWeight="semibold" fontSize="md" mb={3}>
-                {cert.issuer}
-              </Text>
-              <Text fontSize="sm" color="gray.300">
-                {cert.description}
-              </Text>
-            </GridItem>
-          ))}
-        </Grid>
-      </Box>
+      <CertificationTestimonial />
 
       <Box width="100%">
         <Heading

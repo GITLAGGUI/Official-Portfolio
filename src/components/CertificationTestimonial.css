@@ -1,0 +1,150 @@
+.certificates-smooth-slider {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.smooth-slider-track {
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.smooth-slider-card {
+  min-width: 420px;
+  max-width: 420px;
+  background: #252526;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0006;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  transition: box-shadow 0.3s, transform 0.8s cubic-bezier(.4,2,.6,1);
+  padding-bottom: 1rem;
+}
+.vscode-theme-certificates {
+  background: transparent;
+  color: inherit;
+  padding: 2rem 0 1.5rem 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vscode-theme-certificates h2 {
+  color: #0BCEAF;
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: left;
+  background: linear-gradient(90deg, #0BCEAF 0%, #007acc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* text-fill-color: transparent; */
+  text-shadow: 0 2px 8px #0002;
+  font-family: inherit;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+}
+
+.testimonial {
+  font-style: italic;
+  margin-bottom: 2rem;
+  animation: fadeIn 1s ease;
+}
+
+
+.certificates-slider {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.slider-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  min-width: 320px;
+  max-width: 420px;
+  background: #252526;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0006;
+  opacity: 0;
+  transform: scale(0.98) translateY(20px);
+  transition: opacity 1s cubic-bezier(.4,2,.6,1), transform 1s cubic-bezier(.4,2,.6,1);
+  z-index: 1;
+  pointer-events: none;
+}
+.slider-card.active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  z-index: 2;
+  pointer-events: auto;
+  animation: fadeInSlider 1s cubic-bezier(.4,2,.6,1);
+}
+
+@keyframes fadeInSlider {
+  from { opacity: 0; transform: scale(0.98) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.certificate-card {
+  position: relative;
+}
+.certificate-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.certificate-description {
+  margin-top: 0.75rem;
+  color: #bdbdbd;
+  font-size: 1rem;
+  background: rgba(30,30,30,0.85);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 1px 4px #0003;
+  min-height: 60px;
+}
+
+.champion-badge {
+  display: block;
+  position: static;
+  margin: 1.2rem auto 0.5rem auto;
+  text-align: center;
+  background: #6d777d;
+  color: #fff;
+  padding: 0.3em 0.8em;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9em;
+  box-shadow: 0 2px 8px #0006;
+  animation: badgePop 0.6s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-40px);}
+  to { opacity: 1; transform: translateX(0);}
+}
+@keyframes badgePop {
+  0% { transform: scale(0);}
+  80% { transform: scale(1.2);}
+  100% { transform: scale(1);}
+}

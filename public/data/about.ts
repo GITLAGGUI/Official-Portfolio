@@ -9,16 +9,11 @@ export const aboutMe = {
 
 export const certifications = [
   {
-    title: "Innovate, Transform, Sustain: Shaping a Smarter World",
-    issuer: "St. Paul University Philippines (SPUP)",
-    date: "March 2025",
-    description: "Advanced certification in innovation, digital transformation, and sustainable technology solutions for creating smarter systems and environments.",
-  },
-  {
-    title: "Algorithm and Program Design",
-    issuer: "Huawei",
-    date: "February 2025",
-    description: "Comprehensive certification covering advanced algorithm design, programming methodologies, and software development best practices.",
+    title: "Certifications & Achievements",
+    issuer: "Various Institutions (SPUP, ISU, Huawei, RoboFusion, etc.)",
+    date: "2025",
+    description:
+      "Earning these certifications and recognitions has been a testament to my dedication to continuous learning, innovation, and collaboration in the field of Information Technology. From being a champion in the Data Analytics Challenge to actively participating in regional and international tech conventions, each experience has fueled my passion for problem-solving and excellence. These achievements reflect not just my skills, but also my commitment to advancing STEM education and making a positive impact in the tech community. (See certificates and Champion_Robotics.png for details)",
   },
 ];
 
