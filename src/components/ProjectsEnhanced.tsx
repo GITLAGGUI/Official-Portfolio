@@ -13,7 +13,6 @@ import {
   SimpleGrid,
   Image,
   Tooltip,
-  keyframes,
   useToast,
   Modal,
   ModalOverlay,
@@ -28,6 +27,7 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { useState } from "react";
 import { 
   FaGithub, 

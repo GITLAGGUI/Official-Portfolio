@@ -13,8 +13,9 @@ import {
   Heading,
   Badge,
   Tooltip,
-  keyframes,
+  Image,
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { 
   FaReact, 
   FaNodeJs, 
@@ -28,23 +29,17 @@ import {
   FaTools
 } from "react-icons/fa";
 import { 
-  SiTypescript, 
   SiNextdotjs, 
   SiMongodb, 
   SiPostgresql, 
   SiAmazonaws, 
   SiDocker,
   SiKubernetes,
-  SiPowerbi,
-  SiTableau,
   SiGit,
   SiVuedotjs,
-  SiAngular,
   SiFlutter,
   SiDjango,
-  SiFastapi,
-  SiRedis,
-  SiElasticsearch
+  SiFastapi
 } from "react-icons/si";
 
 const float = keyframes`
@@ -54,7 +49,8 @@ const float = keyframes`
 
 interface Skill {
   name: string;
-  icon: any;
+  icon?: any;
+  iconImage?: string;
   level: number;
   color: string;
   category: string;
@@ -84,11 +80,13 @@ const SkillsShowcase = ({
 
   const allSkills: Skill[] = [
     // Frontend
+    { name: "HTML", iconImage: "/assets/html.webp", level: 95, color: "#E34F26", category: "Frontend" },
+    { name: "CSS", iconImage: "/assets/css.webp", level: 90, color: "#1572B6", category: "Frontend" },
+    { name: "JavaScript", iconImage: "/assets/javascript.webp", level: 92, color: "#F7DF1E", category: "Frontend" },
+    { name: "TypeScript", iconImage: "/assets/typescript.webp", level: 88, color: "#3178C6", category: "Frontend" },
     { name: "React.js", icon: FaReact, level: 95, color: "#61DAFB", category: "Frontend" },
     { name: "Next.js", icon: SiNextdotjs, level: 92, color: "#000000", category: "Frontend" },
-    { name: "TypeScript", icon: SiTypescript, level: 88, color: "#3178C6", category: "Frontend" },
     { name: "Vue.js", icon: SiVuedotjs, level: 75, color: "#4FC08D", category: "Frontend" },
-    { name: "Angular", icon: SiAngular, level: 70, color: "#DD0031", category: "Frontend" },
     
     // Backend
     { name: "Node.js", icon: FaNodeJs, level: 90, color: "#339933", category: "Backend" },
@@ -96,26 +94,25 @@ const SkillsShowcase = ({
     { name: "Django", icon: SiDjango, level: 80, color: "#092E20", category: "Backend" },
     { name: "FastAPI", icon: SiFastapi, level: 78, color: "#009688", category: "Backend" },
     
-    // Database
-    { name: "MongoDB", icon: SiMongodb, level: 80, color: "#47A248", category: "Database" },
-    { name: "PostgreSQL", icon: SiPostgresql, level: 78, color: "#336791", category: "Database" },
-    { name: "Redis", icon: SiRedis, level: 72, color: "#DC382D", category: "Database" },
-    { name: "Elasticsearch", icon: SiElasticsearch, level: 68, color: "#005571", category: "Database" },
+    // Database & Data
+    { name: "JSON", iconImage: "/assets/json.webp", level: 85, color: "#FFCA28", category: "Database & Data" },
+    { name: "Power BI", iconImage: "/assets/powerBI.png", level: 88, color: "#F2C811", category: "Database & Data" },
+    { name: "MongoDB", icon: SiMongodb, level: 80, color: "#47A248", category: "Database & Data" },
+    { name: "PostgreSQL", icon: SiPostgresql, level: 78, color: "#336791", category: "Database & Data" },
+    { name: "Data Analysis", icon: FaChartBar, level: 90, color: "#FF6B6B", category: "Database & Data" },
+    
+    // Tools & Development
+    { name: "VS Code", iconImage: "/assets/vscode.webp", level: 95, color: "#007ACC", category: "Tools & Development" },
+    { name: "Git", icon: SiGit, level: 95, color: "#F05032", category: "Tools & Development" },
+    { name: "Docker", icon: SiDocker, level: 70, color: "#2496ED", category: "Tools & Development" },
     
     // Mobile
     { name: "React Native", icon: FaMobile, level: 82, color: "#61DAFB", category: "Mobile" },
     { name: "Flutter", icon: SiFlutter, level: 75, color: "#02569B", category: "Mobile" },
     
-    // Data & Analytics
-    { name: "Power BI", icon: SiPowerbi, level: 88, color: "#F2C811", category: "Data & Analytics" },
-    { name: "Tableau", icon: SiTableau, level: 82, color: "#E97627", category: "Data & Analytics" },
-    { name: "Data Analysis", icon: FaChartBar, level: 90, color: "#FF6B6B", category: "Data & Analytics" },
-    
     // DevOps & Cloud
     { name: "AWS", icon: SiAmazonaws, level: 75, color: "#FF9900", category: "DevOps & Cloud" },
-    { name: "Docker", icon: SiDocker, level: 70, color: "#2496ED", category: "DevOps & Cloud" },
     { name: "Kubernetes", icon: SiKubernetes, level: 65, color: "#326CE5", category: "DevOps & Cloud" },
-    { name: "Git", icon: SiGit, level: 95, color: "#F05032", category: "DevOps & Cloud" },
   ];
 
   const skills = maxItems ? allSkills.slice(0, maxItems) : allSkills;
@@ -146,7 +143,11 @@ const SkillsShowcase = ({
           <VStack spacing={3} align="stretch">
             <HStack justify="space-between">
               <HStack>
-                <Icon as={skill.icon} color={skill.color} size="20px" />
+                {skill.iconImage ? (
+                  <Image src={skill.iconImage} boxSize="20px" alt={skill.name} />
+                ) : (
+                  <Icon as={skill.icon} color={skill.color} size="20px" />
+                )}
                 <Text fontSize="sm" fontWeight="medium" color={textColor}>
                   {skill.name}
                 </Text>
@@ -165,13 +166,21 @@ const SkillsShowcase = ({
           </VStack>
         ) : variant === 'compact' ? (
           <HStack spacing={2}>
-            <Icon as={skill.icon} color={skill.color} size="16px" />
+            {skill.iconImage ? (
+              <Image src={skill.iconImage} boxSize="16px" alt={skill.name} />
+            ) : (
+              <Icon as={skill.icon} color={skill.color} size="16px" />
+            )}
             <Text fontSize="xs" color={textColor}>{skill.name}</Text>
             <Text fontSize="xs" color={accentColor}>{skill.level}%</Text>
           </HStack>
         ) : (
           <VStack spacing={2}>
-            <Icon as={skill.icon} color={skill.color} size="24px" />
+            {skill.iconImage ? (
+              <Image src={skill.iconImage} boxSize="24px" alt={skill.name} />
+            ) : (
+              <Icon as={skill.icon} color={skill.color} size="24px" />
+            )}
             <Text fontSize="sm" fontWeight="medium" color={textColor} textAlign="center">
               {skill.name}
             </Text>
@@ -197,7 +206,7 @@ const SkillsShowcase = ({
 
   if (variant === 'compact') {
     return (
-      <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={2}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
         {skills.map((skill, index) => renderSkillItem(skill, index))}
       </SimpleGrid>
     );
@@ -205,14 +214,14 @@ const SkillsShowcase = ({
 
   if (!showCategories) {
     return (
-      <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={4}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
         {skills.map((skill, index) => renderSkillItem(skill, index))}
       </SimpleGrid>
     );
   }
 
   return (
-    <VStack spacing={8} align="stretch">
+    <VStack spacing={{ base: 4, md: 8 }} align="stretch" w="100%">
       {categories.map((category, categoryIndex) => (
         <Card
           key={category}
@@ -222,23 +231,25 @@ const SkillsShowcase = ({
           boxShadow="xl"
           backdropFilter="blur(10px)"
           animation={`${float} ${2 + categoryIndex * 0.3}s ease-in-out infinite`}
+          w="100%"
         >
           <CardHeader pb={2}>
-            <Heading size="sm" color={textColor} display="flex" alignItems="center">
+            <Heading size="sm" color={textColor} display="flex" alignItems="center" flexWrap="wrap">
               <Icon 
                 as={
                   category === 'Frontend' ? FaCode :
                   category === 'Backend' ? FaServer :
-                  category === 'Database' ? FaDatabase :
+                  category === 'Database & Data' ? FaDatabase :
                   category === 'Mobile' ? FaMobile :
                   category === 'Data & Analytics' ? FaChartBar :
                   category === 'DevOps & Cloud' ? FaCloud :
+                  category === 'Tools & Development' ? FaTools :
                   FaTools
                 } 
                 mr={2} 
                 color={accentColor} 
               />
-              {category}
+              <Text fontSize={{ base: "sm", md: "md" }}>{category}</Text>
               <Badge ml={2} colorScheme="teal" size="sm">
                 {getSkillsByCategory(category).length}
               </Badge>
@@ -247,11 +258,14 @@ const SkillsShowcase = ({
           <CardBody pt={0}>
             <SimpleGrid 
               columns={{ 
-                base: variant === 'detailed' ? 1 : 2, 
+                base: 1, 
+                sm: variant === 'detailed' ? 1 : 2, 
                 md: variant === 'detailed' ? 2 : 3, 
-                lg: variant === 'detailed' ? 3 : 4 
+                lg: variant === 'detailed' ? 3 : 4,
+                xl: variant === 'detailed' ? 4 : 5 
               }} 
-              spacing={4}
+              spacing={{ base: 2, md: 4 }}
+              w="100%"
             >
               {getSkillsByCategory(category).map((skill, index) => 
                 renderSkillItem(skill, index)

@@ -2,23 +2,27 @@ import { Box } from "@chakra-ui/react";
 
 interface Props {
   label: string;
-  borderColor: string;
+  borderColor?: string; // Made optional since we're not using it
   textColor?: string;
 }
 
-const ProjectTech = ({ label, borderColor, textColor = "white" }: Props) => {
+const ProjectTech = ({ label, textColor = "white" }: Props) => {
   return (
     <Box
-      borderTopLeftRadius="20px"
-      borderBottomLeftRadius="20px"
-      borderTopRightRadius="20px"
-      borderBottomRightRadius="20px"
+      borderRadius="full"
       color={textColor}
-      borderColor={borderColor}
-      borderWidth="1px"
-      padding="2px"
-      paddingX={2}
-      fontSize="sm"
+      bg="rgba(255, 255, 255, 0.1)"
+      border="none"
+      px={{ base: 2, md: 3 }}
+      py={{ base: 1, md: 2 }}
+      fontSize={{ base: "xs", md: "sm" }}
+      fontWeight="medium"
+      backdropFilter="blur(10px)"
+      transition="all 0.2s ease"
+      _hover={{
+        bg: "rgba(255, 255, 255, 0.2)",
+        transform: "translateY(-1px)"
+      }}
     >
       {label}
     </Box>

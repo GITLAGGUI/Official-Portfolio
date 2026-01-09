@@ -4,6 +4,24 @@ import "./CertificationTestimonial.css";
 
 const certificates = [
   {
+    src: "/assets/DICT_StartupChallenge_Certificate.png",
+    alt: "DICT StartUp Challenge",
+    badge: "StartUp",
+    description: "Philippine Startup Challenge X 2025 - Certificate of Appreciation. Presented to Team Kaagapay for valuable participation in the Regional Pitching Competition organized by the Department of Information and Communications Technology (DICT) Region 2 under ICT Industry Development Bureau (IIDB)."
+  },
+  {
+    src: "/assets/CybersecurityAward.png",
+    alt: "Cybersecurity Award",
+    badge: "3rd Place",
+    description: "TRON 2026 Cyber Defense Exercise Qualifiers - Certificate of Recognition. Awarded to Isabela State University - Cabagan Campus (Team ISUC-CompSci) for emerging as the 3rd Place School in the cyber defense exercise, demonstrating outstanding performance and excellence in simulated cyber operations."
+  },
+  {
+    src: "/assets/CyberSecurityCertification.png",
+    alt: "Cybersecurity Certification",
+    badge: "Team Leader",
+    description: "TRON 2026 Cyber Defense Exercise - Certificate of Participation. Presented to Joel L. Laggui Jr. for actively participating as Team Leader of the Cyber Team representing Isabela State University, Cabagan Campus. Demonstrated dedication, teamwork, and technical excellence in simulated cyber operations."
+  },
+  {
     src: "/assets/Champion_Robotics.png",
     alt: "Champion Robotics",
     badge: "Champion",
@@ -61,7 +79,7 @@ export default function CertificationTestimonial() {
     <section className="vscode-theme-certificates">
       <h2>Certifications & Achievements</h2>
       <p className="testimonial">
-        "Earning these certifications and recognitions has been a testament to my dedication to continuous learning, innovation, and collaboration in the field of Information Technology. From being a champion in the Data Analytics Challenge to actively participating in regional and international tech conventions, each experience has fueled my passion for problem-solving and excellence. These achievements reflect not just my skills, but also my commitment to advancing STEM education and making a positive impact in the tech community."
+        "These certifications and achievements represent my journey as a Full Stack Developer and technology enthusiast. From leading cybersecurity teams in national competitions to building innovative startup solutions, each experience has shaped my skills in web development, mobile apps, and software engineering. These recognitions reflect my commitment to continuous learning, collaboration, and making a meaningful impact in the tech community."
       </p>
       <div className="certificates-smooth-slider" ref={containerRef} style={{ overflow: 'hidden', width: '100%' }}>
         <div

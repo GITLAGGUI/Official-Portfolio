@@ -10,6 +10,7 @@ import {
 
 import NightOwl from "/assets/nightowl.webp";
 import VSCode from "/assets/vscode.webp";
+import DraculaIcon from "/assets/dracula.svg";
 
 const themes = [
   {
@@ -23,6 +24,12 @@ const themes = [
     name: "Night Owl",
     image: NightOwl,
     description: "Vibrant and readable theme.",
+  },
+  {
+    key: "dracula",
+    name: "Dracula Soft",
+    image: DraculaIcon,
+    description: "Gothic elegance meets coding.",
   },
 ];
 
@@ -40,10 +47,10 @@ const ThemeSwitcher = () => {
 
   return (
     <SimpleGrid
-      columns={{ base: 1, md: 2 }}
-      spacing={8}
+      columns={{ base: 1, md: 2, lg: 3 }}
+      spacing={6}
       width="100%"
-      maxW="700px"
+      maxW="900px"
       mx="auto"
     >
       {themes.map((theme) => {

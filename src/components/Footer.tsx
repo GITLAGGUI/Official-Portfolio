@@ -7,8 +7,8 @@ import {
   VscCheck,
   VscBell,
 } from "react-icons/vsc";
+import { VscGithubInverted } from "react-icons/vsc";
 import FooterButton from "./FooterButton";
-import ChatBotFooterButton from "./ChatBotFooterButton";
 
 const Footer = () => {
   return (
@@ -30,7 +30,12 @@ const Footer = () => {
             Content="JavaScript JSX"
             TooltipLabel=""
           />
-          <ChatBotFooterButton />
+          <FooterButton 
+            Icon={VscGithubInverted} 
+            Content="GitHub" 
+            TooltipLabel="Visit GitHub Profile"
+            onClick={() => window.open('https://github.com/GITLAGGUI', '_blank')}
+          />
           <FooterButton Icon={VscCheck} Content="Prettier" TooltipLabel="" />
           <FooterButton Icon={VscBell} Content="" TooltipLabel="" />
         </Box>

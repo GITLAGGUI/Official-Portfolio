@@ -3,12 +3,12 @@ import { HStack, IconButton } from "@chakra-ui/react";
 const ToolBarRight = () => {
   const customStyle = { width: "10px", height: "10px", padding: "8px" };
   return (
-    <HStack>
+    <HStack flexShrink={0} mr={2} spacing={1}>
       <IconButton
         isRound={true}
         variant="solid"
         colorScheme="yellow"
-        aria-label="Done"
+        aria-label="Minimize"
         size="xsm"
         style={customStyle}
       />
@@ -16,7 +16,7 @@ const ToolBarRight = () => {
         isRound={true}
         variant="solid"
         colorScheme="green"
-        aria-label="Done"
+        aria-label="Maximize"
         size="xsm"
         style={customStyle}
       />
@@ -24,7 +24,7 @@ const ToolBarRight = () => {
         isRound={true}
         variant="solid"
         colorScheme="red"
-        aria-label="Done"
+        aria-label="Close"
         size="xsm"
         style={customStyle}
       />

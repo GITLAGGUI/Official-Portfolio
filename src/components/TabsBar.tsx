@@ -27,7 +27,25 @@ const TabsBar = ({ selectedTab, onSelectTab }: Props) => {
     { Label: "theme.css", Icon: CSSImage, boxSize: "15px", Link: "/theme" },
   ];
   return (
-    <HStack bg={backgroundColor} gap={0} overflowX="auto">
+    <HStack 
+      bg={backgroundColor} 
+      gap={0} 
+      overflowX="auto" 
+      overflowY="hidden"
+      w="100%"
+      sx={{
+        "&::-webkit-scrollbar": {
+          height: "2px",
+        },
+        "&::-webkit-scrollbar-track": {
+          bg: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          bg: "gray.400",
+          borderRadius: "full",
+        },
+      }}
+    >
       {tabs.map((tab) => (
         <TabsBarItem
           key={tab.Label}

@@ -11,9 +11,10 @@ interface Props {
   Icon: IconType;
   Content: string;
   TooltipLabel: string;
+  onClick?: () => void;
 }
 
-const FooterButton = ({ Icon, Content, TooltipLabel }: Props) => {
+const FooterButton = ({ Icon, Content, TooltipLabel, onClick }: Props) => {
   // Responsive sizes
   const iconFontSize = useBreakpointValue({
     base: "10px",
@@ -40,6 +41,7 @@ const FooterButton = ({ Icon, Content, TooltipLabel }: Props) => {
         bg: buttonHoverBg,
       }}
       transition="background-color 0.2s ease"
+      onClick={onClick}
     >
       <Icon fontSize={iconFontSize} color={iconColor} />
       <Text fontSize={textFontSize} marginLeft="4px" color={textColor}>

@@ -1,75 +1,86 @@
 export const aboutMe = {
   description: [
-    "A Full-Stack Developer (Web & Mobile) and Data Analyst with expertise in modern web technologies and data analysis. Passionate about creating scalable applications and extracting meaningful insights from data to drive business decisions.",
-    "Experienced in both frontend and backend development, mobile application development, and data analysis. Skilled in building responsive web applications, mobile apps, and implementing data visualization solutions.",
+    "A passionate Full Stack Developer with expertise in building modern web and mobile applications from concept to deployment. Experienced in crafting responsive, user-centric interfaces and robust backend systems using React, TypeScript, PHP, Python, and Flutter.",
+    "Proven track record in developing end-to-end solutions including e-commerce platforms, mobile apps, and enterprise systems. Skilled in database design, API development, and cloud deployment. Committed to writing clean, maintainable code and delivering exceptional digital experiences.",
   ],
-  cvPath: "/assets/New Resume.pdf", // Updated to use new resume file
-  cvFileNameAfterDownload: "Joel Laggui Jr New Resume.pdf", // This is what the name of the file is going to be when downloaded
+  cvPath: "/assets/New Resume.pdf",
+  cvFileNameAfterDownload: "Joel Laggui Jr New Resume.pdf",
 };
 
 export const certifications = [
   {
     title: "Certifications & Achievements",
-    issuer: "Various Institutions (SPUP, ISU, Huawei, RoboFusion, etc.)",
-    date: "2025",
+    issuer:
+      "Various Institutions (DICT, Philippine Army, SPUP, ISU, Huawei, RoboFusion, etc.)",
+    date: "2025-2026",
     description:
-      "Earning these certifications and recognitions has been a testament to my dedication to continuous learning, innovation, and collaboration in the field of Information Technology. From being a champion in the Data Analytics Challenge to actively participating in regional and international tech conventions, each experience has fueled my passion for problem-solving and excellence. These achievements reflect not just my skills, but also my commitment to advancing STEM education and making a positive impact in the tech community. (See certificates and Champion_Robotics.png for details)",
+      "Earning these certifications and recognitions has been a testament to my dedication to continuous learning, innovation, and collaboration in the field of Information Technology. From participating in national startup competitions to leading cybersecurity teams, each experience has fueled my passion for problem-solving and excellence. These achievements reflect not just my skills, but also my commitment to advancing technology and making a positive impact in the tech community.",
   },
 ];
 
 export const technicalSkills: Record<string, string[]> = {
-  // You can rename the type of skills, it's dynamically rendered. eg: You can change "Programming Languages" -> to just "Languages"
-  "Programming Languages": ["JavaScript", "TypeScript", "Python", "Java", "C#"],
   "Frontend Development": [
-    "React",
-    "Next.js",
-    "Vue.js",
-    "HTML5",
-    "CSS3",
-    "Bootstrap",
-    "Tailwind CSS",
-    "Chakra UI",
-    "Redux",
+    "React.js & Next.js",
+    "TypeScript & JavaScript (ES6+)",
+    "HTML5 & CSS3",
+    "Chakra UI & Tailwind CSS",
+    "Responsive Web Design",
+    "Framer Motion Animations",
   ],
   "Backend Development": [
-    "Node.js",
-    "Express.js",
-    "Python (Django/Flask)",
-    "MongoDB",
-    "MySQL",
-    "PostgreSQL",
-    "REST APIs",
+    "PHP & Laravel",
+    "Python (Flask, FastAPI)",
+    "Node.js & Express",
+    "RESTful API Design",
+    "Authentication & Authorization",
+    "Server-Side Rendering",
   ],
   "Mobile Development": [
-    "React Native",
-    "Flutter",
-    "Expo",
+    "Flutter & Dart",
+    "Cross-Platform Development",
     "Android Development",
     "iOS Development",
+    "Mobile UI/UX Design",
+    "Firebase Integration",
   ],
-  "Data Analysis": [
-    "Python (Pandas, NumPy)",
-    "SQL",
-    "Power BI",
-    "Tableau",
-    "Excel",
-    "Data Visualization",
+  "Database & Cloud": [
+    "MySQL & PostgreSQL",
+    "MongoDB & Firebase",
+    "Supabase",
+    "AWS (S3, EC2)",
+    "Vercel & Netlify",
+    "Database Design & Optimization",
   ],
-  "Tools & Technologies": [
-    "Git",
-    "GitHub",
+  "Programming Languages": [
+    "TypeScript",
+    "JavaScript",
+    "Python",
+    "PHP",
+    "Dart",
+    "C++ (Arduino)",
+  ],
+  "Tools & DevOps": [
+    "Git & GitHub",
+    "VS Code",
     "Docker",
-    "AWS",
-    "Firebase",
-    "Agile (Scrum, Kanban)",
-    "Algorithm Design",
-    "System Architecture",
+    "Vite & Webpack",
+    "npm & Yarn",
+    "Agile Methodology",
   ],
-  "Soft Skills": [
+  "Data & Analytics": [
+    "Power BI",
+    "Python (Pandas, NumPy)",
+    "Data Visualization",
+    "SQL Queries",
+    "Statistical Analysis",
+    "Dashboard Development",
+  ],
+  "Other Skills": [
+    "UI/UX Design Principles",
+    "API Integration",
+    "Version Control",
     "Problem Solving",
-    "Communication",
     "Team Collaboration",
-    "Project Management",
-    "Analytical Thinking",
+    "Technical Documentation",
   ],
 };

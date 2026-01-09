@@ -2,7 +2,6 @@ import { Box, VStack } from "@chakra-ui/react";
 import {
   VscFiles,
   VscDebugAlt,
-  //VscGithub,
   VscAccount,
   VscSettingsGear,
   VscMail,
@@ -13,9 +12,10 @@ import AIAssistantToggle from "./AIAssistantToggle";
 interface Props {
   selectedPage: string;
   onSelectPage: (page: string) => void;
+  onDrawerClose?: () => void;
 }
 
-const ActivityBar = ({ selectedPage, onSelectPage }: Props) => {
+const MobileActivityBar = ({ selectedPage, onSelectPage, onDrawerClose }: Props) => {
   const topAreaPages = [
     { Label: "Home", Icon: VscFiles, Navigate: "home.js", Link: "/" },
     {
@@ -24,13 +24,6 @@ const ActivityBar = ({ selectedPage, onSelectPage }: Props) => {
       Navigate: "projects.json",
       Link: "/projects",
     },
-    // {
-    //   Label: "GitHub",
-    //   Icon: VscGithub,
-    //   Navigate: "github.css",
-    //   Link: "/github",
-    // },
-
     {
       Label: "Contact me",
       Icon: VscMail,
@@ -39,8 +32,23 @@ const ActivityBar = ({ selectedPage, onSelectPage }: Props) => {
     },
   ];
 
+  const bottomAreaPages = [
+    {
+      Label: "About",
+      Icon: VscAccount,
+      Navigate: "about.html",
+      Link: "/about",
+    },
+    {
+      Label: "Change Theme",
+      Icon: VscSettingsGear,
+      Navigate: "theme.css",
+      Link: "/theme",
+    },
+  ];
+
   return (
-    <VStack height="inherit" justify="space-between" width={"100%"}>
+    <VStack height="inherit" justify="space-between" width={"100%"} spacing={4}>
       <Box width={"100%"}>
         {topAreaPages.map((page) => (
           <ActivityBarIcon
@@ -53,28 +61,28 @@ const ActivityBar = ({ selectedPage, onSelectPage }: Props) => {
             key={page.Label}
           />
         ))}
-        <AIAssistantToggle />
       </Box>
+      
+      {/* AI Assistant - separate section for mobile */}
+      <Box width={"100%"} py={2}>
+        <AIAssistantToggle onPanelOpen={onDrawerClose} />
+      </Box>
+      
       <Box marginBottom={2} width={"100%"}>
-        <ActivityBarIcon
-          Label="About"
-          Image={VscAccount}
-          Navigate="about.html"
-          Link="/about"
-          selectedPage={selectedPage}
-          onSelectPage={onSelectPage}
-        />
-        <ActivityBarIcon
-          Label="Change Theme"
-          Image={VscSettingsGear}
-          Navigate="theme.css"
-          Link="/theme"
-          selectedPage={selectedPage}
-          onSelectPage={onSelectPage}
-        />
+        {bottomAreaPages.map((page) => (
+          <ActivityBarIcon
+            Label={page.Label}
+            Image={page.Icon}
+            Navigate={page.Navigate}
+            Link={page.Link}
+            selectedPage={selectedPage}
+            onSelectPage={onSelectPage}
+            key={page.Label}
+          />
+        ))}
       </Box>
     </VStack>
   );
 };
 
-export default ActivityBar;
+export default MobileActivityBar;

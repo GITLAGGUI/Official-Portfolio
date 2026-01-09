@@ -4,9 +4,9 @@ import {
   VStack,
   Flex,
   Box,
-  keyframes,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { useEffect } from "react";
 import HomeItem from "../components/HomeItem";
 import { homeData } from "../../public/data/home";

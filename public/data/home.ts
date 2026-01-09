@@ -11,7 +11,7 @@ export const homeData = {
   // To use your own photo, just place it in /public/assets and write the link as I did: eg: /assets/my_image.jpg
   // Of course it's best to convert your image file type to webp for better performance on the web!
   // The links are optional
-  myImage: "/assets/Me.jpg",
+  myImage: "/assets/web-Logo.png",
   contactInfo: [
     {
       Icon: IoMdMail,
@@ -42,7 +42,7 @@ export const homeData = {
     },
     {
       Icon: FaGraduationCap,
-      Label: "Computer Science/IT Degree",
+      Label: "Bachelor of Science in Computer Science",
       Link: "#",
     },
   ],
@@ -55,7 +55,7 @@ export const homeData = {
     {
       Icon: FaLinkedin,
       Label: "LinkedIn",
-      Link: "https://www.linkedin.com/in/joel-laggui-801104369/",
+      Link: "https://www.linkedin.com/in/joellagguijr-dev/",
     },
     {
       Icon: FaFacebook,

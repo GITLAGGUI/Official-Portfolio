@@ -40,24 +40,73 @@ const theme = extendTheme({
       activityBar: "#333333", // VS Code activity bar
       statusBar: "#007ACC", // VS Code status bar
     },
+    dracula: {
+      bg: "#1A1A2E", // Deep purple-tinted background
+      currentLine: "#2D2B55", // Rich purple line highlight
+      foreground: "#EEFFFF", // Bright foreground
+      comment: "#8B8EAC", // Muted purple comment
+      cyan: "#89DDFF", // Bright cyan
+      green: "#C3E88D", // Lime green
+      orange: "#FFCB6B", // Golden orange
+      pink: "#FF80AB", // Hot pink
+      purple: "#C792EA", // Vibrant purple
+      red: "#FF5370", // Coral red
+      yellow: "#FFEB95", // Warm yellow
+      accent: "#FF79C6", // Magenta accent
+    },
+    draculaSoft: {
+      bg: "#16162A", // Deep space purple background
+      currentLine: "#252545", // Subtle purple highlight
+      foreground: "#E4E4FC", // Soft lavender white
+      comment: "#6E6E9C", // Muted purple comment
+      cyan: "#7DCFFF", // Electric cyan
+      green: "#9ECE6A", // Fresh green
+      orange: "#E0AF68", // Sunset orange
+      pink: "#F778BA", // Neon pink
+      purple: "#BB9AF7", // Lavender purple
+      red: "#F7768E", // Rose red
+      yellow: "#E0C080", // Soft gold
+      accent: "#9D6DD3", // Deep violet accent
+      sidebar: "#1E1E3F", // Purple-tinted sidebar
+      statusBar: "#663399", // Rebecca purple status bar
+    },
   },
   styles: {
     global: (props: any) => ({
       body: {
-        // Default VS Code dark theme colors
-        bg: props.colorMode === "dark" ? "gray.800" : "nightOwl.bg",
-        color: props.colorMode === "dark" ? "whiteAlpha.900" : "nightOwl.text",
+        // Theme-specific colors based on color mode
+        bg: props.colorMode === "dark" 
+          ? "gray.800" 
+          : props.colorMode === "dracula" 
+          ? "draculaSoft.bg" 
+          : "nightOwl.bg",
+        color: props.colorMode === "dark" 
+          ? "whiteAlpha.900" 
+          : props.colorMode === "dracula" 
+          ? "draculaSoft.foreground" 
+          : "nightOwl.text",
 
         // Classes for specific components
         "&.explorer": {
-          bg: props.colorMode === "dark" ? "gray.900" : "#0D293E",
+          bg: props.colorMode === "dark" 
+            ? "gray.900" 
+            : props.colorMode === "dracula" 
+            ? "draculaSoft.currentLine" 
+            : "#0D293E",
         },
         "&.status-bar": {
-          bg:
-            props.colorMode === "dark" ? "vscode.statusBar" : "nightOwl.accent",
+          bg: props.colorMode === "dark"
+            ? "vscode.statusBar" 
+            : props.colorMode === "dracula" 
+            ? "draculaSoft.purple" 
+            : "nightOwl.accent",
         },
         "&.activity-bar": {
-          bg: props.colorMode === "dark" ? "vscode.activityBar" : "#0D293E",
+          bg: props.colorMode === "dark" 
+            ? "vscode.activityBar" 
+            : props.colorMode === "dracula" 
+            ? "draculaSoft.currentLine" 
+            : "#0D293E",
         },
       },
     }),
@@ -74,6 +123,20 @@ const theme = extendTheme({
           bg: "nightOwl.accent",
           _hover: { bg: "purple.600" },
         },
+        "dracula": {
+          bg: "dracula.purple",
+          color: "dracula.foreground",
+          _hover: { bg: "dracula.pink" },
+        },
+        "dracula-soft": {
+          bg: "draculaSoft.purple",
+          color: "draculaSoft.foreground",
+          _hover: { 
+            bg: "draculaSoft.pink",
+            transform: "translateY(-2px)",
+            boxShadow: "lg"
+          },
+        },
       },
     },
   },
@@ -82,18 +145,22 @@ const theme = extendTheme({
       "chakra-body-text": {
         default: "nightOwl.text",
         _dark: "whiteAlpha.900",
+        _dracula: "draculaSoft.foreground",
       },
       "chakra-body-bg": {
         default: "nightOwl.bg",
         _dark: "gray.800",
+        _dracula: "draculaSoft.bg",
       },
       "panel-bg": {
         default: "#0D293E", // Night Owl panel
         _dark: "gray.900", // VS Code panel
+        _dracula: "draculaSoft.currentLine", // Dracula panel
       },
       "sidebar-bg": {
         default: "#0D293E", // Night Owl sidebar
         _dark: "gray.700", // VS Code sidebar
+        _dracula: "draculaSoft.currentLine", // Dracula sidebar
       },
     },
   },

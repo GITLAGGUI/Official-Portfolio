@@ -1,65 +1,34 @@
 import {
-  Image,
   Text,
   VStack,
-  Flex,
   Box,
-  keyframes,
-  useColorModeValue,
-  Badge,
+  useColorMode,
   HStack,
-  SimpleGrid,
+  Link,
   Icon,
-  Progress,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
+  Heading,
   Grid,
   GridItem,
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-// Firebase imports
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, runTransaction, onValue } from "firebase/database";
 import { 
-  FaReact, 
-  FaNodeJs, 
-  FaPython, 
-  FaMobile, 
-  FaChartBar,
-  FaAward,
-  FaCode,
-  FaBrain,
-  FaGraduationCap,
-  FaRocket,
-  FaUsers,
-  FaProjectDiagram
+  FaGithub, 
+  FaLinkedin, 
+  FaFacebook, 
+  FaInstagram,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
-import { SiTypescript, SiNextdotjs, SiMongodb, SiPostgresql, SiAmazonaws, SiDocker, SiPowerbi } from "react-icons/si";
-import HomeItem from "../components/HomeItem";
-import { homeData } from "../../public/data/home";
-
-// Firebase configuration using environment variables
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+import { 
+  VscFiles, 
+  VscAccount, 
+  VscMail, 
+  VscDebugAlt,
+  VscSettingsGear,
+  VscFolderOpened,
+} from "react-icons/vsc";
+import { keyframes } from "@emotion/react";
+import { useEffect } from "react";
 
 interface Props {
   setPage: (page: string) => void;
@@ -70,395 +39,313 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const float = keyframes`
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-`;
-
-const pulse = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-`;
-
 const HomeEnhanced = ({ setPage }: Props) => {
-  const [visitorCount, setVisitorCount] = useState(0);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     setPage("home.js");
-    // Firebase visitor counter logic
-    const visitorsRef = ref(db, "portfolioVisitors/count");
+    // Scroll to top when home page loads to fix scroll position bug
+    window.scrollTo(0, 0);
+  }, [setPage]);
 
-    // Increment visitor count atomically
-    runTransaction(visitorsRef, (currentCount) => {
-      if (currentCount === null || typeof currentCount !== "number") {
-        return 1;
-      }
-      return currentCount + 1;
-    });
-
-    // Listen for real-time updates
-    const unsubscribe = onValue(visitorsRef, (snapshot) => {
-      const count = snapshot.val();
-      setVisitorCount(typeof count === "number" ? count : 0);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  const accentColor = useColorModeValue("syntax.keyword", "#0BCEAF");
-  const textColor = useColorModeValue("nightOwl.text", "whiteAlpha.900");
-  const headingColor = useColorModeValue("nightOwl.text", "whiteAlpha.900");
-  const cardBg = useColorModeValue(
-    "rgba(1, 22, 39, 0.7)",
-    "rgba(31, 36, 40, 0.7)"
-  );
-  const cardBorderColor = useColorModeValue(
-    "rgba(126, 87, 194, 0.2)",
-    "rgba(11, 206, 175, 0.2)"
-  );
-  const statsBg = useColorModeValue(
-    "rgba(1, 22, 39, 0.5)",
-    "rgba(31, 36, 40, 0.5)"
-  );
-
-  // Skills data with proficiency levels
-  const skills = [
-    { name: "React.js", icon: FaReact, level: 95, color: "#61DAFB" },
-    { name: "Node.js", icon: FaNodeJs, level: 90, color: "#339933" },
-    { name: "TypeScript", icon: SiTypescript, level: 88, color: "#3178C6" },
-    { name: "Python", icon: FaPython, level: 85, color: "#3776AB" },
-    { name: "Next.js", icon: SiNextdotjs, level: 92, color: "#000000" },
-    { name: "MongoDB", icon: SiMongodb, level: 80, color: "#47A248" },
-    { name: "PostgreSQL", icon: SiPostgresql, level: 78, color: "#336791" },
-    { name: "AWS", icon: SiAmazonaws, level: 75, color: "#FF9900" },
-    { name: "Docker", icon: SiDocker, level: 70, color: "#2496ED" },
-    { name: "Power BI", icon: SiPowerbi, level: 88, color: "#F2C811" },
-    { name: "React Native", icon: FaMobile, level: 82, color: "#61DAFB" },
-    { name: "Data Analysis", icon: FaChartBar, level: 90, color: "#FF6B6B" },
-  ];
-
-  // Recent achievements
-  const achievements = [
-    {
-      title: "SPUP Innovation Certificate",
-      date: "March 2025",
-      icon: FaAward,
-      color: "gold"
-    },
-    {
-      title: "Huawei Algorithm Certificate",
-      date: "February 2025",
-      icon: FaBrain,
-      color: "blue.400"
-    },
-    {
-      title: "10K+ App Downloads",
-      date: "Eskwelahan.ph",
-      icon: FaMobile,
-      color: "green.400"
-    },
-    {
-      title: "Enterprise Dashboard",
-      date: "Power BI Project",
-      icon: FaChartBar,
-      color: "purple.400"
+  // Dynamic theme colors based on current color mode
+  const getThemeColors = () => {
+    if ((colorMode as string) === 'dracula') {
+      return {
+        accentColor: "#BD93F9",
+        textColor: "#F8F8F2",
+        secondaryText: "#6272A4",
+        headingColor: "#FF79C6",
+        linkColor: "#8BE9FD",
+        badgeBg: "#FF79C6",
+      };
+    } else if (colorMode === 'light') {
+      return {
+        accentColor: "#C792EA",
+        textColor: "#D6DEEB",
+        secondaryText: "#7E8B99",
+        headingColor: "#82AAFF",
+        linkColor: "#82AAFF",
+        badgeBg: "#ADDB67",
+      };
+    } else {
+      return {
+        accentColor: "#007ACC",
+        textColor: "#CCCCCC",
+        secondaryText: "#808080",
+        headingColor: "#569CD6",
+        linkColor: "#3794FF",
+        badgeBg: "#0E639C",
+      };
     }
+  };
+
+  const { accentColor, textColor, secondaryText, linkColor, badgeBg } = getThemeColors();
+
+  // Navigation items like VSCode Welcome
+  const startItems = [
+    { icon: VscFiles, label: "View Projects", link: "/projects" },
+    { icon: VscAccount, label: "About Me", link: "/about" },
+    { icon: VscMail, label: "Contact", link: "/contact" },
+    { icon: VscSettingsGear, label: "Change Theme", link: "/theme" },
   ];
 
-  // Portfolio stats
-  const portfolioStats = [
-    { label: "Projects Completed", value: 25, change: 12, icon: FaProjectDiagram },
-    { label: "Happy Clients", value: 18, change: 8, icon: FaUsers },
-    { label: "Technologies Mastered", value: 15, change: 3, icon: FaCode },
-    { label: "Years Experience", value: 3, change: 0, icon: FaGraduationCap }
+  // Recent/Featured projects
+  const recentItems = [
+    { name: "ISU Lost & Found System", path: "Web Application • PHP, MySQL" },
+    { name: "TopShoppe E-commerce", path: "Full Stack • React, Node.js" },
+    { name: "PinoyAI CLI", path: "CLI Tool • Python, OpenAI" },
+    { name: "Pest Sentinel App", path: "Mobile • Flutter, Firebase" },
   ];
 
-  const renderSection = (items: typeof homeData.contactInfo) => (
-    <Card
-      bg={cardBg}
-      border="1px solid"
-      borderColor={cardBorderColor}
-      boxShadow="xl"
-      width="100%"
-      transition="all 0.3s"
-      backdropFilter="blur(10px)"
-      _hover={{ transform: "translateY(-2px)", boxShadow: "2xl" }}
-    >
-      <CardBody p={6}>
-        <VStack spacing={4} align="stretch">
-          {items.map((item, index) => (
-            <HomeItem key={index} {...item} />
-          ))}
-        </VStack>
-      </CardBody>
-    </Card>
-  );
-
-  const renderSkillsGrid = () => (
-    <Card
-      bg={cardBg}
-      border="1px solid"
-      borderColor={cardBorderColor}
-      boxShadow="xl"
-      backdropFilter="blur(10px)"
-    >
-      <CardHeader>
-        <Heading size="md" color={headingColor} display="flex" alignItems="center">
-          <Icon as={FaCode} mr={2} color={accentColor} />
-          Technical Skills
-        </Heading>
-      </CardHeader>
-      <CardBody>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-          {skills.map((skill, index) => (
-            <Box key={index}>
-              <HStack justify="space-between" mb={2}>
-                <HStack>
-                  <Icon as={skill.icon} color={skill.color} />
-                  <Text fontSize="sm" color={textColor}>{skill.name}</Text>
-                </HStack>
-                <Text fontSize="xs" color={accentColor}>{skill.level}%</Text>
-              </HStack>
-              <Progress 
-                value={skill.level} 
-                size="sm" 
-                colorScheme="teal"
-                bg="whiteAlpha.200"
-                borderRadius="full"
-              />
-            </Box>
-          ))}
-        </SimpleGrid>
-      </CardBody>
-    </Card>
-  );
-
-  const renderAchievements = () => (
-    <Card
-      bg={cardBg}
-      border="1px solid"
-      borderColor={cardBorderColor}
-      boxShadow="xl"
-      backdropFilter="blur(10px)"
-    >
-      <CardHeader>
-        <Heading size="md" color={headingColor} display="flex" alignItems="center">
-          <Icon as={FaAward} mr={2} color={accentColor} />
-          Recent Achievements
-        </Heading>
-      </CardHeader>
-      <CardBody>
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-          {achievements.map((achievement, index) => (
-            <Box
-              key={index}
-              p={4}
-              borderRadius="lg"
-              bg="whiteAlpha.50"
-              border="1px solid"
-              borderColor="whiteAlpha.200"
-              transition="all 0.3s"
-              _hover={{ bg: "whiteAlpha.100", transform: "translateY(-2px)" }}
-            >
-              <HStack spacing={3}>
-                <Icon as={achievement.icon} color={achievement.color} size="20px" />
-                <VStack align="start" spacing={1}>
-                  <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                    {achievement.title}
-                  </Text>
-                  <Text fontSize="xs" color="whiteAlpha.700">
-                    {achievement.date}
-                  </Text>
-                </VStack>
-              </HStack>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </CardBody>
-    </Card>
-  );
-
-  const renderPortfolioStats = () => (
-    <Card
-      bg={cardBg}
-      border="1px solid"
-      borderColor={cardBorderColor}
-      boxShadow="xl"
-      backdropFilter="blur(10px)"
-    >
-      <CardHeader>
-        <Heading size="md" color={headingColor} display="flex" alignItems="center">
-          <Icon as={FaRocket} mr={2} color={accentColor} />
-          Portfolio Statistics
-        </Heading>
-      </CardHeader>
-      <CardBody>
-        <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4}>
-          {portfolioStats.map((stat, index) => (
-            <Stat key={index} textAlign="center">
-              <Box mb={2}>
-                <Icon as={stat.icon} color={accentColor} size="24px" />
-              </Box>
-              <StatNumber color={headingColor} fontSize="2xl">
-                {stat.value}
-              </StatNumber>
-              <StatLabel color={textColor} fontSize="xs">
-                {stat.label}
-              </StatLabel>
-              {stat.change > 0 && (
-                <StatHelpText color="green.400" fontSize="xs">
-                  <StatArrow type="increase" />
-                  +{stat.change} this year
-                </StatHelpText>
-              )}
-            </Stat>
-          ))}
-        </SimpleGrid>
-      </CardBody>
-    </Card>
-  );
+  // Skills/Walkthroughs equivalent
+  const walkthroughs = [
+    { icon: VscDebugAlt, label: "Full Stack Development", badge: "Expert" },
+    { icon: VscFolderOpened, label: "React & TypeScript", badge: "Primary" },
+    { icon: VscFiles, label: "Flutter & Mobile Apps", badge: "Active" },
+    { icon: VscSettingsGear, label: "PHP & Backend Systems", badge: "Experienced" },
+  ];
 
   return (
-    <Box minHeight="100%" px={{ base: 4, md: 8 }} py={{ base: 8, md: 6 }}>
-      {/* Hero Section */}
-      <Flex
-        minHeight="60vh"
-        justify="space-around"
-        align="center"
-        direction={{ base: "column-reverse", lg: "row" }}
-        gap={{ base: 8, md: 16 }}
-        mb={12}
+    <Box 
+      h={{ base: "auto", md: "100vh" }}
+      minH={{ base: "100vh", md: "auto" }}
+      overflow={{ base: "auto", md: "hidden" }}
+      display="flex"
+      flexDirection="column"
+      justifyContent="flex-start"
+      alignItems="center"
+      px={{ base: 3, md: 6, lg: 12 }}
+      py={{ base: 4, md: 6 }}
+      pb={{ base: 20, md: 4 }}
+    >
+      {/* Main Content - VSCode Welcome Style */}
+      <Box
+        maxW="800px"
+        w="100%"
+        animation={`${fadeIn} 0.5s ease-out`}
       >
-        <VStack
-          alignItems={{ base: "center", lg: "flex-start" }}
-          justify="center"
-          spacing={6}
-          animation={`${fadeIn} 0.5s ease-out`}
-          color={textColor}
-          flex={1}
-        >
-          <Box textAlign={{ base: "center", lg: "left" }}>
-            <Text
-              fontSize={{ base: "2xl", md: "4xl" }}
-              fontWeight="bold"
-              letterSpacing="wide"
-              color={headingColor}
-            >
-              JOEL LAGGUI JR.
-            </Text>
-            <Text
-              fontSize={{ base: "lg", md: "xl" }}
-              fontWeight="bold"
-              color={accentColor}
-              mb={4}
-            >
-              Data Analyst | Python, SQL, Power BI Expert | Business Intelligence Specialist
-            </Text>
-            <Text
-              fontSize={{ base: "md", md: "lg" }}
-              color="whiteAlpha.800"
-              maxW="500px"
-              lineHeight="1.6"
-              mb={6}
-            >
-              Passionate about creating innovative digital solutions with modern technologies. 
-              Specialized in React, Node.js, Python, and data visualization.
-            </Text>
-            
-            {/* Visitor Counter */}
-            <Box mt={6} p={3} borderRadius="lg" bg={statsBg} maxW="fit-content">
-              <HStack spacing={2}>
-                <Icon as={FaUsers} color={accentColor} />
-                <Text fontSize="sm" color={textColor}>
-                  Portfolio Visitors: 
-                  <Text as="span" fontWeight="bold" color={accentColor} ml={2}>
-                    {visitorCount.toLocaleString()}
-                  </Text>
-                </Text>
-              </HStack>
-            </Box>
-          </Box>
-
-          {/* Contact Info */}
-          {renderSection(homeData.contactInfo)}
+        {/* Title Section */}
+        <VStack spacing={0} mb={{ base: 6, md: 4 }} align={{ base: "center", md: "flex-start" }}>
+          <Heading
+            fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+            fontWeight="300"
+            color={textColor}
+            letterSpacing="tight"
+          >
+            Joel Laggui Jr.
+          </Heading>
+          <Text 
+            fontSize={{ base: "sm", md: "md" }} 
+            color={secondaryText}
+            fontWeight="300"
+          >
+            Full Stack Developer
+          </Text>
         </VStack>
 
-        {/* Profile Image */}
-        <Box 
-          position="relative" 
-          animation={`${fadeIn} 0.5s ease-out`}
-          flex={{ base: "none", lg: "0 0 auto" }}
+        {/* Two Column Layout like VSCode Welcome */}
+        <Grid 
+          templateColumns="1fr 1fr"
+          gap={{ base: 4, md: 6, lg: 8 }}
         >
-          <Box
-            position="absolute"
-            inset="0"
-            borderRadius="50%"
-            bgGradient={`radial(${accentColor}, transparent 70%)`}
-            opacity={useColorModeValue("0.1", "0.15")}
-            filter="blur(15px)"
-            animation={`${pulse} 3s infinite`}
-          />
-          <Image
-            src={homeData.myImage}
-            width={{ base: "250px", sm: "300px", md: "350px", lg: "400px" }}
-            height="auto"
-            borderRadius="50%"
-            border="4px solid"
-            borderColor={accentColor}
-            transition="transform 0.3s"
-            _hover={{ transform: "scale(1.02)" }}
-            animation={`${float} 6s ease-in-out infinite`}
-          />
-          
-          {/* Status Badge */}
-          <Badge
-            position="absolute"
-            bottom="20px"
-            right="20px"
-            colorScheme="green"
-            fontSize="sm"
-            p={2}
-            borderRadius="full"
-            animation={`${pulse} 2s infinite`}
-          >
-            Available for Work
-          </Badge>
-        </Box>
-      </Flex>
+          {/* Left Column - Start & Recent */}
+          <GridItem>
+            <VStack align="flex-start" spacing={3}>
+              {/* Start Section */}
+              <Box>
+                <Text 
+                  fontSize={{ base: "sm", md: "sm" }} 
+                  fontWeight="600" 
+                  color={textColor} 
+                  mb={2}
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                >
+                  Start
+                </Text>
+                <VStack align="flex-start" spacing={1}>
+                  {startItems.map((item, index) => (
+                    <HStack 
+                      key={index}
+                      as={Link}
+                      href={item.link}
+                      spacing={2}
+                      color={linkColor}
+                      _hover={{ color: accentColor, textDecoration: "none" }}
+                      transition="color 0.2s"
+                      cursor="pointer"
+                    >
+                      <Icon as={item.icon} fontSize={{ base: "sm", md: "sm" }} />
+                      <Text fontSize={{ base: "xs", md: "sm" }}>{item.label}</Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              </Box>
 
-      {/* Enhanced Sections Grid */}
-      <Grid
-        templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
-        gap={8}
-        mb={8}
-      >
-        <GridItem>
-          {renderSkillsGrid()}
-        </GridItem>
-        <GridItem>
-          {renderAchievements()}
-        </GridItem>
-      </Grid>
+              {/* Recent Section */}
+              <Box>
+                <Text 
+                  fontSize={{ base: "sm", md: "sm" }} 
+                  fontWeight="600" 
+                  color={textColor} 
+                  mb={2}
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                >
+                  Recent Projects
+                </Text>
+                <VStack align="flex-start" spacing={0}>
+                  {recentItems.map((item, index) => (
+                    <Box key={index} mb={1}>
+                      <Link
+                        href="/projects"
+                        color={linkColor}
+                        fontSize={{ base: "xs", md: "sm" }}
+                        _hover={{ color: accentColor }}
+                      >
+                        {item.name}
+                      </Link>
+                      <Text 
+                        fontSize={{ base: "10px", md: "12px" }} 
+                        color={secondaryText}
+                        ml={0}
+                      >
+                        {item.path}
+                      </Text>
+                    </Box>
+                  ))}
+                </VStack>
+              </Box>
 
-      {/* Portfolio Stats */}
-      <Box mb={8}>
-        {renderPortfolioStats()}
+              {/* Contact Info */}
+              <Box>
+                <Text 
+                  fontSize={{ base: "sm", md: "sm" }} 
+                  fontWeight="600" 
+                  color={textColor} 
+                  mb={2}
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                >
+                  Contact
+                </Text>
+                <VStack align="flex-start" spacing={1}>
+                  <HStack spacing={2} color={secondaryText}>
+                    <Icon as={FaEnvelope} fontSize="12px" />
+                    <Text fontSize={{ base: "xs", md: "sm" }}>jlaggui47@gmail.com</Text>
+                  </HStack>
+                  <HStack spacing={2} color={secondaryText}>
+                    <Icon as={FaPhone} fontSize="12px" />
+                    <Text fontSize={{ base: "xs", md: "sm" }}>+63 915 368 3496</Text>
+                  </HStack>
+                  <HStack spacing={2} color={secondaryText}>
+                    <Icon as={FaMapMarkerAlt} fontSize="12px" />
+                    <Text fontSize={{ base: "xs", md: "sm" }}>Philippines</Text>
+                  </HStack>
+                </VStack>
+              </Box>
+            </VStack>
+          </GridItem>
+
+          {/* Right Column - Walkthroughs/Skills */}
+          <GridItem>
+            <Box>
+              <Text 
+                fontSize={{ base: "sm", md: "sm" }} 
+                fontWeight="600" 
+                color={textColor} 
+                mb={2}
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Expertise
+              </Text>
+              <VStack align="stretch" spacing={1}>
+                {walkthroughs.map((item, index) => (
+                  <HStack 
+                    key={index}
+                    spacing={2}
+                    py={1}
+                    px={2}
+                    borderRadius="md"
+                    _hover={{ bg: "whiteAlpha.50" }}
+                    transition="background 0.2s"
+                  >
+                    <Icon as={item.icon} fontSize={{ base: "sm", md: "sm" }} color={secondaryText} />
+                    <Text fontSize={{ base: "xs", md: "sm" }} color={textColor} flex={1}>
+                      {item.label}
+                    </Text>
+                    <Box
+                      bg={badgeBg}
+                      color="white"
+                      px={1.5}
+                      py={0}
+                      borderRadius="sm"
+                      fontSize={{ base: "9px", md: "11px" }}
+                      fontWeight="500"
+                    >
+                      {item.badge}
+                    </Box>
+                  </HStack>
+                ))}
+              </VStack>
+
+              {/* Social Links */}
+              <Box mt={4}>
+                <Text 
+                  fontSize={{ base: "sm", md: "sm" }} 
+                  fontWeight="600" 
+                  color={textColor} 
+                  mb={2}
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                >
+                  Connect
+                </Text>
+                <HStack spacing={3}>
+                  <Link href="https://github.com/GITLAGGUI" isExternal>
+                    <Icon 
+                      as={FaGithub} 
+                      fontSize={{ base: "lg", md: "lg" }} 
+                      color={secondaryText}
+                      _hover={{ color: textColor }}
+                      transition="color 0.2s"
+                    />
+                  </Link>
+                  <Link href="https://www.linkedin.com/in/joellagguijr-dev/" isExternal>
+                    <Icon 
+                      as={FaLinkedin} 
+                      fontSize={{ base: "lg", md: "lg" }} 
+                      color={secondaryText}
+                      _hover={{ color: textColor }}
+                      transition="color 0.2s"
+                    />
+                  </Link>
+                  <Link href="https://www.facebook.com/joellagguijr/" isExternal>
+                    <Icon 
+                      as={FaFacebook} 
+                      fontSize={{ base: "lg", md: "lg" }} 
+                      color={secondaryText}
+                      _hover={{ color: textColor }}
+                      transition="color 0.2s"
+                    />
+                  </Link>
+                  <Link href="https://www.instagram.com/jlaggui.jr/#" isExternal>
+                    <Icon 
+                      as={FaInstagram} 
+                      fontSize={{ base: "lg", md: "lg" }} 
+                      color={secondaryText}
+                      _hover={{ color: textColor }}
+                      transition="color 0.2s"
+                    />
+                  </Link>
+                </HStack>
+              </Box>
+            </Box>
+          </GridItem>
+        </Grid>
       </Box>
-
-      {/* Additional Sections */}
-      <Grid
-        templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-        gap={8}
-      >
-        <GridItem>
-          {renderSection(homeData.education)}
-        </GridItem>
-        <GridItem>
-          {renderSection(homeData.social)}
-        </GridItem>
-      </Grid>
     </Box>
   );
 };

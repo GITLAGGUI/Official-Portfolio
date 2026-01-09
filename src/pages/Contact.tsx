@@ -5,6 +5,7 @@ import {
   HStack,
   VStack,
   useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useState, useEffect } from "react";
@@ -20,6 +21,8 @@ interface Props {
 }
 
 const Contact = ({ setPage }: Props) => {
+  const { colorMode } = useColorMode();
+  
   useEffect(() => {
     setPage("contact.ts");
   }, []);
@@ -29,6 +32,34 @@ const Contact = ({ setPage }: Props) => {
   const [messageLines, setMessageLines] = useState(1);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [loading, setLoading] = useState(false);
+
+  // Dynamic theme colors based on current color mode
+  const getThemeColors = () => {
+    if ((colorMode as any) === 'dracula') {
+      return {
+        accentColor: "#BD93F9",
+        buttonBg: "#BD93F9",
+        buttonHover: "#FF79C6",
+        textColor: "#F8F8F2",
+      };
+    } else if (colorMode === 'dark') {
+      return {
+        accentColor: "#0BCEAF",
+        buttonBg: "#0BCEAF",
+        buttonHover: "#09a88d",
+        textColor: "whiteAlpha.900",
+      };
+    } else {
+      return {
+        accentColor: "#7E57C2",
+        buttonBg: "#7E57C2",
+        buttonHover: "#6A4C93",
+        textColor: "#d6deeb",
+      };
+    }
+  };
+
+  const { buttonBg, buttonHover } = getThemeColors();
 
   const initialValues: FormValues = {
     name: "",
@@ -88,13 +119,13 @@ const Contact = ({ setPage }: Props) => {
   }, [messageLines]);
 
   return (
-    <Box minHeight="100%" width="100%">
+    <Box minHeight="100%" width="100%" p={{ base: 2, md: 4 }}>
       <Box
         w="full"
         borderRadius="md"
         fontFamily="monospace"
         overflowX="hidden"
-        pr="1rem"
+        pr={{ base: "0.5rem", md: "1rem" }}
       >
         <Formik
           initialValues={initialValues}
@@ -119,9 +150,10 @@ const Contact = ({ setPage }: Props) => {
                 >
                   <HStack
                     align="flex-start"
-                    spacing={2}
+                    spacing={{ base: 1, md: 2 }}
                     w="full"
                     overflowX={isMobile ? "auto" : "visible"}
+                    direction={{ base: "column", lg: "row" }}
                   >
                     <ContactCodeLines
                       totalLines={totalLines}
@@ -132,7 +164,8 @@ const Contact = ({ setPage }: Props) => {
                     <VStack
                       align="stretch"
                       w="full"
-                      minW={isMobile ? "300px" : "auto"}
+                      minW={{ base: "280px", md: "300px" }}
+                      spacing={{ base: 2, md: 4 }}
                     >
                       <ContactDetails />
                       <ContactForm
@@ -146,13 +179,21 @@ const Contact = ({ setPage }: Props) => {
 
                   <Button
                     type="submit"
-                    bg="#0BCEAF"
+                    bg={buttonBg}
                     color="white"
-                    _hover={{ bg: "#09a88d" }}
+                    _hover={{ 
+                      bg: buttonHover,
+                      transform: "translateY(-2px)",
+                      boxShadow: "xl"
+                    }}
                     mt={4}
-                    ml={4}
+                    ml={{ base: 2, md: 4 }}
+                    w={{ base: "calc(100% - 1rem)", md: "auto" }}
                     isLoading={loading}
                     loadingText="Sending..."
+                    transition="all 0.2s ease"
+                    boxShadow="lg"
+                    size={{ base: "md", md: "lg" }}
                   >
                     Send Message
                   </Button>
