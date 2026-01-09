@@ -3,7 +3,6 @@ import {
   Text,
   HStack,
   Grid,
-  GridItem,
   Box,
   Heading,
   Icon,
@@ -342,7 +341,7 @@ const About = ({ setPage }: Props) => {
             </Box>
 
             {/* Clear float */}
-            <Box clear="both" />
+            <Box sx={{ clear: "both" }} />
 
             {/* Bible Quote Section */}
             <Box 
