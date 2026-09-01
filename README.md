@@ -1,168 +1,51 @@
-# Joel Laggui Jr.'s Portfolio with the Visual Studio Code Theme
+# Joel Laggui Jr. — Portfolio
 
-## Table of Contents
+A responsive VS Code-inspired portfolio for my full-stack development, AI automation, computer-vision, NLP, and data work.
 
-- [Overview](#overview)
-  - [Screenshot](#screenshot)
-  - [Links](#links)
-- [My Process](#my-process)
-  - [Built With](#built-with)
-- [How to Use](#how-to-use)
-- [Make It Your Own](#make-it-your-own)
-- [Deploy on Vercel](#deploy-on-vercel)
-- [EmailJS Implementation](#emailjs-implementation)
-- [Author](#author)
+[Live portfolio](https://joellaggui.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/joellagguijr-dev/) · [GitHub](https://github.com/GITLAGGUI)
 
----
+![Portfolio home](./qa/home-desktop-final-1536x1070.png)
 
-## Overview
+## What is included
 
-### Screenshot
+- Evidence-led case studies with stable slug routes, screenshots, stack, role, constraints, process, and honest project status.
+- Featured work covering SkyGlass, Drones & Gadgets PH, RiceGuardAI, short-video automation, property data operations, Cagayan ABSA, OpenClaw, n8n, ZM’s Place, and the TikTok LIVE Support Companion.
+- A responsive VS Code shell with desktop, tablet, and mobile layouts.
+- A lazy 3D home-page data ribbon with static and reduced-motion fallbacks.
+- `Joel Assistant`, backed by a server-side Vercel function with a portfolio-grounded local fallback.
+- Legacy numeric project-link redirects, internal editor scroll restoration, project filters, and accessible navigation.
 
-![](./public/assets/Latest_Portfolio.png)
+Private data, credentials, real lead records, private handles, and unreleased research holdouts are intentionally excluded from the repository and screenshots.
 
-### Links
+## Local development
 
-- **Live Demo**: [https://joellaggui.vercel.app/](https://joellaggui.vercel.app/)
-
----
-
-## My Process
-
-### Built With
-
-- [Vite](https://vitejs.dev/) – Frontend build tool
-- [React](https://reactjs.org/) – JavaScript library for building UIs
-- [TypeScript](https://www.typescriptlang.org/) – Typed JavaScript
-- [Chakra UI](https://chakra-ui.com/) – Component library for styling
-- [EmailJS](https://www.emailjs.com/) – For email sending functionality
-- [Formik](https://formik.org/) – For form handling
-
----
-
-## How to Use
-
-1. **Fork** this repository to your GitHub account.
-2. **Clone** the forked repository:
-   ```bash
-   git clone https://github.com/GITLAGGUI/Official-Portfolio.git
-   ```
-3. Navigate to the project folder:
-   ```bash
-   cd Official-Portfolio
-   ```
-4. Install all dependencies:
-   ```bash
-   npm install
-   ```
-5. Start the development server:
-   ```bash
-   npm run dev
-   ```
-6. Open your browser and go to [http://localhost:5173](http://localhost:5173) to view your local version.
-
----
-
-## Make It Your Own
-
-This project was designed to be **developer-friendly and customizable**.
-
-- Go to the `/public/data` folder.
-- You'll find simple `.ts` files containing your:
-  - Bio
-  - Skills
-  - Projects
-  - Contact Info
-- Modify those JavaScript objects with your own content.
-- Restart the dev server to apply changes:
-  ```bash
-  npm run dev
-  ```
-
-No complicated setup or backend configuration required!
-
----
-
-## Deploy on Vercel
-
-You can **deploy this portfolio in minutes** using [Vercel](https://vercel.com/):
-
-1. **Fork** the repo.
-2. Head over to [https://vercel.com/new](https://vercel.com/new).
-3. Connect your GitHub account and import your forked repo.
-4. Vercel will auto-detect the project settings (no manual config needed).
-5. Click **Deploy**, and your portfolio will be live almost instantly!
-
-> 💡 All necessary Vercel settings are already in place in the project structure.
-
----
-
-## EmailJS Implementation
-
-This portfolio uses **EmailJS** for handling contact form submissions directly from the frontend, eliminating the need for a custom backend.
-
-### Current Configuration ✅
-
-- **Service**: SERVICE_ID
-- **Template**: TEMPLATE_ID
-- **Recipient**: jlaggui47@gmail.com
-- **Library**: @emailjs/browser (already installed)
-
-### How It Works
-
-The contact form sends emails directly through EmailJS using the configuration in `/src/utils/sendEmail.ts`:
-
-```typescript
-import emailjs from '@emailjs/browser';
-
-// EmailJS Configuration
-const SERVICE_ID = 'YOUR SERVICE_ID';
-const TEMPLATE_ID = 'YOUR TEMPLATE_ID';
-const PUBLIC_KEY = 'YOUR PUBLIC_KEY';
-
-export const sendEmail = async (values: {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}) => {
-  const templateParams = {
-    from_name: values.name,
-    reply_to: values.email,
-    subject: values.subject,
-    message: values.message,
-    to_email: 'jlaggui47@gmail.com',
-  };
-
-  return await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-};
+```bash
+npm install
+npm run dev
 ```
 
-### Setting Up Your Own EmailJS
+Quality checks:
 
-If you want to configure your own EmailJS service:
+```bash
+npm run lint
+npm run build
+npm audit --omit=dev
+```
 
-1. **Create EmailJS Account**
-   - Sign up at [https://www.emailjs.com/](https://www.emailjs.com/)
-   - Create a new email service (Gmail recommended)
+Project content lives in [`src/data/projects.ts`](./src/data/projects.ts). The visual and interaction QA record is in [`design-qa.md`](./design-qa.md).
 
-2. **Configure Email Template**
-   - Create a template with variables: `{{from_name}}`, `{{reply_to}}`, `{{subject}}`, `{{message}}`
-   - Note your Service ID and Template ID
+## Deployment
 
-3. **Update Configuration**
-   - Replace the constants in `/src/utils/sendEmail.ts` with your own IDs
-   - Update the recipient email address
+The site is configured for Vercel. SPA routes are handled in `vercel.json`, while `/api/assistant` remains a serverless endpoint.
 
-4. **Test Implementation**
-   - Run the development server: `npm run dev`
-   - Navigate to the contact page and send a test message
+The assistant reads its API credential only from the deployment environment. Do not add keys to source files or client-side variables.
 
-> 💡 **Benefits**: No backend required, instant setup, reliable delivery, and free tier available.
+```bash
+vercel pull --yes --environment production
+vercel build --prod
+vercel --prod --yes
+```
 
----
+## Stack
 
-## Author
-
-- Website – [Joel Laggui Jr.](https://joellaggui.vercel.app/)
-- LinkedIn – [Joel Laggui Jr.](https://www.linkedin.com/in/joel-laggui-801104369/)
+React · TypeScript · Vite · React Router · React Three Fiber · Three.js · Vercel
