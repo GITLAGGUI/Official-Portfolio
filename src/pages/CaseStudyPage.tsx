@@ -36,10 +36,9 @@ export default function CaseStudyPage() {
         </dl>
       </header>
 
-      <figure className="case-study__hero">
+      <div className="case-study__hero">
         <img src={project.hero} alt={project.heroAlt} />
-        <figcaption>{project.heroAlt}. {project.links.length === 0 ? "Public-safe project evidence; no external link is required." : "Captured from the verified project build."}</figcaption>
-      </figure>
+      </div>
 
       {project.metrics && (
         <section className="metric-row" aria-label="Project evidence">
@@ -72,6 +71,23 @@ export default function CaseStudyPage() {
           </aside>
         )}
       </div>
+
+      {project.gallery && project.gallery.length > 0 && (
+        <section className="case-gallery" aria-labelledby="case-gallery-title">
+          <div className="section-heading">
+            <div><p className="eyebrow">Project evidence</p><h2 id="case-gallery-title">Screens and workflow</h2></div>
+            <p>Real project output or a public-safe view derived from the working files.</p>
+          </div>
+          <div className="case-gallery__grid">
+            {project.gallery.map((item) => (
+              <article key={item.src}>
+                <img src={item.src} alt={item.alt} loading="lazy" />
+                <p>{item.caption}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="stack-section">
         <p className="eyebrow">Tools and languages</p>

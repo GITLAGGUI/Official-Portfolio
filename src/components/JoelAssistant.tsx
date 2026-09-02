@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowUpRight, FiSend, FiX } from "react-icons/fi";
-import { VscCommentDiscussion } from "react-icons/vsc";
 import { projects } from "../data/projects";
 
 type ChatMessage = {
@@ -133,7 +132,7 @@ export default function JoelAssistant({ open, onClose }: JoelAssistantProps) {
       >
         <header className="assistant-panel__header">
           <div>
-            <span className="assistant-panel__icon"><VscCommentDiscussion /></span>
+            <span className="assistant-panel__icon"><img src="/assets/assistant/joel-assistant-bot.webp" alt="" /></span>
             <div>
               <h2 id="assistant-title">Joel Assistant</h2>
               <p>Portfolio guide</p>

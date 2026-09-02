@@ -7,24 +7,24 @@ export default function ProjectCard({ project, compact = false }: { project: Pro
     <article className={`project-card project-card--${project.accent} ${compact ? "project-card--compact" : ""}`}>
       <Link className="project-card__media" to={`/projects/${project.slug}`} aria-label={`Open ${project.title} case study`}>
         <img src={project.hero} alt={project.heroAlt} loading="lazy" />
-        <span>{project.category}</span>
-      </Link>
-      <div className="project-card__body">
-        <div className="project-card__meta">
-          <span>{project.status}</span>
-          <span>{project.year}</span>
-        </div>
-        <h3><Link to={`/projects/${project.slug}`}>{project.title}</Link></h3>
-        <p>{project.summary}</p>
-        <div className="project-card__footer">
-          <div className="tag-list" aria-label="Technology stack">
-            {project.stack.slice(0, compact ? 3 : 4).map((technology) => <span key={technology}>{technology}</span>)}
+        <div className="project-card__overlay">
+          <div className="project-card__meta">
+            <span>{project.category}</span>
+            <span>{project.year}</span>
           </div>
-          <Link className="icon-link" to={`/projects/${project.slug}`} aria-label={`Read ${project.title} case study`}>
-            <FiArrowUpRight />
-          </Link>
+          <div className="project-card__copy">
+            <p>{project.status}</p>
+            <h3>{project.title}</h3>
+            {!compact && <p className="project-card__summary">{project.summary}</p>}
+            <div className="project-card__footer">
+              <div className="tag-list" aria-label="Technology stack">
+                {project.stack.slice(0, compact ? 2 : 4).map((technology) => <span key={technology}>{technology}</span>)}
+              </div>
+              <span className="icon-link" aria-hidden="true"><FiArrowUpRight /></span>
+            </div>
+          </div>
         </div>
-      </div>
+      </Link>
     </article>
   );
 }

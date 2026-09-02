@@ -1,65 +1,37 @@
-# Portfolio redesign QA
+# Product design QA
 
-Date: 2026-09-01
+## Source and implementation
 
-## Visual source and implementation
+- Selected visual: `C:\Users\jenal\.codex\generated_images\01a05a8f-2f1f-73e0-b758-c158edf1587d\exec-3395311c-085c-4959-bb85-3ce90af1bb65.png`
+- Desktop implementation: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\home-selected-desktop.png`
+- Combined comparison: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\design-comparison-selected-v1.png`
+- Mobile implementation: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\home-selected-mobile.png`
+- Project gallery desktop: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\projects-rest-desktop.png`
+- Project gallery mobile: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\projects-mobile.png`
+- Face Guard case study: `C:\Users\jenal\Update_Portfolio\Official-Portfolio\qa\face-guard-case-study.png`
 
-- Selected design source: `C:\Users\jenal\.codex\generated_images\01a05a8f-2f1f-73e0-b758-c158edf1587d\exec-46e2ced5-212b-4029-897a-4551454726c1.png`
-- Source pixels: 1487 × 1058
-- Local implementation: `http://127.0.0.1:4173/`
-- Desktop QA viewport: 1536 × 1070 CSS pixels
-- Captured implementation pixels: 1535 × 1064
-- State: home route, desktop VS Code shell, SkyGlass featured case study, terminal visible, Joel Assistant closed
-- Final implementation capture: `qa/home-desktop-final-1536x1070.png`
-- Final side-by-side comparison: `qa/design-comparison-final.png`
+## Viewports and states
 
-The reference and implementation were padded to a common 1536 × 1070 frame and inspected together in one 3072 × 1070 image. The implementation preserves the reference hierarchy: VS Code shell, explorer, tab row, left identity and capabilities pane, animated data ribbon, right project proof pane, and bottom terminal.
+- Desktop: 1536 x 1070, initial loader, settled home, animated-grid phase 1 and phase 2, project gallery, assistant open, and Face Guard case study.
+- Mobile: 390 x 844, settled home, image-first project gallery, and About profile.
+- Motion: the grid interpolates through red, blue, yellow, teal, and violet on two-second phases; only the blue connection pulses move through the network. Reduced-motion and lower-power/mobile conditions receive a static WebP fallback.
 
-## Comparison findings and fixes
+## Comparison history
 
-### Iteration 1
+1. The selected direction established the required surfaces: VS Code shell, readable introduction, five code inputs, two automation hubs, three outcome nodes, blue connection pulses, and a quiet dark grid.
+2. The first implementation matched the hierarchy but mobile project cards depended on a hover-capability query, so a narrow desktop emulation hid their titles.
+3. Added the same compact title/meta reveal under the 720px breakpoint. The 390px recheck now shows the project image, category, year, and title without requiring hover.
 
-- P1 layout: the terminal was below the desktop viewport because the home workbench used a minimum height instead of a fixed available-height grid. Fixed by making the workbench fill the editor and reserving a 154px terminal row.
-- P1 typography: the name wrapped to three lines and the role wrapped at the reference viewport. Fixed by controlling the line break after `Joel`, reducing the second-line scale, and preventing the role line from wrapping on desktop.
-- P2 performance and responsive behavior: the WebGL ribbon was available at every viewport. Fixed by lazy-loading it only on capable desktop devices and using the generated raster fallback for mobile, reduced-motion, and lower-capability environments.
-- P2 console quality: old React Router future warnings were removed by upgrading to React Router 7.18.2 and restarting the dev server with a fresh dependency cache.
+## Required fidelity surfaces
 
-### Final comparison
-
-- Fonts and typography: editorial serif display type, compact sans-serif interface text, labels, and terminal monospace preserve the selected source hierarchy. No cramped or clipped headings remain.
-- Spacing and layout: explorer, tabs, editor split, proof image, case-study facts, related work, terminal, and status bar retain the intended density and alignment.
-- Colors and tokens: charcoal editor surfaces, graphite borders, muted cream text, olive focus color, and restrained status colors match the selected direction without gradients or generic neon styling.
-- Imagery: SkyGlass, Drones & Gadgets, ZM’s Place, RiceGuardAI Video3, and the short-video pipeline use authentic local captures. Private workflows use purpose-built sanitized visuals. No credentials, private lead data, real TikTok identity, model name, or sealed Video4 evidence is published.
-- Icons: interface and capability icons come from the existing React Icons library and remain aligned across desktop and responsive states.
-- AI shortcut artifacts: no placeholder boxes, hand-drawn SVG substitutes, fake metrics, percentage skill bars, or generic AI dashboard cards remain in the visible portfolio experience.
-
-## Responsive and accessibility checks
-
-- Desktop: 1536 × 1070, no document or editor horizontal overflow; all main workbench regions visible.
-- Tablet: 768 × 1024, no horizontal overflow; identity, fallback ribbon, project preview, and terminal stack cleanly.
-- Mobile: 390 × 844, no horizontal overflow on home, projects, case study, and about/skills; tabs remain horizontally usable and the fixed shell chrome does not cover the content.
-- Reduced motion: CSS disables animation where requested, and the heavy 3D scene is replaced with a static generated asset.
-- Semantics: landmark regions, labelled navigation, heading order, image alt text, form labels, button names, `aria-pressed` filter states, skip link, and keyboard focus targets are present.
-- Skills anchor: `/about#skills` scrolls the named editor pane to the skills section.
-- Route scroll reset: after scrolling the internal editor on About and selecting Home, `.editor-scroll.scrollTop` returns to `0`.
-
-## Interaction checks
-
-- Project category filters update the featured list and pressed state; the AI automation filter correctly returns 2 of 10 featured projects.
-- Stable slug routes open their case studies; the legacy `/projects/0` route redirects to `/projects/hotplate`; unknown project slugs recover to `/projects`.
-- Joel Assistant opens under the exact name `Joel Assistant`, exposes no provider/model label, accepts a question, and returns the local portfolio-grounded fallback when the API is unavailable in Vite dev mode.
-- Fresh browser tab after the final dependency restart: zero console warnings and zero console errors.
-- Contact form uses native required fields and a transparent mail-client handoff; it does not claim to store messages.
-- TikTok companion verification: the current local test executable reports 7/7 tests passed and the case study keeps the app explicitly manual-only.
-
-## Build and security checks
-
-- `npm run lint`: passed with zero warnings.
-- `npm run build`: passed.
-- `vercel build --prod`: passed and produced the SPA plus `/api/assistant` serverless function.
-- `npm audit --omit=dev`: zero production vulnerabilities after the React Router upgrade.
-- The large Three.js bundle remains isolated in a lazy optional chunk; the initial portfolio bundle does not load it on mobile or reduced-motion devices.
-
-No unresolved P0, P1, or P2 findings remain.
+- PASS: VS Code shell, navigation, tabs, explorer, terminal, and status bar remain intact.
+- PASS: Hero hierarchy and spacing match the selected direction while keeping plain-language copy for non-technical visitors.
+- PASS: Real TypeScript, React/TSX, JSON, Markdown, and Python icons are visually distinct.
+- PASS: Static 3D-styled nodes retain their positions while blue pulses travel through the connectors.
+- PASS: Grid color and intensity change smoothly without layout or paint churn in the React tree.
+- PASS: Project cards are image-first at rest; desktop hover/focus reveals transparent, text-shadowed story content, and mobile has an always-readable compact state.
+- PASS: No horizontal overflow at 1536px or 390px.
+- PASS: Initial load is masked by a branded progress animation and the Three.js scene remains code-split.
+- PASS: Authentic Face Guard interface/training captures, profile photo, n8n workflow, RiceGuard inference, OpenClaw overview, property audit, ABSA evidence, and YouTube channel imagery are used.
 
 final result: passed

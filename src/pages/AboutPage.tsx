@@ -30,10 +30,12 @@ const skillGroups = [
 ];
 
 const achievements = [
-  { title: "Data Analytics Challenge", detail: "Champion", image: "/assets/DATA ANALYTICS CHALLENGE - CHAMPION 1_page-0001.jpg" },
-  { title: "ROBOFUSION", detail: "Line-following robot champion", image: "/assets/Champion_Robotics.png" },
-  { title: "Huawei learning track", detail: "Certificate of completion", image: "/assets/Huawei_Certificate_of_Completion.png" },
-  { title: "Startup and cybersecurity work", detail: "Competitions, team projects, and practical training", image: "/assets/DICT_StartupChallenge_Certificate.png" },
+  { title: "Data Analytics Challenge", detail: "Champion · 15th ICT Roadshow 2025", image: "/assets/DATA ANALYTICS CHALLENGE - CHAMPION 1_page-0001.jpg", href: "/assets/DATA ANALYTICS CHALLENGE - CHAMPION 1_page-0001.jpg" },
+  { title: "Introduction to Modern AI", detail: "DICT–ITU DTC Initiative via Cisco Networking Academy · 2026", image: "/assets/certificates/modern-ai.webp", href: "/assets/certificates/Introduction_to_Modern_AI_Joel_Laggui.pdf" },
+  { title: "Algorithm and Program Design", detail: "Huawei Talent certificate of completion · 2025", image: "/assets/Huawei_Certificate_of_Completion.png", href: "/assets/Huawei_Certificate_of_Completion.png" },
+  { title: "Regional ITE Convention", detail: "Participant · St. Paul University Philippines · 2025", image: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg", href: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg" },
+  { title: "RoboFusion", detail: "Participant · International Smart and Sustainable Cities Expo · 2025", image: "/assets/Champion_Robotics.png", href: "/assets/Champion_Robotics.png" },
+  { title: "Philippine Startup Challenge X", detail: "Team Kaagapay · Regional pitching participant · 2025", image: "/assets/DICT_StartupChallenge_Certificate.png", href: "/assets/DICT_StartupChallenge_Certificate.png" },
 ];
 
 export default function AboutPage() {
@@ -41,20 +43,20 @@ export default function AboutPage() {
     <div className="content-page about-page">
       <header className="about-intro">
         <div className="about-intro__portrait">
-          <img src="/assets/Me.jpg" alt="Joel Laggui Jr." />
+          <img src="/assets/profile/joel-profile.webp" alt="Joel Laggui Jr. working on a laptop" />
           <span><VscCheck /> Available for new opportunities</span>
         </div>
         <div>
           <p className="eyebrow">About</p>
-          <h1>I turn operational problems into software people can actually use.</h1>
+          <h1>I build websites, automations, and AI tools that make work easier.</h1>
           <p>
-            I’m Joel Laggui Jr., a full-stack developer and AI automation builder from the Philippines. My work ranges from booking and commerce experiences to agent workflows, computer vision, NLP research, and data operations.
+            I’m Joel Laggui Jr., a full-stack developer and AI automation builder from the Philippines. I create customer-facing websites, internal tools, and repeatable workflows that save people from slow manual work.
           </p>
           <p>
-            I use Claude Code, Codex, and other AI tools to move faster, but I still check the result against the real repository, dataset, browser state, logs, and deployment. That habit matters more to me than sounding impressive.
+            Some of my work uses computer vision and language models. I explain those projects in plain language and show the real screens, workflow exports, and test evidence behind them.
           </p>
           <div className="about-actions">
-            <a className="button button--primary" href="/assets/New Resume.pdf" target="_blank" rel="noreferrer">Resume <FiDownload /></a>
+            <a className="button button--primary" href="/assets/resume/Joel_Laggui_Resume_ATS_2026.pdf" target="_blank" rel="noreferrer">Resume <FiDownload /></a>
             <Link className="button button--secondary" to="/contact">Work with me <FiExternalLink /></Link>
           </div>
         </div>
@@ -63,7 +65,7 @@ export default function AboutPage() {
       <section id="skills" className="skills-section" aria-labelledby="skills-title">
         <div className="section-heading">
           <div><p className="eyebrow">Capabilities</p><h2 id="skills-title">Skills</h2></div>
-          <p>No percentage bars or vague proficiency labels—just the tools I use and the kind of work they support.</p>
+          <p>A clear view of what I can build, followed by the tools I use to do it.</p>
         </div>
         <div className="skills-grid">
           {skillGroups.map((group) => {
@@ -91,15 +93,17 @@ export default function AboutPage() {
 
       <section id="achievements" className="achievements-section" aria-labelledby="achievements-title">
         <div className="section-heading">
-          <div><p className="eyebrow">Evidence</p><h2 id="achievements-title">Selected achievements</h2></div>
-          <p>Competitions and training belong here as supporting evidence—not as software case studies.</p>
+          <div><p className="eyebrow">Evidence</p><h2 id="achievements-title">Certificates and achievements</h2></div>
+          <p>Verified competition, training, and participation records currently available in the portfolio archive.</p>
         </div>
         <div className="achievement-grid">
           {achievements.map((achievement) => (
-            <article key={achievement.title}>
-              <img src={achievement.image} alt="" loading="lazy" />
-              <div><h3>{achievement.title}</h3><p>{achievement.detail}</p></div>
-            </article>
+            <a key={achievement.title} href={achievement.href} target="_blank" rel="noreferrer">
+              <article>
+                <img src={achievement.image} alt={`${achievement.title} certificate`} loading="lazy" />
+                <div><h3>{achievement.title}</h3><p>{achievement.detail}</p></div>
+              </article>
+            </a>
           ))}
         </div>
       </section>

@@ -11,18 +11,16 @@ import { NavLink, Navigate, Route, Routes, useLocation, useParams } from "react-
 import {
   VscAccount,
   VscChevronDown,
-  VscCode,
   VscFiles,
   VscGithub,
-  VscJson,
   VscMail,
-  VscMarkdown,
-  VscRemote,
   VscSearch,
   VscSettingsGear,
   VscSourceControl,
 } from "react-icons/vsc";
+import { SiJson, SiMarkdown, SiReact, SiTypescript } from "react-icons/si";
 import { featuredProjects, legacyProjectRoutes } from "./data/projects";
+import AppLoader from "./components/AppLoader";
 import JoelAssistant from "./components/JoelAssistant";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -53,14 +51,16 @@ function LegacyProjectRedirect() {
 function RouteContent() {
   return (
     <Suspense fallback={<div className="route-loading">Opening file…</div>}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/projects/:slug" element={<CaseStudyRoute />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
+      <div className="route-stage">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:slug" element={<CaseStudyRoute />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      </div>
     </Suspense>
   );
 }
@@ -76,6 +76,44 @@ function App() {
   const scrollRegionRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [bootPhase, setBootPhase] = useState<"loading" | "leaving" | "done">("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+    const startedAt = performance.now();
+    const imageSources = [
+      "/assets/hero/automation-network-fallback.webp",
+      "/assets/assistant/joel-assistant-bot.webp",
+      "/assets/projects/skyglass/home.webp",
+      "/assets/profile/joel-profile.webp",
+    ];
+    const preloadImage = (src: string) =>
+      new Promise<void>((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve();
+        image.onerror = () => resolve();
+        image.src = src;
+        if (image.complete) resolve();
+      });
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
+    const resourcesReady = Promise.all([fontsReady, ...imageSources.map(preloadImage)]);
+    const timeout = new Promise<void>((resolve) => window.setTimeout(resolve, 2400));
+
+    void Promise.race([resourcesReady, timeout]).then(() => {
+      const minimumDelay = Math.max(0, 720 - (performance.now() - startedAt));
+      window.setTimeout(() => {
+        if (cancelled) return;
+        setBootPhase("leaving");
+        window.setTimeout(() => {
+          if (!cancelled) setBootPhase("done");
+        }, 360);
+      }, minimumDelay);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const activeTab = useMemo(() => {
     if (location.pathname.startsWith("/projects/") && location.pathname !== "/projects") {
@@ -125,13 +163,14 @@ function App() {
   }, []);
 
   const tabIcon = (kind: TabDefinition["kind"]) => {
-    if (kind === "md") return <VscMarkdown aria-hidden="true" />;
-    if (kind === "json") return <VscJson aria-hidden="true" />;
-    return <VscCode aria-hidden="true" />;
+    if (kind === "md") return <SiMarkdown className="file-icon file-icon--md" aria-hidden="true" />;
+    if (kind === "json") return <SiJson className="file-icon file-icon--json" aria-hidden="true" />;
+    if (kind === "tsx") return <SiReact className="file-icon file-icon--tsx" aria-hidden="true" />;
+    return <SiTypescript className="file-icon file-icon--ts" aria-hidden="true" />;
   };
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" aria-busy={bootPhase !== "done"}>
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
@@ -179,7 +218,7 @@ function App() {
               title="Joel Assistant"
               onClick={() => setAssistantOpen(true)}
             >
-              <VscRemote />
+              <img className="assistant-rail-icon" src="/assets/assistant/joel-assistant-bot.webp" alt="" />
             </button>
           </div>
           <div className="activity-rail__bottom">
@@ -208,12 +247,12 @@ function App() {
                 <span>profile</span>
               </div>
               <NavLink className="tree-link" to="/about">
-                <VscMarkdown /> about.md
+                <SiMarkdown className="file-icon file-icon--md" /> about.md
               </NavLink>
               <NavLink className="tree-link" to="/about#skills">
-                <VscMarkdown /> skills.md
+                <SiMarkdown className="file-icon file-icon--md" /> skills.md
               </NavLink>
-              <a className="tree-link" href="/assets/New Resume.pdf" target="_blank" rel="noreferrer">
+              <a className="tree-link" href="/assets/resume/Joel_Laggui_Resume_ATS_2026.pdf" target="_blank" rel="noreferrer">
                 <span className="file-badge file-badge--pdf">PDF</span> resume.pdf
               </a>
             </div>
@@ -225,7 +264,7 @@ function App() {
               </div>
               {featuredProjects.slice(0, 8).map((project) => (
                 <NavLink className="tree-link" key={project.slug} to={`/projects/${project.slug}`}>
-                  <VscMarkdown /> {project.slug}.md
+                  <SiMarkdown className="file-icon file-icon--md" /> {project.slug}.md
                 </NavLink>
               ))}
               <NavLink className="tree-link tree-link--more" to="/projects">
@@ -235,10 +274,10 @@ function App() {
 
             <div className="tree-group tree-group--utility">
               <NavLink className="tree-link" to="/contact">
-                <VscCode /> contact.ts
+                <SiTypescript className="file-icon file-icon--ts" /> contact.ts
               </NavLink>
               <span className="tree-link tree-link--static">
-                <VscJson /> config.json
+                <SiJson className="file-icon file-icon--json" /> config.json
               </span>
               <a className="tree-link" href="https://github.com/GITLAGGUI" target="_blank" rel="noreferrer">
                 <VscGithub /> GitHub
@@ -266,7 +305,7 @@ function App() {
 
           <main id="main-content" ref={mainRef} className="editor-main" tabIndex={-1}>
             <div ref={scrollRegionRef} className="editor-scroll" data-testid="editor-scroll-region">
-              <RouteContent />
+              <RouteContent key={location.pathname} />
             </div>
           </main>
         </section>
@@ -286,6 +325,7 @@ function App() {
       </footer>
 
       <JoelAssistant open={assistantOpen} onClose={() => setAssistantOpen(false)} />
+      {bootPhase !== "done" && <AppLoader leaving={bootPhase === "leaving"} />}
     </div>
   );
 }

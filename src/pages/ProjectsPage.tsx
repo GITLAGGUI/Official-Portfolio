@@ -2,12 +2,22 @@ import { useMemo, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
 import { archivedProjects, featuredProjects, projects } from "../data/projects";
 
-const filters = ["All", "Web product", "AI automation", "Computer vision", "Data engineering", "NLP and data science"];
+const filters = [
+  { label: "All work", categories: [] },
+  { label: "Websites & apps", categories: ["Web product", "Commerce", "Mobile", "Web application", "Web design"] },
+  { label: "Automation", categories: ["AI automation", "Workflow automation", "Developer tool", "Desktop utility"] },
+  { label: "AI & data", categories: ["Computer vision", "Data engineering", "NLP and data science", "Data application", "Data visualization"] },
+];
 
 export default function ProjectsPage() {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("All work");
   const visibleFeatured = useMemo(
-    () => activeFilter === "All" ? featuredProjects : featuredProjects.filter((project) => project.category === activeFilter),
+    () => {
+      const filter = filters.find((item) => item.label === activeFilter);
+      return !filter || filter.categories.length === 0
+        ? featuredProjects
+        : featuredProjects.filter((project) => filter.categories.includes(project.category));
+    },
     [activeFilter],
   );
 
@@ -16,23 +26,23 @@ export default function ProjectsPage() {
       <header className="page-header page-header--split">
         <div>
           <p className="eyebrow">Selected work</p>
-          <h1>Projects built around real constraints.</h1>
+          <h1>What I built, why it matters, and how it works.</h1>
         </div>
         <p>
-          Each case study separates what shipped, what was tested, what stays private, and what is still in progress. No invented metrics or generic README dumps.
+          Choose a project to see the problem, the solution, the tools used, and real screenshots or public-safe evidence.
         </p>
       </header>
 
       <div className="project-filters" role="group" aria-label="Filter featured projects">
         {filters.map((filter) => (
           <button
-            key={filter}
+            key={filter.label}
             type="button"
-            aria-pressed={activeFilter === filter}
-            className={activeFilter === filter ? "is-active" : ""}
-            onClick={() => setActiveFilter(filter)}
+            aria-pressed={activeFilter === filter.label}
+            className={activeFilter === filter.label ? "is-active" : ""}
+            onClick={() => setActiveFilter(filter.label)}
           >
-            {filter}
+            {filter.label}
           </button>
         ))}
       </div>
@@ -43,7 +53,7 @@ export default function ProjectsPage() {
       </section>
 
       {visibleFeatured.length === 0 && (
-        <div className="empty-state">No featured case study uses that exact category yet. Try All to see the complete set.</div>
+        <div className="empty-state">No project is in this group yet. Choose All work to see everything.</div>
       )}
 
       <section className="archive-section" aria-labelledby="archive-title">
