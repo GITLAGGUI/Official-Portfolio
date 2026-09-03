@@ -7,15 +7,15 @@ const gridPalette = ["#f06a6a", "#4ca7ff", "#f3d35d", "#55c7b5", "#a982ff"].map(
 );
 
 const pathSpecs = [
-  [0.18, 0.12, 0.51, 0.43],
-  [0.18, 0.28, 0.51, 0.43],
-  [0.18, 0.44, 0.51, 0.43],
-  [0.18, 0.6, 0.51, 0.43],
-  [0.18, 0.76, 0.51, 0.43],
-  [0.51, 0.43, 0.66, 0.43],
-  [0.66, 0.43, 0.84, 0.24],
-  [0.66, 0.43, 0.84, 0.45],
-  [0.66, 0.43, 0.84, 0.67],
+  [0.6, 0.13, 0.67, 0.47],
+  [0.6, 0.3, 0.67, 0.47],
+  [0.6, 0.47, 0.67, 0.47],
+  [0.6, 0.64, 0.67, 0.47],
+  [0.6, 0.81, 0.67, 0.47],
+  [0.67, 0.47, 0.76, 0.47],
+  [0.76, 0.47, 0.86, 0.25],
+  [0.76, 0.47, 0.86, 0.49],
+  [0.76, 0.47, 0.86, 0.72],
 ] as const;
 
 function SpectrumGrid() {
@@ -31,8 +31,8 @@ function SpectrumGrid() {
     const strength = 0.5 + 0.5 * Math.sin((cycle % 1) * Math.PI);
 
     for (const [grid, opacity] of [
-      [fineGrid.current, 0.08 + strength * 0.12],
-      [strongGrid.current, 0.04 + strength * 0.13],
+      [fineGrid.current, 0.1 + strength * 0.15],
+      [strongGrid.current, 0.06 + strength * 0.15],
     ] as const) {
       if (!grid) continue;
       const materials = Array.isArray(grid.material) ? grid.material : [grid.material];
@@ -47,8 +47,8 @@ function SpectrumGrid() {
 
   return (
     <group position={[0, 0, -1.35]} rotation={[Math.PI / 2, 0, 0]}>
-      <gridHelper ref={fineGrid} args={[16, 32, "#4ca7ff", "#4ca7ff"]} />
-      <gridHelper ref={strongGrid} args={[16, 8, "#4ca7ff", "#4ca7ff"]} position={[0, -0.01, 0]} />
+      <gridHelper ref={fineGrid} args={[22, 44, "#4ca7ff", "#4ca7ff"]} />
+      <gridHelper ref={strongGrid} args={[22, 11, "#4ca7ff", "#4ca7ff"]} position={[0, -0.01, 0]} />
     </group>
   );
 }
@@ -99,11 +99,11 @@ function ConnectionNetwork() {
           <mesh>
             <tubeGeometry args={[curve, 54, index === 5 ? 0.026 : 0.018, 6, false]} />
             <meshStandardMaterial
-              color="#364957"
-              emissive="#0b2942"
-              emissiveIntensity={0.6}
-              metalness={0.72}
-              roughness={0.3}
+              color="#7b8a93"
+              emissive="#0a2a45"
+              emissiveIntensity={0.85}
+              metalness={0.9}
+              roughness={0.2}
             />
           </mesh>
           <FlowPulse curve={curve} offset={(index * 0.13) % 1} />

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { FiArrowRight, FiBarChart2, FiGlobe } from "react-icons/fi";
 import { SiJson, SiMarkdown, SiPython, SiReact, SiTypescript } from "react-icons/si";
-import { VscCircuitBoard, VscCode, VscEye, VscJson, VscRemote } from "react-icons/vsc";
+import { VscCode, VscEye, VscJson, VscRemote, VscServerProcess } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 
 const HeroScene = lazy(() => import("../components/HeroScene"));
@@ -23,7 +23,7 @@ const inputNodes = [
 
 const outcomeNodes = [
   { icon: FiGlobe, title: "Deployed", detail: "Website" },
-  { icon: VscCircuitBoard, title: "Automated", detail: "Workflow" },
+  { icon: VscServerProcess, title: "Automated", detail: "Workflow" },
   { icon: FiBarChart2, title: "AI / data", detail: "Result" },
 ];
 
@@ -94,8 +94,12 @@ export default function HomePage() {
                     );
                   })}
                 </div>
-                <div className="network-node network-node--hub network-node--hub-one"><VscCircuitBoard /></div>
-                <div className="network-node network-node--hub network-node--hub-two"><VscCircuitBoard /></div>
+                <div className="network-node network-node--hub network-node--hub-one">
+                  <img src="/assets/logos/n8n.svg" alt="" />
+                </div>
+                <div className="network-node network-node--hub network-node--hub-two">
+                  <img src="/assets/logos/n8n.svg" alt="" />
+                </div>
                 <div className="network-node-column network-node-column--outcomes">
                   {outcomeNodes.map((node) => {
                     const Icon = node.icon;

@@ -303,7 +303,12 @@ function App() {
             ))}
           </nav>
 
-          <main id="main-content" ref={mainRef} className="editor-main" tabIndex={-1}>
+          <main
+            id="main-content"
+            ref={mainRef}
+            className={`editor-main ${location.pathname === "/" ? "editor-main--home" : ""}`}
+            tabIndex={-1}
+          >
             <div ref={scrollRegionRef} className="editor-scroll" data-testid="editor-scroll-region">
               <RouteContent key={location.pathname} />
             </div>

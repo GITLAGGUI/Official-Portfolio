@@ -1,8 +1,10 @@
 import { FormEvent, useState } from "react";
 import { FiArrowUpRight, FiCheck, FiCopy, FiGithub, FiLinkedin, FiMail, FiMapPin, FiPhone } from "react-icons/fi";
+import { sendEmail } from "../utils/sendEmail";
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
+  const [sendState, setSendState] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText("jlaggui47@gmail.com");
@@ -10,15 +12,23 @@ export default function ContactPage() {
     window.setTimeout(() => setCopied(false), 1800);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formElement = event.currentTarget;
     const form = new FormData(event.currentTarget);
     const name = String(form.get("name") ?? "").trim();
-    const project = String(form.get("project") ?? "").trim();
-    const details = String(form.get("details") ?? "").trim();
-    const subject = encodeURIComponent(`${project || "Portfolio inquiry"} — ${name || "New contact"}`);
-    const body = encodeURIComponent(`Hi Joel,\n\n${details}\n\nFrom: ${name}`);
-    window.location.href = `mailto:jlaggui47@gmail.com?subject=${subject}&body=${body}`;
+    const email = String(form.get("email") ?? "").trim();
+    const subject = String(form.get("project") ?? "").trim();
+    const message = String(form.get("details") ?? "").trim();
+
+    setSendState("sending");
+    try {
+      await sendEmail({ name, email, subject, message });
+      formElement.reset();
+      setSendState("success");
+    } catch {
+      setSendState("error");
+    }
   };
 
   return (
@@ -48,15 +58,23 @@ export default function ContactPage() {
         </section>
 
         <form className="contact-form" onSubmit={handleSubmit}>
-          <div className="form-heading"><span>contact.ts</span><span>mailto handoff</span></div>
+          <div className="form-heading"><span>contact.ts</span><span>direct message</span></div>
           <label htmlFor="contact-name">Your name</label>
           <input id="contact-name" name="name" autoComplete="name" placeholder="Name or company" required />
+          <label htmlFor="contact-email">Your email</label>
+          <input id="contact-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required />
           <label htmlFor="contact-project">What are we discussing?</label>
           <input id="contact-project" name="project" placeholder="Website, automation, AI, data…" required />
           <label htmlFor="contact-details">Useful context</label>
           <textarea id="contact-details" name="details" rows={7} placeholder="What is happening now, and what should be better after the project?" required />
-          <button className="button button--primary" type="submit">Prepare email <FiArrowUpRight /></button>
-          <p>This form opens your email app. It does not store your message on this site.</p>
+          <button className="button button--primary" type="submit" disabled={sendState === "sending"}>
+            {sendState === "sending" ? "Sending…" : "Send message"} <FiArrowUpRight />
+          </button>
+          <p className={`form-status form-status--${sendState}`} role="status" aria-live="polite">
+            {sendState === "success" && "Message sent. Joel will reply using the email you provided."}
+            {sendState === "error" && <>The message could not be sent. Please email <a href="mailto:jlaggui47@gmail.com">jlaggui47@gmail.com</a>.</>}
+            {(sendState === "idle" || sendState === "sending") && "Your message is sent directly through the portfolio contact service."}
+          </p>
         </form>
       </div>
     </div>
