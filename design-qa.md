@@ -53,6 +53,6 @@
 
 Evidence: `qa/home-full-grid-2026-09-03.png`, `qa/home-grid-phase-b-2026-09-03.png`, `qa/home-mobile-2026-09-03.png`, `qa/skills-2026-09-03.png`, `qa/skills-mobile-2026-09-03.png`, `qa/certificates-2026-09-03.png`, `qa/project-gallery-2026-09-03.png`, `qa/contact-success-2026-09-03.png`.
 
-No unresolved P0/P1/P2 local UI findings. Production assistant behavior will be rechecked after deployment.
+No unresolved P0/P1/P2 local UI findings. Production commit `84b4701` reached Vercel Ready and the live domain served the new bundle. The live assistant rendered three semantic bold labels and a bullet list, correctly returned three years of experience, and redirected an off-topic dinner question back to Joel's work. No browser console errors were recorded. A final send directly from the live contact page succeeded, with EmailJS history `OK` at 13:49 on 2026-09-03. Screenshots: `qa/assistant-live-2026-09-03.png` and `qa/contact-live-success-2026-09-03.png`.
 
 final result: passed
