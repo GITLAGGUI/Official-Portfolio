@@ -1,5 +1,3 @@
-import { projects } from "../src/data/projects";
-
 type ApiRequest = {
   method?: string;
   body?: unknown;
@@ -19,21 +17,82 @@ type UpstreamResponse = {
 
 const requestBuckets = new Map<string, { count: number; resetAt: number }>();
 
-const publicProjectContext = projects.map((project) => ({
-  title: project.title,
-  subtitle: project.subtitle,
-  summary: project.summary,
-  category: project.category,
-  role: project.role,
-  year: project.year,
-  status: project.status,
-  stack: project.stack,
-  challenge: project.challenge,
-  approach: project.approach,
-  outcome: project.outcome,
-  limitations: project.limitations,
-  links: project.links,
-}));
+// Keep the public assistant context self-contained. Vercel executes this file as
+// an independent ESM function, so importing the browser-side project module
+// would leave an extensionless runtime import in the deployed function.
+const publicProjectContext = [
+  {
+    title: "SkyGlass Hillside Garden",
+    summary: "A calm, image-led venue website for stays, packages, and structured visit requests.",
+    status: "Live demo",
+    stack: ["React", "TypeScript", "Vite", "Vercel"],
+    link: "https://skyglass-hillside-garden-demo.vercel.app/",
+  },
+  {
+    title: "Drones & Gadgets PH",
+    summary: "A DJI-focused storefront for product discovery, buyer confidence, and controlled checkout flows.",
+    status: "Live demo",
+    stack: ["React", "TypeScript", "Supabase", "PayMongo modes"],
+    link: "https://drones-and-gadgets-ph.vercel.app/",
+  },
+  {
+    title: "VisionAI Face Guard",
+    summary: "A Streamlit app that detects faces with a custom-trained YOLOv8 model and applies adjustable blur.",
+    status: "Source available",
+    stack: ["Python", "Streamlit", "YOLOv8", "OpenCV"],
+    link: "https://github.com/GITLAGGUI/face-blur-app",
+  },
+  {
+    title: "RiceGuardAI",
+    summary: "A research pipeline for reviewing rice-disease areas in high-resolution drone imagery.",
+    status: "Research pipeline; final accuracy is not claimed before review and training gates are complete",
+    stack: ["Python", "YOLOv8-seg", "YOLOv26-seg", "CVAT", "Kaggle", "AWS"],
+  },
+  {
+    title: "YouTube Short-Video Automation Pipeline",
+    summary: "The repeatable research, script, voice, image, animation, edit, and sound workflow behind Mind Echoes Daily.",
+    status: "Published channel workflow",
+    stack: ["Claude", "ElevenLabs", "GPT image generation", "Google Flow", "FFmpeg", "Python"],
+    link: "https://www.youtube.com/@MindEchoesDaily",
+  },
+  {
+    title: "Property Data Operations",
+    summary: "A private workflow for source research, completeness tracking, cleaning, deduplication, and auditable exports.",
+    status: "Private data workflow",
+    stack: ["Python", "CSV/XLSX", "Data audit", "Google Apps Script"],
+  },
+  {
+    title: "Cagayan Tourism & Food ABSA",
+    summary: "A multilingual NLP workflow for review data, aspect extraction, leakage-safe splits, and dataset audits.",
+    status: "Evaluated research pipeline",
+    stack: ["Python", "ABSA", "BERTopic", "MiniLM", "XLM-RoBERTa", "Kaggle"],
+  },
+  {
+    title: "OpenClaw Automation System",
+    summary: "A privacy-conscious local agent setup with Telegram access, controlled tools, fallback routing, and runtime checks.",
+    status: "Private local system",
+    stack: ["OpenClaw", "Telegram", "Agent routing", "Windows automation"],
+  },
+  {
+    title: "n8n AI Outreach Prototype",
+    summary: "An AWS-hosted workflow that creates a draft from a test lead, sends it to Telegram for review, and gates SMS.",
+    status: "AWS-hosted prototype",
+    stack: ["n8n", "Docker", "AWS Lightsail", "Telegram"],
+  },
+  {
+    title: "ZM’s Place",
+    summary: "A responsive venue site for discovery, amenities, event context, inquiries, and reservation organization.",
+    status: "Live site",
+    stack: ["React", "TypeScript", "Vite", "Vercel"],
+    link: "https://zms-place-resort.vercel.app/",
+  },
+  {
+    title: "TikTok LIVE Support Companion",
+    summary: "A manual-only desktop companion for opening a pinned LIVE, timing a session, marking moments, and sharing a QR code.",
+    status: "Local desktop app; it does not automate engagement",
+    stack: ["C#", ".NET 9", "WPF", "QRCoder"],
+  },
+];
 
 const publicProfileContext = {
   name: "Joel Laggui Jr.",
@@ -50,6 +109,11 @@ const publicProfileContext = {
   tools: [
     "React", "TypeScript", "Node.js", "PHP", "Flutter", "Python", "n8n", "OpenClaw",
     "Claude Code", "Codex", "AWS", "Kaggle", "CVAT", "YOLOv8-seg", "YOLOv26-seg",
+  ],
+  additionalWork: [
+    "Hotplate", "Prostate Cancer Risk Analysis Dashboard", "ISU Lost & Found System",
+    "TopShoppe E-commerce", "PinoyAI CLI", "Maria Lourdes Mansion", "Eskwelahan.ph",
+    "Interactive Power BI Dashboard",
   ],
 };
 
