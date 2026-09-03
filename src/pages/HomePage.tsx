@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { FiArrowRight, FiBarChart2, FiGlobe } from "react-icons/fi";
-import { SiJson, SiMarkdown, SiPython, SiReact, SiTypescript } from "react-icons/si";
+import { SiMarkdown, SiPython, SiReact, SiTypescript } from "react-icons/si";
 import { VscCode, VscEye, VscJson, VscRemote, VscServerProcess } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import AnimatedGrid from "../components/AnimatedGrid";
 
 const HeroScene = lazy(() => import("../components/HeroScene"));
 
@@ -16,7 +17,7 @@ const focusItems = [
 const inputNodes = [
   { icon: SiTypescript, file: "index.ts", label: "TypeScript", className: "typescript" },
   { icon: SiReact, file: "component.tsx", label: "React TSX", className: "tsx" },
-  { icon: SiJson, file: "config.json", label: "JSON", className: "json" },
+  { icon: VscJson, file: "config.json", label: "JSON", className: "json" },
   { icon: SiMarkdown, file: "readme.md", label: "Markdown", className: "markdown" },
   { icon: SiPython, file: "pipeline.py", label: "Python", className: "python" },
 ];
@@ -77,6 +78,7 @@ export default function HomePage() {
         </div>
 
         <div className="hero-ribbon" aria-hidden="true">
+          <AnimatedGrid />
           {renderInteractiveNetwork ? (
             <>
               <Suspense fallback={<div className="hero-scene-placeholder" />}>

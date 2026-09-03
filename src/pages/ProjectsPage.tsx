@@ -23,14 +23,11 @@ export default function ProjectsPage() {
 
   return (
     <div className="content-page projects-page">
-      <header className="page-header page-header--split">
+      <header className="page-header">
         <div>
           <p className="eyebrow">Selected work</p>
           <h1>What I built, why it matters, and how it works.</h1>
         </div>
-        <p>
-          Choose a project to see the problem, the solution, the tools used, and real screenshots or public-safe evidence.
-        </p>
       </header>
 
       <div className="project-filters" role="group" aria-label="Filter featured projects">

@@ -1,31 +1,61 @@
 import { FiDownload, FiExternalLink } from "react-icons/fi";
+import { SiCsharp, SiCss3, SiDart, SiHtml5, SiJavascript, SiMysql, SiPhp, SiPowershell, SiPython, SiTypescript } from "react-icons/si";
 import { VscCheck, VscCode, VscGraph, VscRemote, VscTools } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 
 const skillGroups = [
   {
     icon: VscCode,
-    title: "Web & product engineering",
-    summary: "Responsive products from interface and data model through deployment and QA.",
-    skills: ["React", "TypeScript", "Node.js", "PHP", "Flutter", "Supabase", "Firebase", "Vercel"],
+    number: "01",
+    title: "Web & software engineering",
+    summary: "Responsive websites, business systems, APIs, and desktop or mobile applications.",
+    languages: [
+      { name: "HTML", icon: SiHtml5, color: "#e34f26" },
+      { name: "CSS", icon: SiCss3, color: "#1572b6" },
+      { name: "JavaScript", icon: SiJavascript, color: "#f7df1e" },
+      { name: "TypeScript", icon: SiTypescript, color: "#3178c6" },
+      { name: "PHP", icon: SiPhp, color: "#777bb4" },
+      { name: "Dart", icon: SiDart, color: "#0175c2" },
+      { name: "C#", icon: SiCsharp, color: "#9b4f96" },
+      { name: "SQL", icon: SiMysql, color: "#4479a1" },
+    ],
+    tools: ["React", "Next.js", "Node.js", "Flutter", "Supabase", "Firebase", "Vercel"],
   },
   {
     icon: VscRemote,
-    title: "AI automation & agentic tools",
-    summary: "Human-reviewed workflows, local agents, APIs, and production tooling.",
-    skills: ["n8n", "OpenClaw", "Workflow design", "API integration", "Claude Code", "Codex", "Docker"],
+    number: "02",
+    title: "AI automation & agentic systems",
+    summary: "Connected workflows and assistants that reduce repetitive work while keeping review points clear.",
+    languages: [
+      { name: "Python", icon: SiPython, color: "#ffd343" },
+      { name: "TypeScript", icon: SiTypescript, color: "#3178c6" },
+      { name: "JavaScript", icon: SiJavascript, color: "#f7df1e" },
+      { name: "PowerShell", icon: SiPowershell, color: "#5391fe" },
+    ],
+    tools: ["n8n", "OpenClaw", "Claude Code", "Codex", "Docker", "Playwright", "REST APIs", "Webhooks"],
   },
   {
     icon: VscTools,
+    number: "03",
     title: "Computer vision & cloud",
-    summary: "Dataset review and high-resolution segmentation pipelines built around evidence gates.",
-    skills: ["Python", "OpenCV", "CVAT", "YOLOv8-seg", "YOLOv26-seg", "Ultralytics", "AWS", "Kaggle"],
+    summary: "Drone imagery, annotation, dataset review, model training, and deployment-ready inference pipelines.",
+    languages: [
+      { name: "Python", icon: SiPython, color: "#ffd343" },
+      { name: "SQL", icon: SiMysql, color: "#4479a1" },
+      { name: "PowerShell", icon: SiPowershell, color: "#5391fe" },
+    ],
+    tools: ["OpenCV", "CVAT", "YOLOv8-seg", "YOLOv26-seg", "Ultralytics", "AWS", "Kaggle"],
   },
   {
     icon: VscGraph,
-    title: "NLP & data",
-    summary: "Consent-aware research data, aspect analysis, topic discovery, and auditable reporting.",
-    skills: ["ABSA", "BERTopic", "MiniLM", "XLM-RoBERTa", "pandas", "Power BI", "Data audit"],
+    number: "04",
+    title: "NLP & data science",
+    summary: "Review analysis, aspect sentiment, topic discovery, data auditing, and decision-ready reporting.",
+    languages: [
+      { name: "Python", icon: SiPython, color: "#ffd343" },
+      { name: "SQL", icon: SiMysql, color: "#4479a1" },
+    ],
+    tools: ["ABSA", "BERTopic", "MiniLM", "XLM-RoBERTa", "pandas", "Power BI", "Data audit"],
   },
 ];
 
@@ -36,7 +66,9 @@ const evidenceItems = [
   { title: "Regional ITE Convention", detail: "Participant · St. Paul University Philippines · 2025", image: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg", href: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg", kind: "certificate" },
   { title: "RoboFusion Champion", detail: "iScene RoboFusion · 2025", image: "/assets/Champion_Robotics.png", href: "/assets/Champion_Robotics.png", kind: "certificate" },
   { title: "Philippine Startup Challenge X", detail: "Team Kaagapay · Regional pitching participant · 2025", image: "/assets/DICT_StartupChallenge_Certificate.png", href: "/assets/DICT_StartupChallenge_Certificate.png", kind: "certificate" },
-  { title: "Cyber Defense Exercise Qualifiers", detail: "TRON cybersecurity event documentation", image: "/assets/gallery/cyber-defense-tron-qualifiers.webp", href: "/assets/gallery/cyber-defense-tron-qualifiers.webp", kind: "certificate" },
+  { title: "TRON 2026 Cyber Defense Exercise", detail: "Team Leader · Certificate of Participation", image: "/assets/certificates/tron-team-leader-2026.webp", href: "/assets/certificates/tron-team-leader-2026.webp", kind: "certificate" },
+  { title: "TRON Cyber Defense - 3rd Place", detail: "ISU Cabagan Campus · Team ISUC-CompSci", image: "/assets/certificates/tron-third-place-team.webp", href: "/assets/certificates/tron-third-place-team.webp", kind: "certificate" },
+  { title: "Cyber Defense Exercise Qualifiers", detail: "Team gallery", image: "/assets/gallery/cyber-defense-tron-qualifiers.webp", href: "/assets/gallery/cyber-defense-tron-qualifiers.webp", kind: "gallery" },
   { title: "RoboFusion Champion 2025", detail: "Competition gallery", image: "/assets/gallery/robofusion-champion-2025.webp", href: "/assets/gallery/robofusion-champion-2025.webp", kind: "gallery" },
   { title: "ICT Roadshow Champion 2025", detail: "Competition gallery", image: "/assets/gallery/ict-roadshow-champion-2025.webp", href: "/assets/gallery/ict-roadshow-champion-2025.webp", kind: "gallery" },
   { title: "Data Analytics Champion 2025", detail: "Competition gallery", image: "/assets/gallery/data-analytics-champion-2025.webp", href: "/assets/gallery/data-analytics-champion-2025.webp", kind: "gallery" },
@@ -70,17 +102,31 @@ export default function AboutPage() {
       <section id="skills" className="skills-section" aria-labelledby="skills-title">
         <div className="section-heading">
           <div><p className="eyebrow">Capabilities</p><h2 id="skills-title">Skills</h2></div>
-          <p>A clear view of what I can build, followed by the tools I use to do it.</p>
+          <p>The languages I use, and the tools behind each kind of work.</p>
         </div>
-        <div className="skills-grid">
+        <div className="skills-command-list">
           {skillGroups.map((group) => {
             const Icon = group.icon;
             return (
-              <article key={group.title}>
-                <Icon aria-hidden="true" />
-                <h3>{group.title}</h3>
-                <p>{group.summary}</p>
-                <div className="tag-list">{group.skills.map((skill) => <span key={skill}>{skill}</span>)}</div>
+              <article className="skill-command" key={group.title}>
+                <div className="skill-command__identity">
+                  <span className="skill-command__number">{group.number}</span>
+                  <Icon aria-hidden="true" />
+                  <div><h3>{group.title}</h3><p>{group.summary}</p></div>
+                </div>
+                <div className="skill-command__languages">
+                  <span className="skill-command__label">Languages</span>
+                  <div>
+                    {group.languages.map((language) => {
+                      const LanguageIcon = language.icon;
+                      return <span key={language.name}><LanguageIcon style={{ color: language.color }} aria-hidden="true" />{language.name}</span>;
+                    })}
+                  </div>
+                </div>
+                <div className="skill-command__tools">
+                  <span className="skill-command__label">Tools & platforms</span>
+                  <div>{group.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
+                </div>
               </article>
             );
           })}

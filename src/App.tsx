@@ -141,14 +141,27 @@ function App() {
 
     region.scrollTo({ top: 0, left: 0, behavior: "instant" });
 
+    let observer: MutationObserver | undefined;
+    const scrollToAnchor = () => {
+      const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+      if (!target) return false;
+      target.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" });
+      return true;
+    };
     const frame = window.requestAnimationFrame(() => {
-      if (location.hash) {
-        document.querySelector(location.hash)?.scrollIntoView({ block: "start" });
+      if (location.hash && !scrollToAnchor()) {
+        observer = new MutationObserver(() => {
+          if (scrollToAnchor()) observer?.disconnect();
+        });
+        observer.observe(region, { childList: true, subtree: true });
       }
       mainRef.current?.focus({ preventScroll: true });
     });
 
-    return () => window.cancelAnimationFrame(frame);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
   }, [location.pathname, location.hash]);
 
   useEffect(() => {

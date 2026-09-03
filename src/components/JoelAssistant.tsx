@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowUpRight, FiSend, FiX } from "react-icons/fi";
 import { projects } from "../data/projects";
 
@@ -42,10 +42,51 @@ function localPortfolioAnswer(message: string) {
 
   if (query.includes("project") || query.includes("work") || query.includes("build")) {
     const names = projects.filter((project) => project.featured).slice(0, 6).map((project) => project.shortTitle);
-    return `Start with ${names.join(", ")}. Open any project to see Joel’s role, the challenge, the build approach, evidence, and honest limitations.`;
+    return `Start with ${names.join(", ")}. Open any project to see Joel’s role, the challenge, the build approach, and project screenshots.`;
   }
 
   return "Joel builds web products, AI automations, computer-vision pipelines, and NLP/data systems. Try asking about featured projects, skills, RiceGuardAI, automation work, or how to contact him.";
+}
+
+function renderInlineMarkdown(text: string): ReactNode[] {
+  return text
+    .split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g)
+    .filter(Boolean)
+    .map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={index}>{part.slice(2, -2)}</strong>;
+      }
+      if (part.startsWith("*") && part.endsWith("*")) {
+        return <em key={index}>{part.slice(1, -1)}</em>;
+      }
+      return <Fragment key={index}>{part}</Fragment>;
+    });
+}
+
+function MarkdownMessage({ text }: { text: string }) {
+  const lines = text.replace(/\r/g, "").split("\n");
+  const blocks: ReactNode[] = [];
+  let bullets: string[] = [];
+
+  const flushBullets = () => {
+    if (!bullets.length) return;
+    blocks.push(<ul key={`list-${blocks.length}`}>{bullets.map((bullet, index) => <li key={index}>{renderInlineMarkdown(bullet)}</li>)}</ul>);
+    bullets = [];
+  };
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    const bullet = trimmed.match(/^(?:[-*]|\d+[.)])\s+(.+)$/);
+    if (bullet) {
+      bullets.push(bullet[1]);
+      return;
+    }
+    flushBullets();
+    if (trimmed) blocks.push(<p key={`paragraph-${blocks.length}`}>{renderInlineMarkdown(trimmed)}</p>);
+  });
+  flushBullets();
+
+  return <>{blocks}</>;
 }
 
 export default function JoelAssistant({ open, onClose }: JoelAssistantProps) {
@@ -87,7 +128,7 @@ export default function JoelAssistant({ open, onClose }: JoelAssistantProps) {
     setLoading(true);
 
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 25_000);
+    const timeout = window.setTimeout(() => controller.abort(), 32_000);
 
     try {
       const response = await fetch("/api/assistant", {
@@ -146,7 +187,7 @@ export default function JoelAssistant({ open, onClose }: JoelAssistantProps) {
         <div ref={messagesRef} className="assistant-messages" aria-live="polite">
           {messages.map((message) => (
             <div key={message.id} className={`assistant-message assistant-message--${message.role}`}>
-              {message.text}
+              {message.role === "assistant" ? <MarkdownMessage text={message.text} /> : message.text}
             </div>
           ))}
           {loading && <div className="assistant-message assistant-message--assistant">Checking the portfolio…</div>}

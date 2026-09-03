@@ -99,6 +99,11 @@ const publicProfileContext = {
   location: "Philippines",
   email: "jlaggui47@gmail.com",
   roles: ["Full-stack developer", "AI automation builder", "Data and AI project developer"],
+  experienceYears: 3,
+  certificates: [
+    "TRON 2026 Cyber Defense Exercise Qualifiers - Team Leader, Certificate of Participation",
+    "TRON 2026 Cyber Defense Exercise Qualifiers - 3rd Place School, ISU Cabagan, Team ISUC-CompSci",
+  ],
   services: [
     "Responsive websites and web applications",
     "Internal tools and workflow automation",

@@ -10,6 +10,10 @@ export default function CaseStudyPage() {
   const currentIndex = projects.findIndex((item) => item.slug === project.slug);
   const previous = projects[(currentIndex - 1 + projects.length) % projects.length];
   const next = projects[(currentIndex + 1) % projects.length];
+  const screenshots = [
+    { src: project.hero, alt: project.heroAlt },
+    ...(project.gallery ?? []).map((item) => ({ src: item.src, alt: item.alt })),
+  ].filter((item, index, items) => items.findIndex((candidate) => candidate.src === item.src) === index);
 
   return (
     <article className={`content-page case-study case-study--${project.accent}`}>
@@ -36,9 +40,17 @@ export default function CaseStudyPage() {
         </dl>
       </header>
 
-      <div className="case-study__hero">
-        <img src={project.hero} alt={project.heroAlt} />
-      </div>
+      {screenshots.length > 0 && (
+        <section id="screenshots" className="case-gallery case-gallery--images-only" aria-label="Project screenshots">
+          <div className="case-gallery__grid">
+            {screenshots.map((item) => (
+              <article key={item.src}>
+                <img src={item.src} alt={item.alt} loading="lazy" />
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       {project.metrics && (
         <section className="metric-row" aria-label="Project evidence">
@@ -64,30 +76,7 @@ export default function CaseStudyPage() {
           <h2>Outcome and proof</h2>
           <ul>{project.outcome.map((item) => <li key={item}>{item}</li>)}</ul>
         </section>
-        {project.limitations && (
-          <aside className="case-study__note">
-            <span>Honest boundary</span>
-            <p>{project.limitations}</p>
-          </aside>
-        )}
       </div>
-
-      {project.gallery && project.gallery.length > 0 && (
-        <section className="case-gallery" aria-labelledby="case-gallery-title">
-          <div className="section-heading">
-            <div><p className="eyebrow">Project evidence</p><h2 id="case-gallery-title">Screens and workflow</h2></div>
-            <p>Real project output or a public-safe view derived from the working files.</p>
-          </div>
-          <div className="case-gallery__grid">
-            {project.gallery.map((item) => (
-              <article key={item.src}>
-                <img src={item.src} alt={item.alt} loading="lazy" />
-                <p>{item.caption}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
 
       <section className="stack-section">
         <p className="eyebrow">Tools and languages</p>

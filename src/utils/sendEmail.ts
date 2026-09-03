@@ -2,8 +2,8 @@ const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
 
 const EMAILJS_CONFIG = {
   service_id: "Portfolio_Contact",
-  template_id: "template_jnkruwp",
-  user_id: "xbstR31xaERF_RP_O",
+  template_id: "template_6jj62jf",
+  user_id: "TVttJrxgE7gKmoM6o",
 };
 
 export type ContactMessage = {
@@ -19,6 +19,7 @@ export async function sendEmail(values: ContactMessage) {
     user_email: values.email,
     user_subject: values.subject,
     user_message: values.message,
+    title: values.subject,
     from_name: values.name,
     from_email: values.email,
     reply_to: values.email,
@@ -28,6 +29,15 @@ export async function sendEmail(values: ContactMessage) {
     email: values.email,
     to_name: "Joel Laggui Jr.",
     to_email: "jlaggui47@gmail.com",
+    business_email: "jlaggui47@gmail.com",
+    website_url: "https://joellaggui.vercel.app",
+    inquiry_type: "Portfolio inquiry",
+    event_type: "Website contact",
+    preferred_date: "Not specified",
+    guest_estimate: "Not applicable",
+    contact_method: "Email",
+    phone: "Not provided",
+    submission_time: new Date().toLocaleString("en-PH", { timeZone: "Asia/Manila" }),
     sender_name: values.name,
     sender_email: values.email,
     contact_name: values.name,
