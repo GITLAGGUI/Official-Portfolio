@@ -3,6 +3,13 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { themes, type ThemeId } from '../data/themes';
 import { NightDesk, MoonStudio, DataOrbit, MonokaiKeys, BlueArchitecture, RoseAtelier, NordTerrain, DaylightPlant } from './SceneDecor';
+import { markSceneReady } from '../utils/startup';
+
+function FirstFrame() {
+  const ready = useRef(false);
+  useFrame(() => { if (!ready.current) { ready.current = true; markSceneReady(); } });
+  return null;
+}
 
 function roundShape(width: number, height: number, radius: number) {
   const x = -width / 2, y = -height / 2, shape = new THREE.Shape();
@@ -107,7 +114,7 @@ function Studio({ active, theme }: { active: boolean; theme: ThemeId }) {
     nord: <NordTerrain active={active} />,
     light: <><Ribbon color="#e7e2d7" /><DaylightPlant active={active} /></>,
   };
-  return <group ref={scene}><StudioPhoto src={appearance.portrait} />{decor[theme]}</group>;
+  return <group ref={scene}><StudioPhoto src={appearance.portrait} />{decor[theme]}<FirstFrame /></group>;
 }
 
 function FitCamera() {

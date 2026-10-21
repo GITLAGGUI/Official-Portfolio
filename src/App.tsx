@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FiArrowUpRight, FiChevronDown, FiCode, FiCommand, FiDownload, FiFolder, FiGithub, FiHome, FiMail, FiSidebar, FiMonitor, FiPause, FiPlay, FiSearch, FiSettings, FiTerminal, FiUser, FiX, FiZap } from 'react-icons/fi';
 import { projects, legacyProjectRoutes } from './data/projects';
@@ -11,14 +11,25 @@ import CursorTrail from './components/CursorTrail';
 import MotionOrchestrator from './components/MotionOrchestrator';
 import LandingBackdrop from './components/LandingBackdrop';
 import { useMotionSettings } from './components/motion-context';
+import StudioLoader from './components/StudioLoader';
 
-const HomePage = lazy(() => import('./pages/HomePage'));
-const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
+const pages = {
+  '/': () => import('./pages/HomePage'), '/projects': () => import('./pages/ProjectsPage'),
+  '/about': () => import('./pages/AboutPage'), '/contact': () => import('./pages/ContactPage'),
+  '/tools': () => import('./pages/ToolsPage'), '/services': () => import('./pages/ServicesPage'),
+};
+const HomePage = lazy(pages['/']);
+const ProjectsPage = lazy(pages['/projects']);
 const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const ContactPage = lazy(() => import('./pages/ContactPage'));
-const ToolsPage = lazy(() => import('./pages/ToolsPage'));
-const ServicesPage = lazy(() => import('./pages/ServicesPage'));
+const AboutPage = lazy(pages['/about']);
+const ContactPage = lazy(pages['/contact']);
+const ToolsPage = lazy(pages['/tools']);
+const ServicesPage = lazy(pages['/services']);
+function preparePage(path: string) {
+  if (path === '/') return Promise.all([pages['/'](), import('./components/HeroScene')]);
+  if (path.startsWith('/projects/')) return import('./pages/CaseStudyPage');
+  return (pages[path === '/skills' ? '/tools' : path as keyof typeof pages] ?? pages['/'])();
+}
 const icons = [FiHome, FiFolder, FiZap, FiMonitor, FiUser, FiMail];
 function ProjectRoute() {
   const { slug } = useParams();
@@ -30,6 +41,9 @@ export default function App() {
   const location = useLocation(); const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null); const mainRef = useRef<HTMLElement>(null);
   const [theme, setTheme] = useState<ThemeId>(loadTheme);
+  const [loading, setLoading] = useState(true);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const finishStartup = useCallback(() => setLoading(false), []);
   const appearance = themes.find((item) => item.id === theme)!;
   const [sidebar, setSidebar] = useState(true); const [assistant, setAssistant] = useState(false);
   const [tabs, setTabs] = useState(['/', '/projects', '/contact']);
@@ -40,6 +54,12 @@ export default function App() {
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem('joel-theme', theme); } catch { /* Storage is optional. */ }
   }, [theme]);
+  useLayoutEffect(() => {
+    document.documentElement.dataset.startup = loading ? 'loading' : 'ready';
+    if (shellRef.current) shellRef.current.inert = loading;
+    window.dispatchEvent(new Event('joel-studio-visibility'));
+    if (!loading) mainRef.current?.focus({ preventScroll: true });
+  }, [loading]);
   useEffect(() => {
     document.title = `${pageTitle} — Joel Laggui Jr.`;
     document.querySelector('link[rel="canonical"]')?.setAttribute('href', `https://joellaggui.vercel.app${location.pathname}`);
@@ -73,7 +93,7 @@ export default function App() {
     region.addEventListener('scroll', update, { passive: true }); media.addEventListener('change', update); update();
     return () => { region.removeEventListener('scroll', update); media.removeEventListener('change', update); cancelAnimationFrame(frame); };
   }, [location.pathname, paused]);
-  return <div className={`app-shell ${location.pathname === '/' ? 'app-shell--home' : ''} ${sidebar ? '' : 'sidebar-hidden'}`}>
+  return <>{loading && <StudioLoader theme={theme} path={location.pathname} preparePage={preparePage} onComplete={finishStartup} />}<div ref={shellRef} aria-hidden={loading ? true : undefined} className={`app-shell ${location.pathname === '/' ? 'app-shell--home' : ''} ${sidebar ? '' : 'sidebar-hidden'}`}>
     <a className="skip-link" href="#main-content">Skip to content</a>
     <header className="title-bar">
       <StudioCommands theme={theme} setTheme={setTheme} toggleSidebar={() => setSidebar((old) => !old)} openAssistant={() => setAssistant(true)} />
@@ -94,6 +114,6 @@ export default function App() {
     </div>
     <footer className="status-bar"><div><FiCode /> portfolio <span>·</span><span>Philippines, GMT+8</span></div><div><VisitCount /><span>{themes.find((item) => item.id === theme)?.name}</span></div></footer>
     <JoelAssistant open={assistant} onClose={() => setAssistant(false)} />
-    <CursorTrail /><MotionOrchestrator region={scrollRef} route={location.pathname} />
-  </div>;
+    <CursorTrail /><MotionOrchestrator region={scrollRef} route={location.pathname} enabled={!loading} />
+  </div></>;
 }

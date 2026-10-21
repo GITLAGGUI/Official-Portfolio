@@ -1,10 +1,10 @@
 import { RefObject, useEffect } from 'react';
 import { useMotionSettings } from './motion-context';
 
-export default function MotionOrchestrator({ region, route }: { region: RefObject<HTMLDivElement>; route: string }) {
+export default function MotionOrchestrator({ region, route, enabled = true }: { region: RefObject<HTMLDivElement>; route: string; enabled?: boolean }) {
   const { paused } = useMotionSettings();
   useEffect(() => {
-    const root = region.current; if (!root || paused) return;
+    const root = region.current; if (!root || paused || !enabled) return;
     const media = matchMedia('(prefers-reduced-motion: reduce)');
     const animations = new Set<Animation>();
     const seen = new WeakSet<Element>(); let index = 0;
@@ -21,6 +21,6 @@ export default function MotionOrchestrator({ region, route }: { region: RefObjec
     discover(); const mutation = new MutationObserver(discover); mutation.observe(root, { childList: true, subtree: true });
     media.addEventListener('change', preferenceChanged);
     return () => { observer.disconnect(); mutation.disconnect(); media.removeEventListener('change', preferenceChanged); cancel(); };
-  }, [region, route, paused]);
+  }, [region, route, paused, enabled]);
   return null;
 }

@@ -6,18 +6,20 @@ import ProjectCard from '../components/ProjectCard';
 import ToolsStrip from '../components/ToolsStrip';
 import useMotionVisibility from '../components/useMotionVisibility';
 import { themes, type ThemeId } from '../data/themes';
+import { markSceneReady } from '../utils/startup';
 
 const HeroScene = lazy(() => import('../components/HeroScene'));
 const portraitFallback = (theme: ThemeId) => <div className="portrait-fallback"><img src={themes.find((item) => item.id === theme)!.portrait} alt="Joel at his laptop" decoding="async" fetchPriority="high" /></div>;
 class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch() { markSceneReady(); }
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 function Portrait({ theme }: { theme: ThemeId }) {
   const ref = useRef<HTMLDivElement>(null); const active = useMotionVisibility(ref); const [supported, setSupported] = useState(false);
   useEffect(() => {
-    try { const canvas = document.createElement('canvas'); setSupported(!!(canvas.getContext('webgl2') || canvas.getContext('webgl'))); } catch { setSupported(false); }
+    try { const canvas = document.createElement('canvas'); const available = !!(canvas.getContext('webgl2') || canvas.getContext('webgl')); setSupported(available); if (!available) markSceneReady(); } catch { setSupported(false); markSceneReady(); }
   }, []);
   const fallback = portraitFallback(theme);
   return <div className="workflow-scene" ref={ref} role="img" aria-label={`Joel’s original portrait in a ${themes.find((item) => item.id === theme)!.name} scene with themed 3D objects and pointer parallax.`}><SceneBoundary key={theme} fallback={fallback}>{supported ? <Suspense fallback={fallback}><HeroScene active={active} theme={theme} /></Suspense> : fallback}</SceneBoundary></div>;
