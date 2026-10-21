@@ -1,69 +1,20 @@
-import { useMemo, useState } from "react";
-import ProjectCard from "../components/ProjectCard";
-import { archivedProjects, featuredProjects, projects } from "../data/projects";
-
+import { useSearchParams } from 'react-router-dom';
+import { FiSearch } from 'react-icons/fi';
+import ProjectCard from '../components/ProjectCard';
+import Pagination from '../components/Pagination';
+import { projects } from '../data/projects';
 const filters = [
-  { label: "All work", categories: [] },
-  { label: "Websites & apps", categories: ["Web product", "Commerce", "Mobile", "Web application", "Web design"] },
-  { label: "Automation", categories: ["AI automation", "Workflow automation", "Developer tool", "Desktop utility"] },
-  { label: "AI & data", categories: ["Computer vision", "Data engineering", "NLP and data science", "Data application", "Data visualization"] },
+  { id: 'all', label: 'All work', categories: [] as string[] },
+  { id: 'web', label: 'Websites & SaaS', categories: ['SaaS', 'Web product', 'Commerce', 'Mobile', 'Web application', 'Web design'] },
+  { id: 'automation', label: 'Automation', categories: ['AI automation', 'Workflow automation', 'Developer tool', 'Desktop utility'] },
+  { id: 'data', label: 'AI & data', categories: ['Computer vision', 'Data engineering', 'NLP and data science', 'Data application', 'Data visualization'] },
+  { id: 'video', label: 'Video & motion', categories: ['Video & motion'] },
 ];
-
 export default function ProjectsPage() {
-  const [activeFilter, setActiveFilter] = useState("All work");
-  const visibleFeatured = useMemo(
-    () => {
-      const filter = filters.find((item) => item.label === activeFilter);
-      return !filter || filter.categories.length === 0
-        ? featuredProjects
-        : featuredProjects.filter((project) => filter.categories.includes(project.category));
-    },
-    [activeFilter],
-  );
-
-  return (
-    <div className="content-page projects-page">
-      <header className="page-header">
-        <div>
-          <p className="eyebrow">Selected work</p>
-          <h1>What I built, why it matters, and how it works.</h1>
-        </div>
-      </header>
-
-      <div className="project-filters" role="group" aria-label="Filter featured projects">
-        {filters.map((filter) => (
-          <button
-            key={filter.label}
-            type="button"
-            aria-pressed={activeFilter === filter.label}
-            className={activeFilter === filter.label ? "is-active" : ""}
-            onClick={() => setActiveFilter(filter.label)}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </div>
-
-      <p className="result-count">{visibleFeatured.length} of {featuredProjects.length} featured projects</p>
-      <section className="project-grid" aria-label="Featured projects">
-        {visibleFeatured.map((project) => <ProjectCard key={project.slug} project={project} />)}
-      </section>
-
-      {visibleFeatured.length === 0 && (
-        <div className="empty-state">No project is in this group yet. Choose All work to see everything.</div>
-      )}
-
-      <section className="archive-section" aria-labelledby="archive-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">Archive</p><h2 id="archive-title">More work</h2></div>
-          <p>Earlier mobile, commerce, data, and academic builds—kept concise and grounded in the evidence that remains available.</p>
-        </div>
-        <div className="archive-grid">
-          {archivedProjects.map((project) => <ProjectCard key={project.slug} project={project} compact />)}
-        </div>
-      </section>
-
-      <div className="project-index-note">{projects.length} case-study records · stable slug routes · legacy numeric links preserved</div>
-    </div>
-  );
+  const [params, setParams] = useSearchParams(); const filter = filters.find((item) => item.id === params.get('category')) ?? filters[0];
+  const query = params.get('q') ?? '';
+  const visible = projects.filter((project) => (filter.categories.length === 0 || filter.categories.includes(project.category)) && `${project.title} ${project.category} ${project.stack.join(' ')}`.toLowerCase().includes(query.toLowerCase()));
+  const pages = Math.max(1, Math.ceil(visible.length / 6)); const page = Math.min(pages, Math.max(1, Math.floor(Number(params.get('page'))) || 1));
+  const update = (key: string, value: string) => { const next = new URLSearchParams(params); next.delete('page'); if (value) next.set(key, value); else next.delete(key); setParams(next, { replace: true }); };
+  return <div className="content-page projects-page"><header className="compact-page-header"><h1>Projects<span>{projects.length}</span></h1><label className="compact-search"><FiSearch /><input aria-label="Search projects" value={query} placeholder="Find a project…" onChange={(event) => update('q', event.target.value)} /></label></header><div className="project-filters" role="group" aria-label="Filter projects">{filters.map((item) => <button key={item.id} aria-pressed={filter.id === item.id} onClick={() => update('category', item.id === 'all' ? '' : item.id)}>{item.label}</button>)}</div><section className="project-grid" aria-label="Projects">{visible.slice((page - 1) * 6, page * 6).map((project) => <ProjectCard key={project.slug} project={project} compact />)}</section>{visible.length === 0 && <p className="empty-state">No projects match. Try another search.</p>}<Pagination page={page} pages={pages} label="Project pages" onChange={(value) => update('page', String(value))} /></div>;
 }

@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/tools", "destination": "/" },
+    { "source": "/skills", "destination": "/" },
+    { "source": "/services", "destination": "/" },
     { "source": "/about", "destination": "/" },
     { "source": "/contact", "destination": "/" },
     { "source": "/projects", "destination": "/" },

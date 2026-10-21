@@ -8,6 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.local/
+graphify-out/
+tmp/
+qa/
+interview.txt
+tsc_output.txt
 dist
 dist-ssr
 *.local

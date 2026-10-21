@@ -23,13 +23,16 @@ const starterMessages: ChatMessage[] = [
 
 function localPortfolioAnswer(message: string) {
   const query = message.toLowerCase();
+  if (query.includes('leadmaps')) return 'LeadMaps is Joel’s business research workspace at leadmaps.live. It combines business collection, saved lists, CSV/Excel/JSON exports, an API, webhooks and an MCP bridge. The product uses Next.js, TypeScript, PostgreSQL and Azure and is a private beta.';
+  if (query.includes('video') || query.includes('motion') || query.includes('edit')) return 'Joel edits cinematic footage, talking-head reels and product motion graphics using FFmpeg and HyperFrames. Open Projects → Video & Motion to watch the finished cinematic and creator edits.';
+  if (query.includes('seo')) return 'Joel offers technical SEO, keyword and competitor research, metadata and content-structure improvements. OpenSEO supports his research workflow. The Services and Skills pages explain the scope.';
 
   if (query.includes("contact") || query.includes("hire") || query.includes("available")) {
     return "Joel is open to full-stack, AI automation, computer vision, NLP, and data workflow opportunities. You can reach him at jlaggui47@gmail.com or use the Contact file in this portfolio.";
   }
 
   if (query.includes("skill") || query.includes("stack") || query.includes("technology")) {
-    return "Joel works across React and TypeScript, Python data and automation systems, n8n and OpenClaw workflows, AWS, CVAT, YOLO segmentation, ABSA, Flutter, Supabase, and deployment tooling. The Skills section groups these by the problems they solve.";
+    return "Joel works with React, Next.js, TypeScript, Python, PostgreSQL, Supabase, n8n, OpenClaw, Azure, AWS, CVAT, YOLO, ABSA, FFmpeg and HyperFrames. His work spans SaaS, AI automation, vision, data, SEO and video. Open Tools for the complete directory or Skills for the capabilities.";
   }
 
   if (query.includes("automation") || query.includes("n8n") || query.includes("openclaw")) {

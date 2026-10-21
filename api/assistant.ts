@@ -21,6 +21,8 @@ const requestBuckets = new Map<string, { count: number; resetAt: number }>();
 // an independent ESM function, so importing the browser-side project module
 // would leave an extensionless runtime import in the deployed function.
 const publicProjectContext = [
+  { title: 'LeadMaps', summary: 'A business research workspace with bounded collection, saved lists, CSV/Excel/JSON exports, a REST API, signed webhooks and an MCP bridge.', status: 'Private beta', stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure', 'Docker'], link: 'https://leadmaps.live' },
+  { title: 'Video & Motion', summary: 'A finished LeadMaps spatial product film and captioned talking-head edits, playable in the portfolio.', status: 'Selected edits', stack: ['FFmpeg', 'HyperFrames', 'Motion graphics', 'Sound design'], link: 'https://joellaggui.vercel.app/projects/video-editing' },
   {
     title: "SkyGlass Hillside Garden",
     summary: "A calm, image-led venue website for stays, packages, and structured visit requests.",
@@ -110,10 +112,14 @@ const publicProfileContext = {
     "n8n and OpenClaw systems with human review gates",
     "Computer-vision data and inference pipelines",
     "NLP, ABSA, data audits, and dashboards",
+    'SaaS interfaces, account workflows and APIs',
+    'Technical SEO, keyword and competitor research',
+    'Video editing, captions, product motion and cinematic storytelling',
   ],
   tools: [
     "React", "TypeScript", "Node.js", "PHP", "Flutter", "Python", "n8n", "OpenClaw",
     "Claude Code", "Codex", "AWS", "Kaggle", "CVAT", "YOLOv8-seg", "YOLOv26-seg",
+    'Next.js', 'PostgreSQL', 'Azure', 'Docker', 'MCP', 'OpenSEO', 'FFmpeg', 'HyperFrames', 'ElevenLabs',
   ],
   additionalWork: [
     "Hotplate", "Prostate Cancer Risk Analysis Dashboard", "ISU Lost & Found System",

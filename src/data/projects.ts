@@ -36,9 +36,41 @@ export type ProjectCaseStudy = {
   outcome: string[];
   limitations?: string;
   gallery?: ProjectGalleryItem[];
+  videos?: { src: string; poster: string; title: string }[];
+  previewVideo?: string;
 };
 
 export const projects: ProjectCaseStudy[] = [
+  {
+    slug: 'leadmaps', title: 'LeadMaps', shortTitle: 'LeadMaps', subtitle: 'Business research workspace & collection API',
+    summary: 'Find, organize and export business records from one focused workspace.', category: 'SaaS', role: 'Product design & full-stack development', year: '2026', status: 'Private beta', featured: true, accent: 'amber',
+    hero: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', heroAlt: 'LeadMaps workspace from the v11 spatial product film',
+    previewVideo: '/assets/projects/leadmaps/leadmaps-v11-preview.mp4',
+    stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure', 'Docker', 'REST API', 'Webhooks', 'MCP'],
+    links: [{ label: 'Live site', href: 'https://leadmaps.live' }],
+    challenge: 'Business research needs clean records and a clear route from collection to a usable export.',
+    approach: ['Built isolated workspaces, a durable collection queue, and CSV, Excel and JSON exports.', 'Connected the workflow through scoped API keys, signed webhooks and an MCP bridge.'],
+    outcome: ['A working private beta with business research, saved lists and repeatable exports.'],
+    videos: [{ src: '/assets/projects/leadmaps/leadmaps-v11.mp4', poster: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', title: 'LeadMaps v11 · Spatial product film' }],
+    gallery: [
+      { src: '/assets/projects/seo/search-console.jpg', alt: 'LeadMaps Google Search Console performance report captured on October 22, 2026', caption: 'Google Search Console · real project report' },
+      { src: '/assets/projects/seo/openseo-audit.jpg', alt: 'Completed LeadMaps OpenSEO site audit covering 22 crawled pages', caption: 'OpenSEO · completed site audit' },
+    ],
+  },
+  {
+    slug: 'video-editing', title: 'Video & Motion', shortTitle: 'Video & Motion', subtitle: 'Spatial product films & creator edits',
+    summary: 'Product storytelling and talking-head edits, with purposeful pacing, captions and sound.', category: 'Video & motion', role: 'Editing, motion graphics & sound', year: '2026', status: 'Selected edits', featured: true, accent: 'rose',
+    hero: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', heroAlt: 'LeadMaps v11 spatial landscape product film',
+    previewVideo: '/assets/projects/leadmaps/leadmaps-v11-preview.mp4',
+    stack: ['FFmpeg', 'HyperFrames', 'Motion graphics', 'Sound design', 'Captions'], links: [],
+    challenge: 'Give real footage a clear rhythm and make spoken ideas easier to follow.',
+    approach: ['Built a spatial product film for LeadMaps and shaped a talking-head clip into a captioned creator edit.'],
+    outcome: ['Finished edits that can be watched directly in this portfolio.'],
+    videos: [
+      { src: '/assets/projects/leadmaps/leadmaps-v11.mp4', poster: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', title: 'LeadMaps v11 · Spatial product film' },
+      { src: '/assets/projects/video-editing/creator.mp4', poster: '/assets/projects/video-editing/creator-poster.webp', title: 'Broker Home Terms · Creator edit' },
+    ],
+  },
   {
     slug: "skyglass-hillside-garden",
     title: "SkyGlass Hillside Garden",
@@ -87,8 +119,8 @@ export const projects: ProjectCaseStudy[] = [
     status: "Live demo",
     featured: true,
     accent: "blue",
-    hero: "/assets/projects/drones-gadgets/home.webp",
-    heroAlt: "Drones and Gadgets PH storefront homepage",
+    hero: "/assets/projects/drones-gadgets/storefront-20261022.jpg",
+    heroAlt: "Current Drones and Gadgets PH storefront captured from the live website",
     stack: ["React", "TypeScript", "Supabase", "PayMongo modes", "Vercel"],
     links: [
       {
@@ -161,7 +193,7 @@ export const projects: ProjectCaseStudy[] = [
     slug: "riceguardai",
     title: "RiceGuardAI",
     shortTitle: "RiceGuardAI",
-    subtitle: "Drone-image disease detection and segmentation research",
+    subtitle: "Rice-field workspace & drone-image disease segmentation",
     summary:
       "A research pipeline that checks high-resolution drone images for rice disease areas while preserving enough detail for review.",
     category: "Computer vision",
@@ -171,6 +203,7 @@ export const projects: ProjectCaseStudy[] = [
     featured: true,
     accent: "sage",
     hero: "/assets/projects/riceguardai/drone-inference.webp",
+    previewVideo: '/assets/projects/riceguardai/preview.mp4',
     heroAlt: "Drone-captured rice field frame with RiceGuardAI segmentation predictions",
     stack: [
       "Python",
@@ -182,7 +215,7 @@ export const projects: ProjectCaseStudy[] = [
       "Kaggle",
       "AWS",
     ],
-    links: [],
+    links: [{ label: 'Live site', href: 'https://riceguardai.dev' }],
     metrics: [
       { value: "4K", label: "native image workflow" },
       { value: "2", label: "reviewed disease classes" },

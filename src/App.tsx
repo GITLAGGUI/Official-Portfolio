@@ -1,351 +1,97 @@
-import {
-  lazy,
-  Suspense,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { NavLink, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
-import {
-  VscAccount,
-  VscChevronDown,
-  VscFiles,
-  VscGithub,
-  VscMail,
-  VscSearch,
-  VscSettingsGear,
-  VscSourceControl,
-} from "react-icons/vsc";
-import { SiJson, SiMarkdown, SiReact, SiTypescript } from "react-icons/si";
-import { featuredProjects, legacyProjectRoutes } from "./data/projects";
-import AppLoader from "./components/AppLoader";
-import JoelAssistant from "./components/JoelAssistant";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { FiArrowUpRight, FiChevronDown, FiCode, FiCommand, FiDownload, FiFolder, FiGithub, FiHome, FiMail, FiSidebar, FiMonitor, FiPause, FiPlay, FiSearch, FiSettings, FiTerminal, FiUser, FiX, FiZap } from 'react-icons/fi';
+import { projects, legacyProjectRoutes } from './data/projects';
+import { themes, loadTheme, type ThemeId } from './data/themes';
+import JoelAssistant from './components/JoelAssistant';
+import StudioCommands from './components/StudioCommands';
+import { sections, resume, studioAction } from './utils/studio';
+import VisitCount from './components/VisitCount';
+import CursorTrail from './components/CursorTrail';
+import MotionOrchestrator from './components/MotionOrchestrator';
+import { useMotionSettings } from './components/motion-context';
 
-const HomePage = lazy(() => import("./pages/HomePage"));
-const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
-const CaseStudyPage = lazy(() => import("./pages/CaseStudyPage"));
-const AboutPage = lazy(() => import("./pages/AboutPage"));
-const ContactPage = lazy(() => import("./pages/ContactPage"));
-
-type TabDefinition = {
-  label: string;
-  href: string;
-  kind: "tsx" | "md" | "json" | "ts";
-};
-
-const baseTabs: TabDefinition[] = [
-  { label: "home.tsx", href: "/", kind: "tsx" },
-  { label: "about.md", href: "/about", kind: "md" },
-  { label: "projects.json", href: "/projects", kind: "json" },
-  { label: "contact.ts", href: "/contact", kind: "ts" },
-];
-
-function LegacyProjectRedirect() {
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
+const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const ToolsPage = lazy(() => import('./pages/ToolsPage'));
+const ServicesPage = lazy(() => import('./pages/ServicesPage'));
+const icons = [FiHome, FiFolder, FiZap, FiMonitor, FiUser, FiMail];
+function ProjectRoute() {
   const { slug } = useParams();
-  if (!slug || !/^\d+$/.test(slug)) return null;
-  return <Navigate replace to={legacyProjectRoutes[slug] ?? "/projects"} />;
+  return slug && /^\d+$/.test(slug) ? <Navigate replace to={legacyProjectRoutes[slug] ?? '/projects'} /> : <CaseStudyPage />;
 }
-
-function RouteContent() {
-  return (
-    <Suspense fallback={<div className="route-loading">Opening file…</div>}>
-      <div className="route-stage">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/projects/:slug" element={<CaseStudyRoute />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<Navigate replace to="/" />} />
-        </Routes>
-      </div>
-    </Suspense>
-  );
-}
-
-function CaseStudyRoute() {
-  const { slug } = useParams();
-  if (slug && /^\d+$/.test(slug)) return <LegacyProjectRedirect />;
-  return <CaseStudyPage />;
-}
-
-function App() {
-  const location = useLocation();
-  const scrollRegionRef = useRef<HTMLDivElement>(null);
-  const mainRef = useRef<HTMLElement>(null);
-  const [assistantOpen, setAssistantOpen] = useState(false);
-  const [bootPhase, setBootPhase] = useState<"loading" | "leaving" | "done">("loading");
-
+export default function App() {
+  const { paused, toggle: toggleMotion } = useMotionSettings();
+  const motionButton = <button className="icon-button motion-toggle" onClick={toggleMotion} aria-label={paused ? 'Resume motion' : 'Pause motion'} title={paused ? 'Resume motion' : 'Pause motion'} aria-pressed={paused}>{paused ? <FiPlay /> : <FiPause />}</button>;
+  const location = useLocation(); const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null); const mainRef = useRef<HTMLElement>(null);
+  const [theme, setTheme] = useState<ThemeId>(loadTheme);
+  const [sidebar, setSidebar] = useState(true); const [assistant, setAssistant] = useState(false);
+  const [tabs, setTabs] = useState(['/', '/projects', '/contact']);
+  const active = sections.find((section) => section.href === location.pathname);
+  const project = projects.find((item) => location.pathname === `/projects/${item.slug}`);
+  const pageTitle = active?.label ?? project?.shortTitle ?? 'Home';
   useEffect(() => {
-    let cancelled = false;
-    const startedAt = performance.now();
-    const imageSources = [
-      "/assets/hero/automation-network-fallback.webp",
-      "/assets/assistant/joel-assistant-bot.webp",
-      "/assets/projects/skyglass/home.webp",
-      "/assets/profile/joel-profile.webp",
-    ];
-    const preloadImage = (src: string) =>
-      new Promise<void>((resolve) => {
-        const image = new Image();
-        image.onload = () => resolve();
-        image.onerror = () => resolve();
-        image.src = src;
-        if (image.complete) resolve();
-      });
-    const fontsReady = document.fonts?.ready ?? Promise.resolve();
-    const resourcesReady = Promise.all([fontsReady, ...imageSources.map(preloadImage)]);
-    const timeout = new Promise<void>((resolve) => window.setTimeout(resolve, 2400));
-
-    void Promise.race([resourcesReady, timeout]).then(() => {
-      const minimumDelay = Math.max(0, 720 - (performance.now() - startedAt));
-      window.setTimeout(() => {
-        if (cancelled) return;
-        setBootPhase("leaving");
-        window.setTimeout(() => {
-          if (!cancelled) setBootPhase("done");
-        }, 360);
-      }, minimumDelay);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const activeTab = useMemo(() => {
-    if (location.pathname.startsWith("/projects/") && location.pathname !== "/projects") {
-      const segments = location.pathname.split("/").filter(Boolean);
-      const slug = segments[segments.length - 1] ?? "project";
-      return { label: `${slug}.md`, href: location.pathname, kind: "md" as const };
-    }
-    return (
-      baseTabs.find((tab) =>
-        tab.href === "/" ? location.pathname === "/" : location.pathname.startsWith(tab.href),
-      ) ?? baseTabs[0]
-    );
-  }, [location.pathname]);
-
-  const visibleTabs = useMemo(() => {
-    if (activeTab.href.startsWith("/projects/") && activeTab.href !== "/projects") {
-      return [...baseTabs.slice(0, 3), activeTab, baseTabs[3]];
-    }
-    return baseTabs;
-  }, [activeTab]);
-
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('joel-theme', theme); } catch { /* Storage is optional. */ }
+  }, [theme]);
+  useEffect(() => {
+    document.title = `${pageTitle} — Joel Laggui Jr.`;
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', `https://joellaggui.vercel.app${location.pathname}`);
+    setTabs((old) => old.includes(location.pathname) ? old : [...old.slice(-5), location.pathname]);
+  }, [location.pathname, pageTitle]);
   useLayoutEffect(() => {
-    const region = scrollRegionRef.current;
-    if (!region) return;
-
-    region.scrollTo({ top: 0, left: 0, behavior: "instant" });
-
-    let observer: MutationObserver | undefined;
-    const scrollToAnchor = () => {
-      const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
-      if (!target) return false;
-      target.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" });
-      return true;
-    };
-    const frame = window.requestAnimationFrame(() => {
-      if (location.hash && !scrollToAnchor()) {
-        observer = new MutationObserver(() => {
-          if (scrollToAnchor()) observer?.disconnect();
-        });
-        observer.observe(region, { childList: true, subtree: true });
-      }
-      mainRef.current?.focus({ preventScroll: true });
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      observer?.disconnect();
-    };
+    const region = scrollRef.current; region?.scrollTo({ top: 0, behavior: 'instant' });
+    mainRef.current?.focus({ preventScroll: true });
+    if (!location.hash || !region) return;
+    const seek = () => { const target = document.getElementById(location.hash.slice(1)); if (!target) return false; target.scrollIntoView({ behavior: 'instant', block: 'start' }); return true; };
+    const observer = new MutationObserver(() => { if (seek()) observer.disconnect(); });
+    if (!seek()) observer.observe(region, { subtree: true, childList: true });
+    return () => observer.disconnect();
   }, [location.pathname, location.hash]);
-
   useEffect(() => {
-    const pageName = activeTab.label.replace(/\.(tsx|ts|json|md)$/, "");
-    document.title = `${pageName === "home" ? "Joel Laggui" : pageName} — Portfolio`;
-  }, [activeTab.label]);
-
-  useEffect(() => {
-    const openAssistant = () => setAssistantOpen(true);
-    window.addEventListener("open-joel-assistant", openAssistant);
-    return () => window.removeEventListener("open-joel-assistant", openAssistant);
+    const open = () => setAssistant(true); window.addEventListener('open-joel-assistant', open);
+    return () => window.removeEventListener('open-joel-assistant', open);
   }, []);
-
-  const tabIcon = (kind: TabDefinition["kind"]) => {
-    if (kind === "md") return <SiMarkdown className="file-icon file-icon--md" aria-hidden="true" />;
-    if (kind === "json") return <SiJson className="file-icon file-icon--json" aria-hidden="true" />;
-    if (kind === "tsx") return <SiReact className="file-icon file-icon--tsx" aria-hidden="true" />;
-    return <SiTypescript className="file-icon file-icon--ts" aria-hidden="true" />;
-  };
-
-  return (
-    <div className="app-shell" aria-busy={bootPhase !== "done"}>
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
-
-      <header className="title-bar">
-        <div className="title-bar__menus" aria-hidden="true">
-          <img src="/assets/vscode_icon.svg" alt="" />
-          <span>File</span>
-          <span>Edit</span>
-          <span>Selection</span>
-          <span>View</span>
-          <span>Go</span>
-          <span>Run</span>
-          <span>Terminal</span>
-          <span>Help</span>
-        </div>
-        <NavLink className="title-bar__title" to="/">
-          Joel Laggui Jr. — Full-Stack Developer &amp; AI Automation Builder
-        </NavLink>
-        <div className="window-controls" aria-hidden="true">
-          <span className="window-control window-control--amber" />
-          <span className="window-control window-control--sage" />
-          <span className="window-control window-control--rose" />
-        </div>
-      </header>
-
-      <div className="workspace-grid">
-        <aside className="activity-rail" aria-label="Primary navigation">
-          <div className="activity-rail__top">
-            <NavLink to="/projects" aria-label="Projects" title="Projects">
-              <VscFiles />
-            </NavLink>
-            <NavLink to="/about" aria-label="About" title="About">
-              <VscSearch />
-            </NavLink>
-            <NavLink to="/projects" aria-label="Work archive" title="Work archive">
-              <VscSourceControl />
-            </NavLink>
-            <NavLink to="/contact" aria-label="Contact" title="Contact">
-              <VscMail />
-            </NavLink>
-            <button
-              type="button"
-              aria-label="Open Joel Assistant"
-              title="Joel Assistant"
-              onClick={() => setAssistantOpen(true)}
-            >
-              <img className="assistant-rail-icon" src="/assets/assistant/joel-assistant-bot.webp" alt="" />
-            </button>
-          </div>
-          <div className="activity-rail__bottom">
-            <NavLink to="/about" aria-label="Profile" title="Profile">
-              <VscAccount />
-            </NavLink>
-            <span aria-hidden="true">
-              <VscSettingsGear />
-            </span>
-          </div>
-        </aside>
-
-        <aside className="explorer-panel" aria-label="Portfolio explorer">
-          <div className="explorer-panel__heading">
-            <span>EXPLORER</span>
-            <span aria-hidden="true">•••</span>
-          </div>
-          <nav>
-            <div className="tree-row tree-row--root">
-              <VscChevronDown aria-hidden="true" />
-              <strong>PORTFOLIO</strong>
-            </div>
-            <div className="tree-group">
-              <div className="tree-row tree-row--folder">
-                <VscChevronDown aria-hidden="true" />
-                <span>profile</span>
-              </div>
-              <NavLink className="tree-link" to="/about">
-                <SiMarkdown className="file-icon file-icon--md" /> about.md
-              </NavLink>
-              <NavLink className="tree-link" to="/about#skills">
-                <SiMarkdown className="file-icon file-icon--md" /> skills.md
-              </NavLink>
-              <a className="tree-link" href="/assets/resume/Joel_Laggui_Resume_ATS_2026.pdf" target="_blank" rel="noreferrer">
-                <span className="file-badge file-badge--pdf">PDF</span> resume.pdf
-              </a>
-            </div>
-
-            <div className="tree-group">
-              <div className="tree-row tree-row--folder">
-                <VscChevronDown aria-hidden="true" />
-                <span>projects</span>
-              </div>
-              {featuredProjects.slice(0, 8).map((project) => (
-                <NavLink className="tree-link" key={project.slug} to={`/projects/${project.slug}`}>
-                  <SiMarkdown className="file-icon file-icon--md" /> {project.slug}.md
-                </NavLink>
-              ))}
-              <NavLink className="tree-link tree-link--more" to="/projects">
-                + more work
-              </NavLink>
-            </div>
-
-            <div className="tree-group tree-group--utility">
-              <NavLink className="tree-link" to="/contact">
-                <SiTypescript className="file-icon file-icon--ts" /> contact.ts
-              </NavLink>
-              <span className="tree-link tree-link--static">
-                <SiJson className="file-icon file-icon--json" /> config.json
-              </span>
-              <a className="tree-link" href="https://github.com/GITLAGGUI" target="_blank" rel="noreferrer">
-                <VscGithub /> GitHub
-              </a>
-            </div>
-          </nav>
-        </aside>
-
-        <section className="editor-pane">
-          <nav className="editor-tabs" aria-label="Open portfolio files">
-            {visibleTabs.map((tab) => (
-              <NavLink
-                key={`${tab.href}-${tab.label}`}
-                className={({ isActive }) =>
-                  `editor-tab ${isActive || activeTab.href === tab.href ? "editor-tab--active" : ""}`
-                }
-                to={tab.href}
-              >
-                {tabIcon(tab.kind)}
-                <span>{tab.label}</span>
-                {activeTab.href === tab.href && <span className="editor-tab__close" aria-hidden="true">×</span>}
-              </NavLink>
-            ))}
-          </nav>
-
-          <main
-            id="main-content"
-            ref={mainRef}
-            className={`editor-main ${location.pathname === "/" ? "editor-main--home" : ""}`}
-            tabIndex={-1}
-          >
-            <div ref={scrollRegionRef} className="editor-scroll" data-testid="editor-scroll-region">
-              <RouteContent key={location.pathname} />
-            </div>
-          </main>
-        </section>
-      </div>
-
-      <footer className="status-bar">
-        <div>
-          <VscSourceControl aria-hidden="true" /> main
-          <span>× 0</span>
-          <span>△ 0</span>
-        </div>
-        <div>
-          <span>{activeTab.kind === "md" ? "Markdown" : "TypeScript React"}</span>
-          <span>UTF-8</span>
-          <span>Prettier</span>
-        </div>
-      </footer>
-
-      <JoelAssistant open={assistantOpen} onClose={() => setAssistantOpen(false)} />
-      {bootPhase !== "done" && <AppLoader leaving={bootPhase === "leaving"} />}
+  useEffect(() => {
+    const region = scrollRef.current; if (!region) return;
+    let frame = 0;
+    const update = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(() => {
+      const reduce = paused || matchMedia('(prefers-reduced-motion: reduce)').matches;
+      region.querySelectorAll<HTMLElement>('[data-parallax]').forEach((element) => {
+        const top = element.getBoundingClientRect().top - region.getBoundingClientRect().top;
+        const value = reduce ? 0 : Math.max(-22, Math.min(22, (region.clientHeight * .5 - top) * .035));
+        element.style.transform = `translate3d(0,${value}px,0)`;
+      });
+    }); };
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    region.addEventListener('scroll', update, { passive: true }); media.addEventListener('change', update); update();
+    return () => { region.removeEventListener('scroll', update); media.removeEventListener('change', update); cancelAnimationFrame(frame); };
+  }, [location.pathname, paused]);
+  return <div className={`app-shell ${sidebar ? '' : 'sidebar-hidden'}`}>
+    <a className="skip-link" href="#main-content">Skip to content</a>
+    <header className="title-bar">
+      <StudioCommands theme={theme} setTheme={setTheme} toggleSidebar={() => setSidebar((old) => !old)} openAssistant={() => setAssistant(true)} />
+      <button className="command-trigger" onClick={() => studioAction('palette')}><FiSearch /><span>Explore Joel’s portfolio</span><kbd>Ctrl K</kbd></button>
+      <div className="title-tools"><span className="mobile-motion">{motionButton}</span><button className="icon-button mobile-sidebar-toggle" onClick={() => setSidebar((old) => !old)} aria-label="Toggle sidebar" aria-expanded={sidebar}><FiSidebar /></button><button className="icon-button mobile-theme" onClick={() => studioAction('theme')} aria-label="Choose color theme"><FiSettings /></button></div>
+    </header>
+    <div className="workspace-grid">
+      <aside className="activity-rail" aria-label="Studio utilities"><div><button onClick={() => setSidebar((old) => !old)} aria-label="Toggle sidebar" title={sidebar ? 'Collapse sidebar' : 'Expand sidebar'} aria-expanded={sidebar}><FiSidebar /></button><button onClick={() => setAssistant(true)} aria-label="Open Joel Assistant" title="Joel Assistant"><FiCommand /></button><button onClick={() => studioAction('terminal')} aria-label="Open terminal" title="Portfolio terminal"><FiTerminal /></button></div><div>{motionButton}<button onClick={() => studioAction('theme')} aria-label="Choose color theme" title="Color theme"><FiSettings /></button></div></aside>
+      <aside className="explorer-panel" aria-label="Portfolio navigation"><div className="explorer-heading"><span>EXPLORER</span><button className="icon-button" onClick={() => studioAction('palette')} aria-label="Find a page">•••</button></div><div className="explorer-root"><FiChevronDown /> JOEL’S STUDIO</div><nav>{sections.map(({ href, label }, index) => { const Icon = icons[index]; return <NavLink key={href} to={href} end={href === '/'}><Icon />{label}{label === 'Projects' && <span className="nav-count">{projects.length}</span>}</NavLink>; })}<a href={resume} target="_blank" rel="noreferrer"><FiDownload />Resume<FiArrowUpRight className="nav-out" /></a></nav><div className="explorer-profile"><img src="/assets/profile/joel-profile.webp" alt="Joel Laggui Jr." /><strong>Joel Laggui Jr.</strong><span>Developer & creator</span><p><span className="availability-dot" /> Open to work</p><VisitCount /><a href="https://github.com/GITLAGGUI" target="_blank" rel="noreferrer"><FiGithub /> Find me on GitHub <FiArrowUpRight /></a></div></aside>
+      <section className="editor-pane"><nav className="editor-tabs" aria-label="Open pages">{tabs.map((href) => {
+        const title = sections.find((section) => section.href === href)?.label ?? projects.find((item) => href === `/projects/${item.slug}`)?.shortTitle ?? 'Project';
+        return <div className={`editor-tab ${href === location.pathname ? 'editor-tab--active' : ''}`} key={href}><NavLink to={href} end><FiCode /><span>{title}</span></NavLink><button aria-label={`Close ${title} tab`} onClick={() => { const rest = tabs.filter((tab) => tab !== href); setTabs(rest.length ? rest : ['/']); if (href === location.pathname) navigate(rest[rest.length - 1] ?? '/'); }}><FiX /></button></div>;
+      })}<button className="tabs-more icon-button" aria-label="Open a page" onClick={() => studioAction('palette')}>+</button></nav>
+      <div className="breadcrumbs"><span>portfolio</span><span>/</span><span>{project ? 'projects / ' : ''}{pageTitle}</span><span className="breadcrumbs__right"><span className="availability-dot" /> Available for projects</span></div>
+      <main id="main-content" ref={mainRef} tabIndex={-1} className={`editor-main ${location.pathname === '/contact' ? 'editor-main--contact' : ''}`}><div className="editor-scroll" ref={scrollRef} data-testid="editor-scroll-region"><Suspense fallback={<div className="route-loading">Opening {pageTitle}…</div>}><div className="route-stage" key={location.pathname}><Routes>
+        <Route path="/" element={<HomePage />} /><Route path="/projects" element={<ProjectsPage />} /><Route path="/projects/:slug" element={<ProjectRoute />} /><Route path="/services" element={<ServicesPage />} /><Route path="/tools" element={<ToolsPage />} /><Route path="/skills" element={<Navigate replace to="/tools?view=skills" />} /><Route path="/about" element={<AboutPage />} /><Route path="/contact" element={<ContactPage />} /><Route path="*" element={<Navigate replace to="/" />} />
+      </Routes></div></Suspense></div></main></section>
     </div>
-  );
+    <footer className="status-bar"><div><FiCode /> portfolio <span>·</span><span>Philippines, GMT+8</span></div><div><VisitCount /><span>{themes.find((item) => item.id === theme)?.name}</span></div></footer>
+    <JoelAssistant open={assistant} onClose={() => setAssistant(false)} />
+    <CursorTrail /><MotionOrchestrator region={scrollRef} route={location.pathname} />
+  </div>;
 }
-
-export default App;

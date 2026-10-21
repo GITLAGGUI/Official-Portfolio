@@ -1,135 +1,30 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import { FiArrowRight, FiBarChart2, FiGlobe } from "react-icons/fi";
-import { SiMarkdown, SiPython, SiReact, SiTypescript } from "react-icons/si";
-import { VscCode, VscEye, VscJson, VscRemote, VscServerProcess } from "react-icons/vsc";
-import { Link } from "react-router-dom";
-import AnimatedGrid from "../components/AnimatedGrid";
+import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
+import { getProjectBySlug } from '../data/projects';
+import ProjectCard from '../components/ProjectCard';
+import ToolsStrip from '../components/ToolsStrip';
+import useMotionVisibility from '../components/useMotionVisibility';
 
-const HeroScene = lazy(() => import("../components/HeroScene"));
-
-const focusItems = [
-  { icon: VscCode, title: "Websites & apps", detail: "Fast, responsive, and ready to use" },
-  { icon: VscRemote, title: "Workflow automation", detail: "Less repetitive work, clearer handoffs" },
-  { icon: VscEye, title: "Computer vision", detail: "Drone imagery, annotation, and detection" },
-  { icon: VscJson, title: "Language & data", detail: "Sentiment, reports, and decision support" },
-];
-
-const inputNodes = [
-  { icon: SiTypescript, file: "index.ts", label: "TypeScript", className: "typescript" },
-  { icon: SiReact, file: "component.tsx", label: "React TSX", className: "tsx" },
-  { icon: VscJson, file: "config.json", label: "JSON", className: "json" },
-  { icon: SiMarkdown, file: "readme.md", label: "Markdown", className: "markdown" },
-  { icon: SiPython, file: "pipeline.py", label: "Python", className: "python" },
-];
-
-const outcomeNodes = [
-  { icon: FiGlobe, title: "Deployed", detail: "Website" },
-  { icon: VscServerProcess, title: "Automated", detail: "Workflow" },
-  { icon: FiBarChart2, title: "AI / data", detail: "Result" },
-];
-
-function openAssistant() {
-  window.dispatchEvent(new CustomEvent("open-joel-assistant"));
+const HeroScene = lazy(() => import('../components/HeroScene'));
+const fallback = <div className="workflow-fallback"><span>Interfaces</span><span>AI & automation</span><strong>Build & connect</strong><span>Web products</span><span>Data & stories</span></div>;
+class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? fallback : this.props.children; }
 }
-
-export default function HomePage() {
-  const [renderInteractiveNetwork, setRenderInteractiveNetwork] = useState(false);
-
+function Workflow() {
+  const ref = useRef<HTMLDivElement>(null); const active = useMotionVisibility(ref); const [supported, setSupported] = useState(false);
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 720px) and (prefers-reduced-motion: no-preference)");
-    const update = () =>
-      setRenderInteractiveNetwork(media.matches && (navigator.hardwareConcurrency ?? 4) >= 4);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
+    try { const canvas = document.createElement('canvas'); setSupported(!!(canvas.getContext('webgl2') || canvas.getContext('webgl'))); } catch { setSupported(false); }
   }, []);
-
-  return (
-    <div className="home-workbench">
-      <section className="hero-editor" aria-labelledby="home-title">
-        <div className="hero-copy">
-          <p className="eyebrow">Hello, I’m</p>
-          <h1 id="home-title">Joel<br /><span>Laggui Jr.</span></h1>
-          <p className="hero-role">Full-Stack Developer &amp; AI Automation Builder</p>
-          <p className="hero-summary">
-            I build websites, internal tools, and automations that help people sell, organize work, and make better use of their data.
-          </p>
-          <div className="hero-actions">
-            <Link className="button button--primary" to="/projects">
-              Explore work <FiArrowRight />
-            </Link>
-            <button className="button button--secondary button--assistant" type="button" onClick={openAssistant}>
-              <img src="/assets/assistant/joel-assistant-bot.webp" alt="" /> Joel Assistant
-            </button>
-          </div>
-
-          <div className="focus-list">
-            <p className="section-kicker">Current focus</p>
-            {focusItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div className="focus-list__item" key={item.title}>
-                  <Icon aria-hidden="true" />
-                  <div><strong>{item.title}</strong><span>{item.detail}</span></div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="hero-ribbon" aria-hidden="true">
-          <AnimatedGrid />
-          {renderInteractiveNetwork ? (
-            <>
-              <Suspense fallback={<div className="hero-scene-placeholder" />}>
-                <HeroScene />
-              </Suspense>
-              <div className="network-nodes">
-                <div className="network-node-column network-node-column--inputs">
-                  {inputNodes.map((node) => {
-                    const Icon = node.icon;
-                    return (
-                      <div className={`network-node network-node--input network-node--${node.className}`} key={node.file}>
-                        <Icon />
-                        <span><strong>{node.file}</strong><small>{node.label}</small></span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="network-node network-node--hub network-node--hub-one">
-                  <img src="/assets/logos/n8n.svg" alt="" />
-                </div>
-                <div className="network-node network-node--hub network-node--hub-two">
-                  <img src="/assets/logos/n8n.svg" alt="" />
-                </div>
-                <div className="network-node-column network-node-column--outcomes">
-                  {outcomeNodes.map((node) => {
-                    const Icon = node.icon;
-                    return (
-                      <div className="network-node network-node--outcome" key={node.title}>
-                        <Icon />
-                        <span><strong>{node.title}</strong><small>{node.detail}</small></span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          ) : (
-            <img className="hero-network-fallback" src="/assets/hero/automation-network-fallback.webp" alt="" />
-          )}
-        </div>
-      </section>
-
-      <section className="terminal-panel" aria-label="Contact and availability">
-        <div className="terminal-tabs"><span>TERMINAL</span><span>PROBLEMS</span><span>OUTPUT</span><span>DEBUG CONSOLE</span></div>
-        <div className="terminal-output">
-          <p><span className="terminal-prompt">›</span> <strong>Available for new opportunities.</strong></p>
-          <p><span className="terminal-prompt">›</span> Let’s build something useful.</p>
-          <p><span className="terminal-prompt">›</span> Email: <a href="mailto:jlaggui47@gmail.com">jlaggui47@gmail.com</a><span className="terminal-divider">|</span>Location: Philippines</p>
-          <p><span className="terminal-prompt">›</span> Status: <span className="terminal-ready">Open to work</span></p>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="workflow-scene" ref={ref} role="img" aria-label="A floating 3D product workspace with the real LeadMaps interface, code, a video timeline and orbiting development tools."><SceneBoundary>{supported ? <Suspense fallback={fallback}><HeroScene active={active} /></Suspense> : fallback}</SceneBoundary></div>;
+}
+export default function HomePage() {
+  const featured = ['riceguardai', 'leadmaps', 'video-editing'].map((slug) => getProjectBySlug(slug)).filter((item): item is NonNullable<typeof item> => !!item);
+  return <div className="home-page content-page">
+    <ToolsStrip compact featured />
+    <section className="home-hero"><div className="home-hero__copy"><p className="eyebrow">JOEL LAGGUI JR. <span>/ DEVELOPER & CREATOR</span></p><h1>I build software.<br /><span>And stories<br /> that move.</span></h1><div className="hero-actions"><Link className="button button--primary" to="/projects">Explore my work <FiArrowRight /></Link><Link className="text-link" to="/contact">Get in touch <FiArrowUpRight /></Link></div></div><Workflow /></section>
+    <section id="selected-work" className="home-selected" aria-label="Latest projects"><div className="home-projects">{featured.map((project) => <ProjectCard key={project.slug} project={project} compact />)}</div></section>
+  </div>;
 }

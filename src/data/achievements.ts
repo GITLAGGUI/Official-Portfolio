@@ -1,0 +1,15 @@
+export const evidenceItems = [
+  { title: "Data Analytics Challenge", detail: "Champion · 15th ICT Roadshow 2025", image: "/assets/DATA ANALYTICS CHALLENGE - CHAMPION 1_page-0001.jpg", href: "/assets/DATA ANALYTICS CHALLENGE - CHAMPION 1_page-0001.jpg", kind: "certificate" },
+  { title: "Introduction to Modern AI", detail: "DICT-ITU DTC Initiative via Cisco Networking Academy · 2026", image: "/assets/certificates/modern-ai.webp", href: "/assets/certificates/Introduction_to_Modern_AI_Joel_Laggui.pdf", kind: "certificate" },
+  { title: "Algorithm and Program Design", detail: "Huawei Talent certificate of completion · 2025", image: "/assets/Huawei_Certificate_of_Completion.png", href: "/assets/Huawei_Certificate_of_Completion.png", kind: "certificate" },
+  { title: "Regional ITE Convention", detail: "Participant · St. Paul University Philippines · 2025", image: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg", href: "/assets/ITE-REF-20250329-802 - Certificate of Participation - Regional ITE Convention 2025_page-0001.jpg", kind: "certificate" },
+  { title: "RoboFusion Champion", detail: "iScene RoboFusion · 2025", image: "/assets/Champion_Robotics.png", href: "/assets/Champion_Robotics.png", kind: "certificate" },
+  { title: "Philippine Startup Challenge X", detail: "Team Kaagapay · Regional pitching participant · 2025", image: "/assets/DICT_StartupChallenge_Certificate.png", href: "/assets/DICT_StartupChallenge_Certificate.png", kind: "certificate" },
+  { title: "TRON 2026 Cyber Defense Exercise", detail: "Team Leader · Certificate of Participation", image: "/assets/certificates/tron-team-leader-2026.webp", href: "/assets/certificates/tron-team-leader-2026.webp", kind: "certificate" },
+  { title: "TRON Cyber Defense - 3rd Place", detail: "ISU Cabagan Campus · Team ISUC-CompSci", image: "/assets/certificates/tron-third-place-team.webp", href: "/assets/certificates/tron-third-place-team.webp", kind: "certificate" },
+  { title: "Cyber Defense Exercise Qualifiers", detail: "Team gallery", image: "/assets/gallery/cyber-defense-tron-qualifiers.webp", href: "/assets/gallery/cyber-defense-tron-qualifiers.webp", kind: "gallery" },
+  { title: "RoboFusion Champion 2025", detail: "Competition gallery", image: "/assets/gallery/robofusion-champion-2025.webp", href: "/assets/gallery/robofusion-champion-2025.webp", kind: "gallery" },
+  { title: "ICT Roadshow Champion 2025", detail: "Competition gallery", image: "/assets/gallery/ict-roadshow-champion-2025.webp", href: "/assets/gallery/ict-roadshow-champion-2025.webp", kind: "gallery" },
+  { title: "Data Analytics Champion 2025", detail: "Competition gallery", image: "/assets/gallery/data-analytics-champion-2025.webp", href: "/assets/gallery/data-analytics-champion-2025.webp", kind: "gallery" },
+  { title: "TALA Defenders", detail: "Team gallery", image: "/assets/gallery/tala-defenders-group.webp", href: "/assets/gallery/tala-defenders-group.webp", kind: "gallery" },
+] as const;

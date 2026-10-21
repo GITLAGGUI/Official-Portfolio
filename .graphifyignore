@@ -1,0 +1,16 @@
+node_modules/
+.git/
+.vercel/
+dist/
+public/
+tmp/
+qa/
+docs/
+graphify-out/
+.env*
+*.lock
+package-lock.json
+interview.txt
+*.log
+*.pdf
+*.mp4

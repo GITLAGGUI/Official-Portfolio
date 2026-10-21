@@ -50,6 +50,7 @@ export async function sendEmail(values: ContactMessage) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...EMAILJS_CONFIG, template_params: templateParams }),
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!response.ok) {

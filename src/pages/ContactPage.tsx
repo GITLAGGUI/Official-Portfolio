@@ -1,82 +1,26 @@
-import { FormEvent, useState } from "react";
-import { FiArrowUpRight, FiCheck, FiCopy, FiGithub, FiLinkedin, FiMail, FiMapPin, FiPhone } from "react-icons/fi";
-import { sendEmail } from "../utils/sendEmail";
+import { FormEvent, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { FiArrowUpRight, FiCheck, FiCopy, FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi';
+import { sendEmail } from '../utils/sendEmail';
+import Dialog from '../components/Dialog';
 
 export default function ContactPage() {
-  const [copied, setCopied] = useState(false);
-  const [sendState, setSendState] = useState<"idle" | "sending" | "success" | "error">("idle");
-
-  const copyEmail = async () => {
-    await navigator.clipboard.writeText("jlaggui47@gmail.com");
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+  const [params] = useSearchParams(); const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [copyError, setCopyError] = useState(false);
+  const copy = async () => { try { await navigator.clipboard.writeText('jlaggui47@gmail.com'); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { setCopyError(true); } };
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); if (state === 'sending') return;
+    const element = event.currentTarget; const form = new FormData(element);
+    const name = String(form.get('name') ?? '').trim(); const email = String(form.get('email') ?? '').trim();
+    const subject = String(form.get('project') ?? '').trim(); const message = String(form.get('details') ?? '').trim();
+    if (!name || !email || !subject || !message || form.get('website')) return;
+    setState('sending');
+    try { await sendEmail({ name, email, subject, message }); element.reset(); setState('success'); }
+    catch { setState('error'); }
   };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formElement = event.currentTarget;
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") ?? "").trim();
-    const email = String(form.get("email") ?? "").trim();
-    const subject = String(form.get("project") ?? "").trim();
-    const message = String(form.get("details") ?? "").trim();
-
-    setSendState("sending");
-    try {
-      await sendEmail({ name, email, subject, message });
-      formElement.reset();
-      setSendState("success");
-    } catch {
-      setSendState("error");
-    }
-  };
-
-  return (
-    <div className="content-page contact-page">
-      <header className="page-header page-header--split">
-        <div><p className="eyebrow">Contact</p><h1>Let’s build something useful.</h1></div>
-        <p>Tell me what you are trying to improve, automate, launch, or understand. A clear problem statement is enough to start.</p>
-      </header>
-
-      <div className="contact-layout">
-        <section className="contact-details" aria-labelledby="contact-details-title">
-          <h2 id="contact-details-title">Direct contact</h2>
-          <a href="mailto:jlaggui47@gmail.com"><FiMail /><span><small>Email</small>jlaggui47@gmail.com</span><FiArrowUpRight /></a>
-          <a href="tel:+639153683496"><FiPhone /><span><small>Phone</small>+63 915 368 3496</span><FiArrowUpRight /></a>
-          <div><FiMapPin /><span><small>Location</small>Philippines · Remote-friendly</span></div>
-          <button type="button" onClick={() => void copyEmail()}><span>{copied ? <FiCheck /> : <FiCopy />}{copied ? "Copied" : "Copy email"}</span></button>
-
-          <div className="contact-socials">
-            <a href="https://github.com/GITLAGGUI" target="_blank" rel="noreferrer"><FiGithub /> GitHub</a>
-            <a href="https://www.linkedin.com/in/joellagguijr-dev/" target="_blank" rel="noreferrer"><FiLinkedin /> LinkedIn</a>
-          </div>
-
-          <aside className="availability-card">
-            <span className="availability-dot" />
-            <div><strong>Open to work</strong><p>Full-stack products, AI automation, computer vision, NLP, and data workflows.</p></div>
-          </aside>
-        </section>
-
-        <form className="contact-form" onSubmit={handleSubmit}>
-          <div className="form-heading"><span>contact.ts</span><span>direct message</span></div>
-          <label htmlFor="contact-name">Your name</label>
-          <input id="contact-name" name="name" autoComplete="name" placeholder="Name or company" required />
-          <label htmlFor="contact-email">Your email</label>
-          <input id="contact-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required />
-          <label htmlFor="contact-project">What are we discussing?</label>
-          <input id="contact-project" name="project" placeholder="Website, automation, AI, data…" required />
-          <label htmlFor="contact-details">Useful context</label>
-          <textarea id="contact-details" name="details" rows={7} placeholder="What is happening now, and what should be better after the project?" required />
-          <button className="button button--primary" type="submit" disabled={sendState === "sending"}>
-            {sendState === "sending" ? "Sending…" : "Send message"} <FiArrowUpRight />
-          </button>
-          <p className={`form-status form-status--${sendState}`} role="status" aria-live="polite">
-            {sendState === "success" && "Message sent. Joel will reply using the email you provided."}
-            {sendState === "error" && <>The message could not be sent. Please email <a href="mailto:jlaggui47@gmail.com">jlaggui47@gmail.com</a>.</>}
-            {(sendState === "idle" || sendState === "sending") && "Your message is sent directly through the portfolio contact service."}
-          </p>
-        </form>
-      </div>
-    </div>
-  );
+  return <div className="content-page contact-page"><div className="contact-layout"><section className="contact-intro"><p className="eyebrow">Contact</p><h1><span className="contact-greeting-long">Good things<br />start with<br /><em>a hello.</em></span><span className="contact-greeting-compact">Say <em>hello.</em></span></h1><p>Have an idea, a project,<br />or a problem worth solving?</p><a className="contact-email" href="mailto:jlaggui47@gmail.com">jlaggui47@gmail.com <FiArrowUpRight /></a><button className="text-link" type="button" onClick={() => void copy()}>{copied ? <FiCheck /> : <FiCopy />}{copied ? 'Email copied' : 'Copy email'}</button>{copyError && <small role="status">Select the email address above to copy it.</small>}<div className="contact-socials"><a href="https://github.com/GITLAGGUI" target="_blank" rel="noreferrer" aria-label="GitHub"><FiGithub /></a><a href="https://www.linkedin.com/in/joellagguijr-dev/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><FiLinkedin /></a></div><div className="contact-presence"><span className="availability-dot" /><span>Open to new projects<small>Philippines · GMT+8 · Remote friendly</small></span></div></section>
+    <form className="contact-form" onSubmit={submit}><div className="form-heading"><span><i /> NEW CONVERSATION</span><FiMail /></div><h2>Tell me what you’re thinking.</h2><div className="form-row"><label>Your name<input name="name" autoComplete="name" required maxLength={120} placeholder="Your name" /></label><label>Your email<input name="email" type="email" autoComplete="email" required maxLength={254} placeholder="you@company.com" /></label></div><label>What can I help with?<select name="project" required defaultValue={params.get('service') ?? ''}><option value="" disabled>Select a service</option>{['Websites & SaaS', 'AI & automation', 'Computer vision', 'Data & research', 'SEO & discovery', 'Video & motion', 'Collaboration / opportunity', 'Something else'].map((item) => <option key={item}>{item}</option>)}</select></label><label>Your message<textarea name="details" required minLength={10} maxLength={6000} rows={4} placeholder="A little about your idea and what you have in mind…" /></label><div className="honeypot" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></div><button className="button button--primary" disabled={state === 'sending'} type="submit">{state === 'sending' ? 'Sending your message…' : 'Send message'}<FiArrowRight /></button><p className={`form-status form-status--${state}`} role="status">{state === 'error' ? <>Your message couldn’t be sent. Please try again or <a href="mailto:jlaggui47@gmail.com">email me directly</a>.</> : 'Straight to my inbox. I’ll reply to the email you provide.'}</p></form></div>
+    <Dialog open={state === 'success'} onClose={() => setState('idle')} title="Message sent" className="success-dialog"><span className="success-icon"><FiCheck /></span><h3>Your message is on its way to Joel.</h3><p>Thanks for reaching out. I’ll get back to you at the email address you provided.</p><button className="button button--primary" onClick={() => setState('idle')}>Back to the portfolio <FiArrowRight /></button></Dialog>
+  </div>;
 }

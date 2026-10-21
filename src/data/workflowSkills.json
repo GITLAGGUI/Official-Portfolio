@@ -1,0 +1,110 @@
+[
+  {
+    "id": "interface-polish",
+    "title": "Interface polish",
+    "categories": [
+      "Design"
+    ],
+    "summary": "Polish layout, interaction and responsive details without losing the product identity.",
+    "tools": [
+      "React",
+      "TypeScript",
+      "Browser DevTools"
+    ]
+  },
+  {
+    "id": "spatial-product-motion",
+    "title": "Spatial product motion",
+    "categories": [
+      "3D motion",
+      "Video",
+      "Design"
+    ],
+    "summary": "Build a scene with real depth, deliberate camera movement and authentic product media.",
+    "tools": [
+      "Three.js",
+      "FFmpeg",
+      "HyperFrames"
+    ]
+  },
+  {
+    "id": "creator-video-edit",
+    "title": "Creator video edit",
+    "categories": [
+      "Video"
+    ],
+    "summary": "Turn a real recording into a clear, well-paced edit with accurate captions and supporting visuals.",
+    "tools": [
+      "FFmpeg",
+      "HyperFrames",
+      "Canva"
+    ]
+  },
+  {
+    "id": "saas-feature-build",
+    "title": "SaaS feature build",
+    "categories": [
+      "Development"
+    ],
+    "summary": "Take a scoped product feature from the interface through data, errors and verification.",
+    "tools": [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL / SQL"
+    ]
+  },
+  {
+    "id": "search-evidence",
+    "title": "SEO with evidence",
+    "categories": [
+      "SEO & research"
+    ],
+    "summary": "Connect technical SEO work to real Search Console and audit evidence.",
+    "tools": [
+      "Google Search Console",
+      "OpenSEO",
+      "Next.js"
+    ]
+  },
+  {
+    "id": "vision-dataset-review",
+    "title": "Vision dataset review",
+    "categories": [
+      "AI & data"
+    ],
+    "summary": "Review labels, splits and model evidence before making an accuracy claim.",
+    "tools": [
+      "Python",
+      "PyTorch",
+      "OpenCV"
+    ]
+  },
+  {
+    "id": "data-research-handoff",
+    "title": "Data research handoff",
+    "categories": [
+      "AI & data",
+      "SEO & research"
+    ],
+    "summary": "Turn scattered records into an auditable dataset, useful report and clear handoff.",
+    "tools": [
+      "Python",
+      "pandas",
+      "Excel / PowerPoint"
+    ]
+  },
+  {
+    "id": "reviewable-automation",
+    "title": "Reviewable automation",
+    "categories": [
+      "Automation",
+      "Development"
+    ],
+    "summary": "Connect tools with clear triggers, safe retries and observable outcomes.",
+    "tools": [
+      "n8n",
+      "MCP",
+      "Playwright"
+    ]
+  }
+]

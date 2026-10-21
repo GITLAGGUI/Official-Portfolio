@@ -1,0 +1,170 @@
+{
+  "leadmaps": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 184,
+    "totalBytes": 976442,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "bytes": 793283,
+        "percent": 81.2
+      },
+      {
+        "name": "CSS",
+        "bytes": 140614,
+        "percent": 14.4
+      },
+      {
+        "name": "SQL",
+        "bytes": 19340,
+        "percent": 2.0
+      },
+      {
+        "name": "Python",
+        "bytes": 12059,
+        "percent": 1.2
+      },
+      {
+        "name": "HTML",
+        "bytes": 6828,
+        "percent": 0.7
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 2791,
+        "percent": 0.3
+      },
+      {
+        "name": "PowerShell",
+        "bytes": 1527,
+        "percent": 0.2
+      }
+    ]
+  },
+  "riceguardai": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 107,
+    "totalBytes": 740587,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "bytes": 561905,
+        "percent": 75.9
+      },
+      {
+        "name": "CSS",
+        "bytes": 150473,
+        "percent": 20.3
+      },
+      {
+        "name": "Python",
+        "bytes": 14920,
+        "percent": 2.0
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 7900,
+        "percent": 1.1
+      },
+      {
+        "name": "HTML",
+        "bytes": 3653,
+        "percent": 0.5
+      },
+      {
+        "name": "SQL",
+        "bytes": 1736,
+        "percent": 0.2
+      }
+    ]
+  },
+  "visionai-face-guard": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 2,
+    "totalBytes": 23914,
+    "languages": [
+      {
+        "name": "Python",
+        "bytes": 23914,
+        "percent": 100.0
+      }
+    ]
+  },
+  "skyglass-hillside-garden": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 10,
+    "totalBytes": 211405,
+    "languages": [
+      {
+        "name": "JavaScript",
+        "bytes": 145819,
+        "percent": 69.0
+      },
+      {
+        "name": "CSS",
+        "bytes": 64772,
+        "percent": 30.6
+      },
+      {
+        "name": "HTML",
+        "bytes": 814,
+        "percent": 0.4
+      }
+    ]
+  },
+  "drones-and-gadgets-ph": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 18,
+    "totalBytes": 344683,
+    "languages": [
+      {
+        "name": "JavaScript",
+        "bytes": 183420,
+        "percent": 53.2
+      },
+      {
+        "name": "CSS",
+        "bytes": 133949,
+        "percent": 38.9
+      },
+      {
+        "name": "SQL",
+        "bytes": 23382,
+        "percent": 6.8
+      },
+      {
+        "name": "HTML",
+        "bytes": 3932,
+        "percent": 1.1
+      }
+    ]
+  },
+  "zms-place": {
+    "basis": "Application source bytes",
+    "measured": "2026-10-21",
+    "files": 6,
+    "totalBytes": 185401,
+    "languages": [
+      {
+        "name": "JavaScript",
+        "bytes": 135161,
+        "percent": 72.9
+      },
+      {
+        "name": "CSS",
+        "bytes": 48896,
+        "percent": 26.4
+      },
+      {
+        "name": "HTML",
+        "bytes": 1344,
+        "percent": 0.7
+      }
+    ]
+  }
+}

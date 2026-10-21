@@ -1,0 +1,13 @@
+# Local evidence, backups and private configuration are not deployment inputs.
+.git/
+.local/
+graphify-out/
+tmp/
+qa/
+docs/
+.env*
+interview.txt
+tsc_output.txt
+*.log
+public/assets/Joel_Laggui_GetBankSheets_Resume.md
+public/assets/Joel_Laggui_GetBankSheets_Resume_Clean.txt
