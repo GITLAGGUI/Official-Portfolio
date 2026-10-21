@@ -28,6 +28,12 @@ assert.ok(!render('<img src=x onerror=alert(1)>').includes('<img'));
 assert.match(render('A\n\nB'), /<p>A<\/p><p>B<\/p>/);
 
 const { projects, legacyProjectRoutes } = compile(fs.readFileSync('src/data/projects.ts', 'utf8'));
+const leadmaps = projects.find((project) => project.slug === 'leadmaps');
+const videoWork = projects.find((project) => project.slug === 'video-editing');
+assert.equal(leadmaps.previewVideo, '/assets/projects/leadmaps/demo.mp4', 'LeadMaps keeps its original product walkthrough');
+assert.equal(leadmaps.videos[0].src, leadmaps.previewVideo);
+assert.equal(videoWork.previewVideo, '/assets/projects/leadmaps/leadmaps-v11-preview.mp4', 'The replacement spatial film belongs to Video & Motion');
+assert.equal(videoWork.videos[0].src, '/assets/projects/leadmaps/leadmaps-v11.mp4');
 const { tools, capabilities } = compile(fs.readFileSync('src/data/capabilities.ts', 'utf8'));
 const workflowSkills = JSON.parse(fs.readFileSync('src/data/workflowSkills.json', 'utf8'));
 const knownTools = new Set(tools.map((tool) => tool.name));
@@ -121,16 +127,13 @@ for (const count of [1, 2, 3, 4, 5]) {
   assert.doesNotMatch(html, /figcaption/);
 }
 
-const leadmaps = projects.find((project) => project.slug === 'leadmaps');
-const motionWork = projects.find((project) => project.slug === 'video-editing');
-assert.equal(leadmaps.previewVideo, motionWork.previewVideo, 'Use the new film for both product and editing previews');
-assert.equal(leadmaps.videos[0].src, motionWork.videos[0].src, 'Use the full new film in both detail pages');
 const leadmapsDetail = renderToStaticMarkup(React.createElement(makeDetail(projects, 'leadmaps')));
-assert.match(leadmapsDetail, /leadmaps-v11\.mp4/);
+assert.match(leadmapsDetail, /leadmaps\/demo\.mp4/);
+assert.doesNotMatch(leadmapsDetail, /leadmaps-v11/);
 assert.match(leadmapsDetail, /aria-label="Project evidence"/);
 assert.match(leadmapsDetail, /seo\/search-console\.jpg/);
 assert.match(leadmapsDetail, /seo\/openseo-audit\.jpg/);
-assert.doesNotMatch(JSON.stringify(projects), /video-editing\/(cinematic|preview)\.(mp4|webp)|leadmaps\/demo\.mp4/);
+assert.doesNotMatch(JSON.stringify(projects), /video-editing\/(cinematic|preview)\.(mp4|webp)/);
 
 const languages = JSON.parse(fs.readFileSync('src/data/projectLanguages.json', 'utf8'));
 const barSource = fs.readFileSync('src/components/LanguageBar.tsx', 'utf8').replace(/import records from [^;]+;/, `const records = ${JSON.stringify(languages)};`);

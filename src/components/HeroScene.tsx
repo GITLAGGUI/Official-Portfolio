@@ -4,7 +4,8 @@ import * as THREE from 'three';
 
 type Vec3 = [number, number, number];
 type PanelKind = 'product' | 'code' | 'timeline' | 'react' | 'typescript' | 'python' | 'automation';
-const poster = '/assets/projects/leadmaps/leadmaps-v11-poster.webp';
+const poster = '/assets/projects/leadmaps/product.webp';
+const filmPoster = '/assets/projects/leadmaps/leadmaps-v11-poster.webp';
 const toolImages: Partial<Record<PanelKind, string>> = { react: '/assets/logos/react.svg', typescript: '/assets/logos/typescript.svg', python: '/assets/logos/python.svg', automation: '/assets/logos/n8n.svg' };
 
 function roundedPanel(width: number, height: number, depth = .12) {
@@ -51,7 +52,7 @@ function panelTexture(kind: PanelKind, image: CanvasImageSource) {
 
 function FloatingPanel({ kind, size, position, rotation = [0, 0, 0], phase = 0, active }: { kind: PanelKind; size: [number, number]; position: Vec3; rotation?: Vec3; phase?: number; active: boolean }) {
   const [width, height] = size;
-  const source = useLoader(THREE.TextureLoader, toolImages[kind] ?? poster); const ref = useRef<THREE.Group>(null); const time = useRef(phase);
+  const source = useLoader(THREE.TextureLoader, toolImages[kind] ?? (kind === 'timeline' ? filmPoster : poster)); const ref = useRef<THREE.Group>(null); const time = useRef(phase);
   const texture = useMemo(() => panelTexture(kind, source.image), [kind, source]);
   const geometry = useMemo(() => roundedPanel(width, height), [width, height]);
   useEffect(() => () => { texture.dispose(); geometry.dispose(); }, [texture, geometry]);

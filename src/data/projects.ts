@@ -44,14 +44,14 @@ export const projects: ProjectCaseStudy[] = [
   {
     slug: 'leadmaps', title: 'LeadMaps', shortTitle: 'LeadMaps', subtitle: 'Business research workspace & collection API',
     summary: 'Find, organize and export business records from one focused workspace.', category: 'SaaS', role: 'Product design & full-stack development', year: '2026', status: 'Private beta', featured: true, accent: 'amber',
-    hero: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', heroAlt: 'LeadMaps workspace from the v11 spatial product film',
-    previewVideo: '/assets/projects/leadmaps/leadmaps-v11-preview.mp4',
+    hero: '/assets/projects/leadmaps/product.webp', heroAlt: 'LeadMaps business research workspace',
+    previewVideo: '/assets/projects/leadmaps/demo.mp4',
     stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure', 'Docker', 'REST API', 'Webhooks', 'MCP'],
     links: [{ label: 'Live site', href: 'https://leadmaps.live' }],
     challenge: 'Business research needs clean records and a clear route from collection to a usable export.',
     approach: ['Built isolated workspaces, a durable collection queue, and CSV, Excel and JSON exports.', 'Connected the workflow through scoped API keys, signed webhooks and an MCP bridge.'],
     outcome: ['A working private beta with business research, saved lists and repeatable exports.'],
-    videos: [{ src: '/assets/projects/leadmaps/leadmaps-v11.mp4', poster: '/assets/projects/leadmaps/leadmaps-v11-poster.webp', title: 'LeadMaps v11 · Spatial product film' }],
+    videos: [{ src: '/assets/projects/leadmaps/demo.mp4', poster: '/assets/projects/leadmaps/product.webp', title: 'LeadMaps · Product walkthrough' }],
     gallery: [
       { src: '/assets/projects/seo/search-console.jpg', alt: 'LeadMaps Google Search Console performance report captured on October 22, 2026', caption: 'Google Search Console · real project report' },
       { src: '/assets/projects/seo/openseo-audit.jpg', alt: 'Completed LeadMaps OpenSEO site audit covering 22 crawled pages', caption: 'OpenSEO · completed site audit' },

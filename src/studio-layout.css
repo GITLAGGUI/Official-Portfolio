@@ -88,7 +88,6 @@
   .explorer-heading { min-height:36px; height:36px; }
   .explorer-root { padding:10px 15px 12px; }
   .explorer-profile { padding:16px 22px 14px; }
-  .explorer-profile>img { display:none; }
   .explorer-profile>a { margin-top:12px; padding-top:10px; }
 }
 @media(min-width:641px) and (min-height:500px) {

@@ -130,7 +130,7 @@ The eight original MIT-licensed packs cover Interface polish, Spatial product mo
 
 ## Asset provenance — October 22 update
 
-- Full LeadMaps v11 film: exact copy of the user-supplied `LeadMaps-v11-Spatial-Landscape.mp4`. Silent 960px preview and poster derived locally. Both LeadMaps and Video & Motion detail pages use this film.
+- Full LeadMaps v11 film: exact copy of the user-supplied `LeadMaps-v11-Spatial-Landscape.mp4`. Silent 960px preview and poster derived locally. Video & Motion uses this film; the LeadMaps project keeps its original product walkthrough and poster.
 - Drones & Gadgets project image: actual capture of https://drones-and-gadgets-ph.vercel.app/ on October 22, 2026.
 - SEO evidence: actual LeadMaps Google Search Console and completed OpenSEO audit screenshots, captured October 22. The report showed 2 clicks and 32 impressions; the audit covered 22 pages with 14 issues. These are dated evidence, not growth promises.
 - Claude Code, Antigravity, Gemini, Codex, OpenClaw and MCP marks: LobeHub icons repository, https://github.com/lobehub/lobe-icons. MIT license retained in `public/assets/logos/LOBE-ICONS-LICENSE.txt`.
