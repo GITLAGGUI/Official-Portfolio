@@ -7,6 +7,7 @@ import "./index.css";
 import './motion.css';
 import './studio-layout.css';
 import './portfolio-refinements.css';
+import './portrait-studio.css';
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

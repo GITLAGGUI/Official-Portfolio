@@ -5,26 +5,28 @@ import { getProjectBySlug } from '../data/projects';
 import ProjectCard from '../components/ProjectCard';
 import ToolsStrip from '../components/ToolsStrip';
 import useMotionVisibility from '../components/useMotionVisibility';
+import { themes, type ThemeId } from '../data/themes';
 
 const HeroScene = lazy(() => import('../components/HeroScene'));
-const fallback = <div className="workflow-fallback"><span>Interfaces</span><span>AI & automation</span><strong>Build & connect</strong><span>Web products</span><span>Data & stories</span></div>;
-class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+const portraitFallback = (theme: ThemeId) => <div className="portrait-fallback"><img src={themes.find((item) => item.id === theme)!.portrait} alt="Joel at his laptop" /></div>;
+class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  render() { return this.state.failed ? fallback : this.props.children; }
+  render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
-function Workflow() {
+function Portrait({ theme }: { theme: ThemeId }) {
   const ref = useRef<HTMLDivElement>(null); const active = useMotionVisibility(ref); const [supported, setSupported] = useState(false);
   useEffect(() => {
     try { const canvas = document.createElement('canvas'); setSupported(!!(canvas.getContext('webgl2') || canvas.getContext('webgl'))); } catch { setSupported(false); }
   }, []);
-  return <div className="workflow-scene" ref={ref} role="img" aria-label="A floating 3D product workspace with the real LeadMaps interface, code, a video timeline and orbiting development tools."><SceneBoundary>{supported ? <Suspense fallback={fallback}><HeroScene active={active} /></Suspense> : fallback}</SceneBoundary></div>;
+  const fallback = portraitFallback(theme);
+  return <div className="workflow-scene" ref={ref} role="img" aria-label={`Joel’s original portrait in a ${themes.find((item) => item.id === theme)!.name} scene with themed 3D objects and pointer parallax.`}><SceneBoundary key={theme} fallback={fallback}>{supported ? <Suspense fallback={fallback}><HeroScene active={active} theme={theme} /></Suspense> : fallback}</SceneBoundary></div>;
 }
-export default function HomePage() {
+export default function HomePage({ theme = 'studio' }: { theme?: ThemeId }) {
   const featured = ['riceguardai', 'leadmaps', 'video-editing'].map((slug) => getProjectBySlug(slug)).filter((item): item is NonNullable<typeof item> => !!item);
   return <div className="home-page content-page">
     <ToolsStrip compact featured />
-    <section className="home-hero"><div className="home-hero__copy"><p className="eyebrow">JOEL LAGGUI JR. <span>/ DEVELOPER & CREATOR</span></p><h1>I build software.<br /><span>And stories<br /> that move.</span></h1><div className="hero-actions"><Link className="button button--primary" to="/projects">Explore my work <FiArrowRight /></Link><Link className="text-link" to="/contact">Get in touch <FiArrowUpRight /></Link></div></div><Workflow /></section>
+    <section className="home-hero"><div className="home-hero__copy"><p className="eyebrow">JOEL LAGGUI JR. <span>/ DEVELOPER & CREATOR</span></p><h1>I build software.<br /><span>And stories<br /> that move.</span></h1><div className="hero-actions"><Link className="button button--primary" to="/projects">Explore my work <FiArrowRight /></Link><Link className="text-link" to="/contact">Get in touch <FiArrowUpRight /></Link></div></div><Portrait theme={theme} /></section>
     <section id="selected-work" className="home-selected" aria-label="Latest projects"><div className="home-projects">{featured.map((project) => <ProjectCard key={project.slug} project={project} compact />)}</div></section>
   </div>;
 }

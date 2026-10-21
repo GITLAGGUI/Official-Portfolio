@@ -36,6 +36,13 @@ assert.equal(videoWork.previewVideo, '/assets/projects/leadmaps/leadmaps-v11-pre
 assert.equal(videoWork.videos[0].src, '/assets/projects/leadmaps/leadmaps-v11.mp4');
 const { tools, capabilities } = compile(fs.readFileSync('src/data/capabilities.ts', 'utf8'));
 const workflowSkills = JSON.parse(fs.readFileSync('src/data/workflowSkills.json', 'utf8'));
+const { themes, loadTheme } = compile(fs.readFileSync('src/data/themes.ts', 'utf8'));
+assert.equal(loadTheme(), 'studio', 'Studio Dark is the default without browser storage');
+assert.equal(themes.length, 8);
+assert.equal(themes[0].id, 'studio');
+assert.equal(themes[7].id, 'light', 'Light is the seventh variant after the default');
+assert.equal(new Set(themes.map((theme) => theme.portrait)).size, 8);
+for (const theme of themes) assert.ok(fs.existsSync(path.join('public', theme.portrait)), `Missing ${theme.name} portrait`);
 const knownTools = new Set(tools.map((tool) => tool.name));
 for (const item of [...capabilities, ...workflowSkills]) for (const name of item.logos ?? item.tools) assert.ok(knownTools.has(name), `Unknown logo tool: ${name}`);
 for (const skill of workflowSkills) {
