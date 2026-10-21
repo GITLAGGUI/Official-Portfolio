@@ -4,17 +4,21 @@ import useMotionVisibility from './useMotionVisibility';
 
 export default function ProjectPreview({ project, contain = false }: { project: ProjectCaseStudy; contain?: boolean }) {
   const ref = useRef<HTMLDivElement>(null); const video = useRef<HTMLVideoElement>(null);
+  const tiltFrame = useRef(0); const pointer = useRef({ x: 0, y: 0 });
   const active = useMotionVisibility(ref); const [index, setIndex] = useState(0); const [playing, setPlaying] = useState(false);
+  const autoplay = active && !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
   const clip = project.previewVideo ?? project.videos?.[0]?.src;
-  const images = [project.hero, ...(project.gallery ?? []).map((item) => item.src)].slice(0, 3);
+  const images = clip ? [project.hero] : [project.hero, ...(project.gallery ?? []).map((item) => item.src)].slice(0, 3);
+  useEffect(() => () => { cancelAnimationFrame(tiltFrame.current); tiltFrame.current = 0; }, [active]);
   useEffect(() => {
     const player = video.current;
     if (!player || !clip) return;
     const previous = player.getAttribute('src');
-    if (previous !== clip && (active || previous)) { setPlaying(false); player.src = clip; }
-    if (active) { void player.play().catch(() => undefined); }
+    if (previous !== clip && (autoplay || previous)) { setPlaying(false); player.src = clip; }
+    if (autoplay) { void player.play().catch(() => undefined); }
     else player.pause();
-  }, [active, clip]);
+    return () => player.pause();
+  }, [autoplay, clip]);
   useEffect(() => {
     if (!active || clip || images.length < 2) return;
     const timer = setInterval(() => setIndex((old) => (old + 1) % images.length), 5200);
@@ -22,10 +26,17 @@ export default function ProjectPreview({ project, contain = false }: { project: 
   }, [active, clip, images.length]);
   return <div ref={ref} className={`project-preview ${contain ? 'project-preview--contain' : ''} ${active ? 'motion-active' : ''} ${playing ? 'is-playing' : ''}`} onPointerMove={(event) => {
     if (!active || contain || event.pointerType !== 'mouse') return;
-    const box = event.currentTarget.getBoundingClientRect(); const x = (event.clientX - box.left) / box.width - .5, y = (event.clientY - box.top) / box.height - .5;
-    event.currentTarget.style.transform = `perspective(1100px) rotateX(${-y * 4}deg) rotateY(${x * 5}deg) translateZ(0)`;
-  }} onPointerLeave={(event) => { event.currentTarget.style.transform = ''; }}>
-    {images.map((src, i) => <img key={src} className={`project-preview__image ${i === index ? 'is-current' : ''}`} src={src} alt={i === 0 ? project.heroAlt : `${project.title} project preview ${i + 1}`} loading="lazy" />)}
+    pointer.current = { x: event.clientX, y: event.clientY };
+    if (tiltFrame.current) return;
+    const element = event.currentTarget;
+    tiltFrame.current = requestAnimationFrame(() => {
+      tiltFrame.current = 0;
+      const box = (element.parentElement ?? element).getBoundingClientRect();
+      const x = (pointer.current.x - box.left) / box.width - .5, y = (pointer.current.y - box.top) / box.height - .5;
+      element.style.transform = `perspective(1100px) rotateX(${-y * 4}deg) rotateY(${x * 5}deg) translateZ(0)`;
+    });
+  }} onPointerLeave={(event) => { cancelAnimationFrame(tiltFrame.current); tiltFrame.current = 0; event.currentTarget.style.transform = ''; }}>
+    {images.map((src, i) => <img key={src} className={`project-preview__image ${i === index ? 'is-current' : ''}`} src={src} alt={i === 0 ? project.heroAlt : `${project.title} project preview ${i + 1}`} loading="lazy" decoding="async" />)}
     {clip && <video ref={video} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onError={() => setPlaying(false)} aria-hidden="true" />}
     <span className="preview-light" aria-hidden="true" />
   </div>;

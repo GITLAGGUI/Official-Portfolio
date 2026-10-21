@@ -15,10 +15,16 @@ export default function MotionOrchestrator({ region, route, enabled = true }: { 
         animations.add(animation); animation.onfinish = () => animations.delete(animation);
       });
     }, { root, threshold: .08 });
-    const discover = () => { if (media.matches) return; root.querySelectorAll('.project-card,.tool-card,.capability-card,.about-intro__portrait,.about-disciplines a,.achievement-grid a,.repo-about,.contact-form,[data-reveal]').forEach((element) => { if (!seen.has(element)) { seen.add(element); observer.observe(element); } }); };
+    const selector = '.project-card,.tool-card,.capability-card,.about-intro__portrait,.about-disciplines a,.achievement-grid a,.repo-about,.contact-form,[data-reveal]';
+    const observe = (element: Element) => { if (!seen.has(element)) { seen.add(element); observer.observe(element); } };
+    const discover = (scope: Element = root) => {
+      if (media.matches) return;
+      if (scope.matches(selector)) observe(scope);
+      scope.querySelectorAll(selector).forEach(observe);
+    };
     const cancel = () => { animations.forEach((animation) => animation.cancel()); animations.clear(); };
     const preferenceChanged = () => { if (media.matches) cancel(); else discover(); };
-    discover(); const mutation = new MutationObserver(discover); mutation.observe(root, { childList: true, subtree: true });
+    discover(); const mutation = new MutationObserver((records) => { records.forEach((record) => record.addedNodes.forEach((node) => { if (node instanceof Element && root.contains(node)) discover(node); })); }); mutation.observe(root, { childList: true, subtree: true });
     media.addEventListener('change', preferenceChanged);
     return () => { observer.disconnect(); mutation.disconnect(); media.removeEventListener('change', preferenceChanged); cancel(); };
   }, [region, route, paused, enabled]);

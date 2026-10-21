@@ -142,11 +142,18 @@ function StudioReflections({ theme }: { theme: ThemeId }) {
 }
 
 function FrameBudget({ active }: { active: boolean }) {
-  const slowFrames = useRef(0);
+  const sample = useRef({ warmup: 0, frames: 0, seconds: 0 });
+  useEffect(() => { sample.current = { warmup: 0, frames: 0, seconds: 0 }; }, [active]);
   useFrame((state, delta) => {
-    if (!active) return;
-    slowFrames.current = delta > .04 ? slowFrames.current + 1 : Math.max(0, slowFrames.current - 1);
-    if (slowFrames.current >= 18 && state.viewport.dpr > 1) { state.setDpr(1); slowFrames.current = 0; }
+    if (!active || delta > .1) return;
+    const current = sample.current;
+    current.warmup += delta;
+    if (current.warmup < .75) return;
+    current.frames++; current.seconds += delta;
+    if (current.frames < 30) return;
+    // Lower pixel cost after sustained slow rendering, not a single loading hiccup.
+    if (current.seconds / current.frames > 1 / 50 && state.viewport.dpr > 1) state.setDpr(Math.max(1, state.viewport.dpr - .25));
+    current.frames = 0; current.seconds = 0;
   });
   return null;
 }

@@ -2,10 +2,10 @@
 .cursor-trail>span { position:fixed; top:0; left:0; pointer-events:none; }
 .cursor-hello { font:800 25px/1 'Consolas',monospace; letter-spacing:.025em; color:transparent; background:radial-gradient(circle,var(--accent) 48%,transparent 52%) 0 0/2.6px 2.6px; background-clip:text; -webkit-background-clip:text; padding:0 4px 5px 0; }
 .cursor-dot { background:var(--accent); border-radius:50%; }
-.project-preview { position:absolute; inset:0; transform-style:preserve-3d; transition:transform 500ms var(--ease); }
+.project-preview { position:absolute; inset:0; transform-style:preserve-3d; transition:transform 200ms var(--ease); }
 .project-preview__image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top; opacity:0; transition:opacity 850ms; }
 .project-preview__image.is-current { opacity:1; }
-.project-preview.motion-active .project-preview__image { animation:preview-drift 15s ease-in-out infinite alternate; }
+.project-preview.motion-active:not(.is-playing) .project-preview__image.is-current { animation:preview-drift 15s ease-in-out infinite alternate; }
 .project-preview video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 500ms; }
 .project-preview.is-playing video { opacity:1; }
 .project-card--rose .project-preview video { object-position:center; }

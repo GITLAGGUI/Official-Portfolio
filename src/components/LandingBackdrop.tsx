@@ -9,7 +9,7 @@ export default function LandingBackdrop({ theme }: { theme: ThemeId }) {
   useEffect(() => {
     const host = ref.current, canvas = canvasRef.current; if (!host || !canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
-    let width = 1, height = 1, frame = 0, last = 0, phase = 0;
+    let width = 1, height = 1, frame = 0, last = 0, phase = 0, beam: CanvasGradient | null = null;
     const pointer = { x: 0, y: 0 }; const light = theme === 'light';
     const coarse = matchMedia('(pointer:coarse)').matches;
     const color = getComputedStyle(host).getPropertyValue('--accent').trim();
@@ -37,9 +37,8 @@ export default function LandingBackdrop({ theme }: { theme: ThemeId }) {
         ctx.fillStyle = '#d6ba7f'; ctx.globalAlpha = .045;
         for (let i = 0; i < 4; i++) { const x = width * (.12 + i * .22) + Math.sin(phase * .08) * 20; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 80, 0); ctx.lineTo(x - height * .45 + 80, height); ctx.lineTo(x - height * .45, height); ctx.fill(); }
       }
-      if (theme === 'studio') {
-        const beam = ctx.createRadialGradient(width * .06, 0, 0, width * .06, 0, height * .85);
-        beam.addColorStop(0, '#e9ba6c'); beam.addColorStop(1, 'transparent'); ctx.globalAlpha = .09; ctx.fillStyle = beam; ctx.fillRect(0, 0, width, height);
+      if (beam) {
+        ctx.globalAlpha = .09; ctx.fillStyle = beam; ctx.fillRect(0, 0, width, height);
       }
       for (let i = 0; i < points.length; i++) {
         const point = points[i]; const speed = theme === 'monokai' ? 13 : theme === 'nord' ? 4 : 2;
@@ -60,7 +59,16 @@ export default function LandingBackdrop({ theme }: { theme: ThemeId }) {
       }
       ctx.globalAlpha = 1;
     };
-    const resize = () => { const size = host.getBoundingClientRect(); width = Math.max(1, size.width); height = Math.max(1, size.height); const dpr = Math.min(devicePixelRatio || 1, coarse ? 1 : 1.5); canvas.width = width * dpr; canvas.height = height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw(); };
+    const resize = () => {
+      const size = host.getBoundingClientRect(); width = Math.max(1, size.width); height = Math.max(1, size.height);
+      // Sparse ambient particles do not need a high-DPI full-screen buffer.
+      const dpr = Math.min(devicePixelRatio || 1, 1);
+      const pixelsWide = Math.round(width * dpr), pixelsHigh = Math.round(height * dpr);
+      if (canvas.width !== pixelsWide || canvas.height !== pixelsHigh) { canvas.width = pixelsWide; canvas.height = pixelsHigh; }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (theme === 'studio') { beam = ctx.createRadialGradient(width * .06, 0, 0, width * .06, 0, height * .85); beam.addColorStop(0, '#e9ba6c'); beam.addColorStop(1, 'transparent'); }
+      draw();
+    };
     const tick = (now: number) => { if (now - last >= 1000 / 30) { phase += Math.min((now - last) / 1000, .05); last = now; draw(); } frame = requestAnimationFrame(tick); };
     const move = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; pointer.x = event.clientX / innerWidth * 2 - 1; pointer.y = event.clientY / innerHeight * 2 - 1; };
     const observer = new ResizeObserver(resize); observer.observe(host); resize();

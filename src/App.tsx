@@ -81,13 +81,15 @@ export default function App() {
   useEffect(() => {
     const region = scrollRef.current; if (!region) return;
     let frame = 0;
-    const update = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(() => {
+    const update = () => { if (frame) return; frame = requestAnimationFrame(() => {
+      frame = 0;
       const reduce = paused || matchMedia('(prefers-reduced-motion: reduce)').matches;
-      region.querySelectorAll<HTMLElement>('[data-parallax]').forEach((element) => {
-        const top = element.getBoundingClientRect().top - region.getBoundingClientRect().top;
-        const value = reduce ? 0 : Math.max(-22, Math.min(22, (region.clientHeight * .5 - top) * .035));
-        element.style.transform = `translate3d(0,${value}px,0)`;
+      const regionTop = region.getBoundingClientRect().top, midpoint = region.clientHeight * .5;
+      const positions = [...region.querySelectorAll<HTMLElement>('[data-parallax]')].map((element) => {
+        const top = element.getBoundingClientRect().top - regionTop;
+        return { element, value: reduce ? 0 : Math.max(-22, Math.min(22, (midpoint - top) * .035)) };
       });
+      positions.forEach(({ element, value }) => { const transform = `translate3d(0,${value}px,0)`; if (element.style.transform !== transform) element.style.transform = transform; });
     }); };
     const media = matchMedia('(prefers-reduced-motion: reduce)');
     region.addEventListener('scroll', update, { passive: true }); media.addEventListener('change', update); update();
