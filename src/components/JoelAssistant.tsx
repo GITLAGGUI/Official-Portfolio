@@ -17,38 +17,27 @@ const starterMessages: ChatMessage[] = [
   {
     id: 1,
     role: "assistant",
-    text: "Hi, I’m Joel Assistant. Ask me about Joel’s projects, skills, availability, or the kind of systems he builds.",
+    text: "Hey, I’m Joel’s AI assistant. Want to explore his work or talk about your next project?",
   },
 ];
 
 function localPortfolioAnswer(message: string) {
   const query = message.toLowerCase();
-  if (query.includes('leadmaps')) return 'LeadMaps is Joel’s business research workspace at leadmaps.live. It combines business collection, saved lists, CSV/Excel/JSON exports, an API, webhooks and an MCP bridge. The product uses Next.js, TypeScript, PostgreSQL and Azure and is a private beta.';
-  if (query.includes('video') || query.includes('motion') || query.includes('edit')) return 'Joel edits cinematic footage, talking-head reels and product motion graphics using FFmpeg and HyperFrames. Open Projects → Video & Motion to watch the finished cinematic and creator edits.';
-  if (query.includes('seo')) return 'Joel offers technical SEO, keyword and competitor research, metadata and content-structure improvements. OpenSEO supports his research workflow. The Services and Skills pages explain the scope.';
-
-  if (query.includes("contact") || query.includes("hire") || query.includes("available")) {
-    return "Joel is open to full-stack, AI automation, computer vision, NLP, and data workflow opportunities. You can reach him at jlaggui47@gmail.com or use the Contact file in this portfolio.";
+  if (query.includes('leadmaps')) return 'LeadMaps is Joel’s business research workspace. It brings business collection, saved lists and exports together, with an API and webhooks. Check Projects → LeadMaps or leadmaps.live.';
+  if (query.includes('video') || query.includes('motion') || query.includes('edit')) return 'Joel makes product films and creator edits with FFmpeg and HyperFrames. Projects → Video & Motion has the finished work. Got a video in mind?';
+  if (query.includes('seo')) return 'Joel works on technical SEO and search visibility, using Google Search Console and OpenSEO. Services has real LeadMaps reports you can check.';
+  if (query.includes('contact') || query.includes('hire') || query.includes('available')) return 'Want to work with Joel? Email jlaggui47@gmail.com or open Contact. What are you looking to build?';
+  if (query.includes('skill') || query.includes('stack') || query.includes('technology')) return 'React, Next.js, TypeScript and Python are his core tools. He also works with databases, automation, computer vision and video. Tools has the full list and free workflow skills.';
+  if (query.includes('automation') || query.includes('n8n') || query.includes('openclaw')) return 'Joel connects tools through n8n, APIs and AI. His projects include an outreach prototype and private agent workflows. What repetitive task would you like to hand off?';
+  if (query.includes('rice') || query.includes('computer vision') || query.includes('yolo')) return 'RiceGuardAI is a research project for rice-disease segmentation in drone imagery. Joel works on the data, inference pipeline and evaluation. The project page shows the evidence and current limitations.';
+  if (query.includes('project') || query.includes('work') || query.includes('build')) {
+    const names = projects.filter((project) => project.featured).slice(0, 4).map((project) => project.shortTitle);
+    return `Start with ${names.join(', ')}. Pick a project for the actual work, Joel’s role and screenshots.`;
   }
-
-  if (query.includes("skill") || query.includes("stack") || query.includes("technology")) {
-    return "Joel works with React, Next.js, TypeScript, Python, PostgreSQL, Supabase, n8n, OpenClaw, Azure, AWS, CVAT, YOLO, ABSA, FFmpeg and HyperFrames. His work spans SaaS, AI automation, vision, data, SEO and video. Open Tools for the complete directory or Skills for the capabilities.";
-  }
-
-  if (query.includes("automation") || query.includes("n8n") || query.includes("openclaw")) {
-    return "Joel’s automation work includes a preview-first n8n outreach prototype, a private OpenClaw agent system, and a Python/FFmpeg short-video production pipeline. Each case study states what is live, private, or still gated.";
-  }
-
-  if (query.includes("rice") || query.includes("computer vision") || query.includes("yolo")) {
-    return "RiceGuardAI is Joel’s 4K rice-disease segmentation research pipeline. It covers tiled inference, CVAT review, dataset readiness, and AWS job infrastructure. Video4 stays sealed, and the portfolio does not claim final accuracy before expert review and training gates are complete.";
-  }
-
-  if (query.includes("project") || query.includes("work") || query.includes("build")) {
-    const names = projects.filter((project) => project.featured).slice(0, 6).map((project) => project.shortTitle);
-    return `Start with ${names.join(", ")}. Open any project to see Joel’s role, the challenge, the build approach, and project screenshots.`;
-  }
-
-  return "Joel builds web products, AI automations, computer-vision pipelines, and NLP/data systems. Try asking about featured projects, skills, RiceGuardAI, automation work, or how to contact him.";
+  if (/tell.*joke|joke.*tell/.test(query)) return 'Why do developers prefer dark mode? Light attracts bugs. 😭 Anyway, how did you find Joel’s work?';
+  if (/\b(lol|lmao|haha|funny)\b/.test(query)) return 'Okay, that got me. 😭 How did you find Joel’s portfolio?';
+  if (/^(hi|hello|hey|yo)[!. ?]*$/.test(query)) return 'Hey! What brought you here—one of Joel’s projects, or something you want to build?';
+  return 'Happy to chat. What brought you to Joel’s portfolio—his software, AI work, or video edits?';
 }
 
 function renderInlineMarkdown(text: string): ReactNode[] {
@@ -137,7 +126,7 @@ export default function JoelAssistant({ open, onClose }: JoelAssistantProps) {
       const response = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ message, history: messages.slice(-6).map((item) => ({ role: item.role, content: item.text })) }),
         signal: controller.signal,
       });
       const payload = (await response.json()) as { reply?: string; error?: string };

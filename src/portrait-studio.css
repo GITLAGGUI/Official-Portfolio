@@ -39,3 +39,7 @@
 :root[data-theme='nord'] .ambient-orb { opacity:.14; filter:blur(85px); }
 :root[data-theme='light'] .ambient-grid { opacity:.07; }
 :root[data-theme='light'] .ambient-orb--three { background:radial-gradient(ellipse,#d9c59680,transparent 65%); }
+
+.landing-backdrop.is-active .ambient-orb { will-change:transform; }
+.home-page .home-hero h1 { font-size:clamp(33px,2.65vw,47px); }
+@media(max-width:640px) { .home-page .home-hero h1 { font-size:clamp(30px,8.4vw,36px); }.ambient-orb--three { display:none; } }

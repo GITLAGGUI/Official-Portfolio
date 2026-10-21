@@ -11,8 +11,9 @@ export default function LandingBackdrop({ theme }: { theme: ThemeId }) {
     const ctx = canvas.getContext('2d'); if (!ctx) return;
     let width = 1, height = 1, frame = 0, last = 0, phase = 0;
     const pointer = { x: 0, y: 0 }; const light = theme === 'light';
+    const coarse = matchMedia('(pointer:coarse)').matches;
     const color = getComputedStyle(host).getPropertyValue('--accent').trim();
-    const points = Array.from({ length: 58 }, (_, i) => ({ x: ((i * 73 + 19) % 997) / 997, y: ((i * 137 + 41) % 991) / 991, size: i % 7 === 0 ? 1.8 : .8, speed: .3 + (i % 5) * .12 }));
+    const points = Array.from({ length: coarse ? 34 : 58 }, (_, i) => ({ x: ((i * 73 + 19) % 997) / 997, y: ((i * 137 + 41) % 991) / 991, size: i % 7 === 0 ? 1.8 : .8, speed: .3 + (i % 5) * .12 }));
     const draw = () => {
       ctx.clearRect(0, 0, width, height); ctx.strokeStyle = color; ctx.fillStyle = color;
       if (['dracula', 'nord', 'rose'].includes(theme)) {
@@ -59,7 +60,7 @@ export default function LandingBackdrop({ theme }: { theme: ThemeId }) {
       }
       ctx.globalAlpha = 1;
     };
-    const resize = () => { const size = host.getBoundingClientRect(); width = Math.max(1, size.width); height = Math.max(1, size.height); const dpr = Math.min(devicePixelRatio || 1, 1.5); canvas.width = width * dpr; canvas.height = height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw(); };
+    const resize = () => { const size = host.getBoundingClientRect(); width = Math.max(1, size.width); height = Math.max(1, size.height); const dpr = Math.min(devicePixelRatio || 1, coarse ? 1 : 1.5); canvas.width = width * dpr; canvas.height = height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw(); };
     const tick = (now: number) => { if (now - last >= 1000 / 30) { phase += Math.min((now - last) / 1000, .05); last = now; draw(); } frame = requestAnimationFrame(tick); };
     const move = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; pointer.x = event.clientX / innerWidth * 2 - 1; pointer.y = event.clientY / innerHeight * 2 - 1; };
     const observer = new ResizeObserver(resize); observer.observe(host); resize();

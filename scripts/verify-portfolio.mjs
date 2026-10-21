@@ -42,7 +42,7 @@ assert.equal(themes.length, 8);
 assert.equal(themes[0].id, 'studio');
 assert.equal(themes[7].id, 'light', 'Light is the seventh variant after the default');
 assert.equal(new Set(themes.map((theme) => theme.portrait)).size, 8);
-for (const theme of themes) assert.ok(fs.existsSync(path.join('public', theme.portrait)), `Missing ${theme.name} portrait`);
+for (const theme of themes) for (const src of [theme.portrait, theme.avatar, theme.preview]) assert.ok(fs.existsSync(path.join('public', src)), `Missing ${theme.name} image: ${src}`);
 const knownTools = new Set(tools.map((tool) => tool.name));
 for (const item of [...capabilities, ...workflowSkills]) for (const name of item.logos ?? item.tools) assert.ok(knownTools.has(name), `Unknown logo tool: ${name}`);
 for (const skill of workflowSkills) {

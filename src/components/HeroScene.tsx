@@ -128,10 +128,21 @@ function StudioReflections({ theme }: { theme: ThemeId }) {
   return null;
 }
 
+function FrameBudget({ active }: { active: boolean }) {
+  const slowFrames = useRef(0);
+  useFrame((state, delta) => {
+    if (!active) return;
+    slowFrames.current = delta > .04 ? slowFrames.current + 1 : Math.max(0, slowFrames.current - 1);
+    if (slowFrames.current >= 18 && state.viewport.dpr > 1) { state.setDpr(1); slowFrames.current = 0; }
+  });
+  return null;
+}
+
 export default function HeroScene({ active = true, theme = 'studio' }: { active?: boolean; theme?: ThemeId }) {
   const accent = themes.find((item) => item.id === theme)!.colors[1];
   const light = theme === 'light'; const warm = theme === 'studio' || theme === 'rose';
-  return <Canvas frameloop={active ? 'always' : 'demand'} dpr={[1, 1.5]} camera={{ position: [0, .08, 10], fov: 30 }} gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}>
-    <FitCamera /><StudioReflections theme={theme} /><ambientLight intensity={light ? 2.2 : .85} /><directionalLight position={[-4, 5, 7]} intensity={light ? 4 : 2.4} color={warm ? "#ffe0ae" : "#edf4ff"} /><directionalLight position={[4, 1, 3]} intensity={light ? 1.6 : 3} color={accent} /><directionalLight position={[0, -3, 2]} intensity={1.4} color="#e3c5a7" /><Studio active={active} theme={theme} />
+  const maxDpr = matchMedia('(pointer:coarse)').matches ? 1.25 : 1.5;
+  return <Canvas frameloop={active ? 'always' : 'demand'} dpr={[1, maxDpr]} camera={{ position: [0, .08, 10], fov: 30 }} gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}>
+    <FitCamera /><FrameBudget active={active} /><StudioReflections theme={theme} /><ambientLight intensity={light ? 2.2 : .85} /><directionalLight position={[-4, 5, 7]} intensity={light ? 4 : 2.4} color={warm ? "#ffe0ae" : "#edf4ff"} /><directionalLight position={[4, 1, 3]} intensity={light ? 1.6 : 3} color={accent} /><directionalLight position={[0, -3, 2]} intensity={1.4} color="#e3c5a7" /><Studio active={active} theme={theme} />
   </Canvas>;
 }

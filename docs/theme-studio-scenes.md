@@ -20,3 +20,13 @@ No product dependency was added. Procedural softbox environment reflections supp
 Code: src/components/HeroScene.tsx, SceneDecor.tsx, LandingBackdrop.tsx, src/portrait-studio.css and src/data/themes.ts. Images: public/assets/profile/themes/. Unsupported WebGL shows the real photo instead of an empty hero.
 
 Verification: TypeScript/Vite build, lint and portfolio tests pass. Asset checks include all8 unique portrait references, defaultStudio and Light variant07; earlier LeadMaps/video separation assertions remain intact. CUA reported Local browser use is disabled in Work settings even for the requested Codex IAB, so no new rendered visual check or motion screenshot is claimed.
+
+## Copy, assistant and performance follow-up
+
+Home now reads "I turn ambitious ideas. Into real-world solutions." About introduces Joel as a computer scientist who builds, followed by factual work areas and recent LeadMaps/RiceGuardAI projects.
+
+Joel Assistant uses a casual, direct Gen Z tone, brief answers and optional playful emoji. Harmless jokes/small talk are allowed, followed by a natural portfolio bridge. It receives at most6 recent conversation turns, limited to user/assistant roles and1000characters each; trusted system context remains separate. The output budget is220tokens. The UI and offline fallback use concise wording and current Services/Tools links.
+
+The picker uses320px previews instead of full portraits:121,222bytes across eight images versus647,324bytes for full portraits, an81.3% asset-byte reduction. Sidebar avatars total55,832bytes. This is an image-size comparison, not a measured page-load improvement. WebGL is capped at1.25DPR on coarse-pointer devices/1.5otherwise, and drops to1DPR after sustained slow frames. Background drawing caps at30fps with34 mobile or58desktop particles. Three.js remains lazy-loaded; compositor transforms/opacity, hidden-tab/offscreen pause and reduced motion are preserved. Font CSS is requested in parallel with preconnected font origins instead of a nested CSS import.
+
+Tests include bounded assistant conversation, dropped system/tool history roles, length/input/error handling and prompt/output budget. Existing deployment credentials remain server-side. Actual FPS, mobile interaction and Lighthouse results are not available while browser automation is disabled; no performance score is claimed.
