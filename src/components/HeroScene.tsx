@@ -17,11 +17,17 @@ function StudioPhoto({ src }: { src: string }) {
   const source = useLoader(THREE.TextureLoader, src);
   const { texture, geometry, width, height } = useMemo(() => {
     const image = source.image as HTMLImageElement; const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    // Match the default portrait frame; crop each source without changing its proportions.
+    canvas.width = 1200; canvas.height = 1106;
+    const scale = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+    const cropWidth = canvas.width / scale, cropHeight = canvas.height / scale;
+    const cropX = (image.naturalWidth - cropWidth) / 2;
+    const cropY = (image.naturalHeight - cropHeight) * .25; // Keep hair and face in the upper part of taller photos.
     const ctx = canvas.getContext('2d')!;
-    ctx.beginPath(); ctx.roundRect(0, 0, canvas.width, canvas.height, canvas.width * .045); ctx.clip(); ctx.drawImage(image, 0, 0);
+    ctx.beginPath(); ctx.roundRect(0, 0, canvas.width, canvas.height, canvas.width * .045); ctx.clip();
+    ctx.drawImage(image, cropX, cropY, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
     const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4;
-    const height = 3.7, width = height * image.naturalWidth / image.naturalHeight;
+    const height = 3.7, width = height * canvas.width / canvas.height;
     const geometry = new THREE.ExtrudeGeometry(roundShape(width, height, width * .045), { depth: .035, bevelEnabled: false, steps: 1 });
     return { texture, geometry, width, height };
   }, [source]);
