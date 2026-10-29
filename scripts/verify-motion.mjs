@@ -17,7 +17,7 @@ function preview({ clip = true, saveData = false, wide = true, intent = true } =
   };
   const element = { style: {}, parentElement: { getBoundingClientRect() { reads++; return { left:0, top:0, width:100, height:100 }; } } };
   const player = { src:'', getAttribute: () => player.src, play: () => { plays++; return Promise.resolve(); }, pause: () => { pauses++; } };
-  const dependencies = (name) => name === 'react' ? react : name.includes('useMediaQuery') ? { default: () => wide } : name.includes('useMotionVisibility') ? { default: () => active } : require(name);
+  const dependencies = (name) => name === 'react' ? react : name.includes('projectPreviews.json') ? { default: JSON.parse(fs.readFileSync('src/data/projectPreviews.json', 'utf8')) } : name.includes('useMediaQuery') ? { default: () => wide } : name.includes('useMotionVisibility') ? { default: () => active } : require(name);
   const exports = {};
   new Function('require','exports','navigator','requestAnimationFrame','cancelAnimationFrame','setInterval','clearInterval', compile(source('src/components/ProjectPreview.tsx')))(dependencies, exports, { connection:{saveData} }, (fn) => { frames.set(++sequence,fn); return sequence; }, (id) => frames.delete(id), (fn) => { intervals.set(++sequence,fn); return sequence; }, (id) => intervals.delete(id));
   const project = { hero:'/hero.webp', heroAlt:'Project', title:'Project', gallery:[{src:'/one.webp'},{src:'/two.webp'}], ...(clip ? {previewVideo:'/demo.mp4'} : {}) };

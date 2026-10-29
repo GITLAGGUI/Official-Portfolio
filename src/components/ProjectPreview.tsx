@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { ProjectCaseStudy } from '../data/projects';
 import useMotionVisibility from './useMotionVisibility';
 import useMediaQuery from './useMediaQuery';
+import previews from '../data/projectPreviews.json';
 
-export default function ProjectPreview({ project, contain = false, intent = true }: { project: ProjectCaseStudy; contain?: boolean; intent?: boolean }) {
+export default function ProjectPreview({ project, contain = false, intent = true, priority = false }: { project: ProjectCaseStudy; contain?: boolean; intent?: boolean; priority?: boolean }) {
   const ref = useRef<HTMLDivElement>(null); const video = useRef<HTMLVideoElement>(null);
   const tiltFrame = useRef(0); const pointer = useRef({ x: 0, y: 0 });
   const active = useMotionVisibility(ref); const [index, setIndex] = useState(0); const [playing, setPlaying] = useState(false);
@@ -38,7 +39,7 @@ export default function ProjectPreview({ project, contain = false, intent = true
       element.style.transform = `perspective(1100px) rotateX(${-y * 4}deg) rotateY(${x * 5}deg) translateZ(0)`;
     });
   }} onPointerLeave={(event) => { cancelAnimationFrame(tiltFrame.current); tiltFrame.current = 0; event.currentTarget.style.transform = ''; }}>
-    {images.map((src, i) => <img key={src} className={`project-preview__image ${i === index ? 'is-current' : ''}`} src={src} alt={i === 0 ? project.heroAlt : `${project.title} project preview ${i + 1}`} loading="lazy" decoding="async" />)}
+    {images.map((src, i) => <img key={src} className={`project-preview__image ${i === index ? 'is-current' : ''}`} src={src} srcSet={(previews as Record<string, string>)[src]} sizes={contain ? '(min-width: 1000px) 65vw, 95vw' : '(min-width: 1280px) 23vw, (min-width: 768px) 43vw, 50vw'} alt={i === 0 ? project.heroAlt : `${project.title} project preview ${i + 1}`} loading={priority && i === 0 ? 'eager' : 'lazy'} decoding="async" />)}
     {clip && <video ref={video} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onError={() => setPlaying(false)} aria-hidden="true" />}
     <span className="preview-light" aria-hidden="true" />
   </div>;

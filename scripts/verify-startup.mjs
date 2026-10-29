@@ -64,7 +64,7 @@ ready.scene.resolve(); await flush();
 tree = await ready.advance(299); assert.ok(!tree.props.className.includes('--leaving'));
 tree = await ready.advance(1); assert.ok(tree.props.className.includes('--leaving'));
 await ready.advance(350); assert.equal(ready.completed(), 1);
-assert.equal(ready.urls.length, 3, 'Only the small avatar and two first-screen project posters are preloaded');
+assert.equal(ready.urls.length, 1, 'Full-size gallery posters must not be preloaded before responsive image selection');
 assert.ok(ready.urls.every((url) => !url.endsWith('.mp4')), 'Videos must not block entry');
 ready.cleanup();
 

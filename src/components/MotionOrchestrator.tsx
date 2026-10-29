@@ -16,7 +16,7 @@ export default function MotionOrchestrator({ region, route, enabled = true }: { 
       });
     }, { root, threshold: .08 });
     const selector = '.project-card,.tool-card,.capability-card,.about-intro__portrait,.about-disciplines a,.achievement-grid a,.repo-about,.contact-form,[data-reveal]';
-    const observe = (element: Element) => { if (!seen.has(element)) { seen.add(element); observer.observe(element); } };
+    const observe = (element: Element) => { if (!seen.has(element) && !element.closest('[data-reveal-skip]')) { seen.add(element); observer.observe(element); } };
     const discover = (scope: Element = root) => {
       if (media.matches) return;
       if (scope.matches(selector)) observe(scope);

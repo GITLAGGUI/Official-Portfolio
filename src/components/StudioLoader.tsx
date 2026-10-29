@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { themes, type ThemeId } from '../data/themes';
-import { getProjectBySlug } from '../data/projects';
 import { preloadImage } from '../utils/startup';
 
 type Props = { theme: ThemeId; path: string; preparePage: (path: string) => Promise<unknown>; onComplete: () => void };
@@ -22,8 +21,9 @@ export default function StudioLoader({ theme, path, preparePage, onComplete }: P
       revealTimer = setTimeout(() => { if (!cancelled) setLeaving(true); }, Math.max(0, 300 - (performance.now() - start)));
     };
     const appearance = themes.find((item) => item.id === arrival.theme)!;
-    const home = arrival.path === '/';
-    const images = [appearance.avatar, ...(arrival.path === '/about' ? [appearance.portrait] : []), ...(home ? ['riceguardai', 'leadmaps'].map((slug) => getProjectBySlug(slug)!.hero) : [])];
+    // Let the browser select responsive gallery posters when their route mounts.
+    // Preloading full-size originals here duplicated those downloads on phones.
+    const images = [appearance.avatar, ...(arrival.path === '/about' ? [appearance.portrait] : [])];
     const tasks = [
       () => preparePage(arrival.path),
       () => Promise.all(images.map((src) => preloadImage(src, controller.signal))),

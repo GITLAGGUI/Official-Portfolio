@@ -162,7 +162,7 @@ export default function HeroScene({ active = true, theme = 'studio' }: { active?
   const accent = themes.find((item) => item.id === theme)!.colors[1];
   const light = theme === 'light'; const warm = theme === 'studio' || theme === 'rose';
   const maxDpr = matchMedia('(pointer:coarse)').matches ? 1.25 : 1.5;
-  return <Canvas frameloop={active ? 'always' : 'demand'} dpr={[1, maxDpr]} camera={{ position: [0, .08, 10], fov: 30 }} gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}>
+  return <Canvas frameloop={active ? 'always' : 'demand'} dpr={[1, maxDpr]} camera={{ position: [0, .08, 10], fov: 30 }} gl={{ alpha: true, antialias: true, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true }}>
     <FitCamera /><FrameBudget active={active} /><StudioReflections theme={theme} /><ambientLight intensity={light ? 2.2 : .85} /><directionalLight position={[-4, 5, 7]} intensity={light ? 4 : 2.4} color={warm ? "#ffe0ae" : "#edf4ff"} /><directionalLight position={[4, 1, 3]} intensity={light ? 1.6 : 3} color={accent} /><directionalLight position={[0, -3, 2]} intensity={1.4} color="#e3c5a7" /><Studio active={active} theme={theme} />
   </Canvas>;
 }
