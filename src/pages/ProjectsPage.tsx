@@ -5,11 +5,11 @@ import Pagination from '../components/Pagination';
 import { projects } from '../data/projects';
 const filters = [
   { id: 'all', label: 'All work', categories: [] as string[] },
-  { id: 'web', label: 'Websites & SaaS', categories: ['SaaS', 'Web product', 'Commerce', 'Mobile', 'Web application', 'Web design'] },
+  { id: 'web', label: 'Websites & SaaS', categories: ['SaaS', 'Web product', 'Commerce', 'Mobile', 'Web application', 'Web design', 'Frontend study', 'Web animation'] },
   { id: 'hospitality', label: 'Resorts & hospitality', categories: ['Web product', 'Web design'] },
   { id: 'automation', label: 'Automation', categories: ['AI automation', 'Workflow automation', 'Developer tool', 'Desktop utility'] },
   { id: 'data', label: 'AI & data', categories: ['Computer vision', 'Data engineering', 'NLP and data science', 'Data application', 'Data visualization'] },
-  { id: 'video', label: 'Video & motion', categories: ['Video & motion'] },
+  { id: 'video', label: 'Video & motion', categories: ['Video & motion', 'Web animation'] },
 ];
 export default function ProjectsPage() {
   const [params, setParams] = useSearchParams(); const filter = filters.find((item) => item.id === params.get('category')) ?? filters[0];

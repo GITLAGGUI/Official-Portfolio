@@ -259,7 +259,7 @@
   "maria-lourdes-mansion": {
     "basis": "GitHub repository language bytes",
     "measured": "2026-10-29",
-    "files": 60,
+    "files": 34,
     "totalBytes": 211304,
     "languages": [
       {
@@ -284,19 +284,6 @@
       }
     ]
   },
-  "pinoyai-cli": {
-    "basis": "GitHub repository language bytes",
-    "measured": "2026-10-29",
-    "files": 34,
-    "totalBytes": 178054,
-    "languages": [
-      {
-        "name": "Python",
-        "bytes": 178054,
-        "percent": 100.0
-      }
-    ]
-  },
   "prostate-cancer-risk-dashboard": {
     "basis": "GitHub repository language bytes",
     "measured": "2026-10-29",
@@ -312,6 +299,88 @@
         "name": "Python",
         "bytes": 43323,
         "percent": 4.5
+      }
+    ]
+  },
+  "youtube-layout-study": {
+    "basis": "GitHub repository language bytes",
+    "measured": "2026-10-29",
+    "files": 3,
+    "totalBytes": 17913,
+    "languages": [
+      {
+        "name": "HTML",
+        "bytes": 12852,
+        "percent": 71.7
+      },
+      {
+        "name": "CSS",
+        "bytes": 5061,
+        "percent": 28.3
+      }
+    ]
+  },
+  "creator-marketplace": {
+    "basis": "GitHub repository language bytes",
+    "measured": "2026-10-29",
+    "files": 40,
+    "totalBytes": 41924,
+    "languages": [
+      {
+        "name": "JavaScript",
+        "bytes": 23332,
+        "percent": 55.6
+      },
+      {
+        "name": "Python",
+        "bytes": 16101,
+        "percent": 38.4
+      },
+      {
+        "name": "Dockerfile",
+        "bytes": 1111,
+        "percent": 2.7
+      },
+      {
+        "name": "CSS",
+        "bytes": 794,
+        "percent": 1.9
+      },
+      {
+        "name": "HTML",
+        "bytes": 470,
+        "percent": 1.1
+      },
+      {
+        "name": "Shell",
+        "bytes": 116,
+        "percent": 0.3
+      }
+    ]
+  },
+  "webflow-brand-reveal": {
+    "basis": "GitHub repository language bytes",
+    "measured": "2026-10-29",
+    "files": 3,
+    "totalBytes": 12739,
+    "languages": [
+      {
+        "name": "HTML",
+        "bytes": 12739,
+        "percent": 100.0
+      }
+    ]
+  },
+  "openrouter-cli": {
+    "basis": "GitHub repository language bytes",
+    "measured": "2026-10-29",
+    "files": 18,
+    "totalBytes": 178054,
+    "languages": [
+      {
+        "name": "Python",
+        "bytes": 178054,
+        "percent": 100.0
       }
     ]
   }

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import ts from 'typescript';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -26,3 +27,20 @@ try {
   await assert.rejects(() => unavailable.read(), /unavailable/);
   console.log('PASS: shared visits, reload idempotency, 35 concurrent sessions, restart persistence, validation and Redis failure behavior.');
 } finally { await rm(directory, { recursive: true, force: true }); }
+
+// Execute the widget's real request helper: two mounted badges share one fetch,
+// returning tabs keep their browser ID, and blocked storage never invents IDs.
+const ui = await readFile('src/components/VisitCount.tsx', 'utf8');
+const helper = ui.slice(ui.indexOf('let visitRequest:'), ui.indexOf('export default function')).replace('import.meta.env.PROD', 'false');
+const compiled = ts.transpileModule(helper, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+const storage = new Map(); const calls = [];
+const makeReader = (localStorage, fetcher = async (_url, options) => { calls.push(options); return { ok: true, json: async () => ({ count: 35 }) }; }) => new Function('fetch', 'localStorage', 'crypto', `${compiled}; return readCount;`)(fetcher, localStorage, { randomUUID });
+const localStorage = { getItem: (key) => storage.get(key), setItem: (key, value) => storage.set(key, value) };
+const first = makeReader(localStorage);
+assert.equal(await first(), 35); assert.equal(await first(), 35); assert.equal(calls.length, 1);
+await makeReader(localStorage)();
+assert.equal(JSON.parse(calls[0].body).session, JSON.parse(calls[1].body).session, 'Reload keeps the visitor ID');
+await makeReader({ getItem() { throw new Error('Storage blocked'); } })();
+assert.equal(calls.at(-1).method, undefined, 'Blocked storage reads the total without recording repeat visits');
+await assert.rejects(makeReader(localStorage, async () => ({ ok: false }))(), /unavailable/);
+console.log('PASS: one request for two badges, persistent browser identity, storage-blocked read-only mode, and no invented count on API failure.');

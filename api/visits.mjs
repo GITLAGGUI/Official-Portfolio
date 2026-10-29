@@ -11,7 +11,8 @@ export default async function handler(request, response) {
   let body = request.body;
   try { if (typeof body === 'string') body = JSON.parse(body); } catch { return response.status(400).json({ error: 'Invalid request' }); }
   if (request.method === 'POST' && !validSession(body?.session)) return response.status(400).json({ error: 'Invalid session' });
-  const counter = createRedisCounter({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
-  try { return response.status(200).json({ count: request.method === 'POST' ? await counter.record(body.session) : await counter.read() }); }
+  const counter = createRedisCounter({ url: process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN });
+  const automated = /bot|crawler|spider|lighthouse|headless|pagespeed|prerender/i.test(request.headers['user-agent'] ?? '');
+  try { return response.status(200).json({ count: request.method === 'POST' && !automated ? await counter.record(body.session) : await counter.read() }); }
   catch { return response.status(503).json({ error: 'Visit count temporarily unavailable' }); }
 }

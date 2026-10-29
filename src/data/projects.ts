@@ -543,6 +543,11 @@ export const projects: ProjectCaseStudy[] = [
     challenge: "Bring the core steps of a food ordering experience into one mobile prototype.",
     approach: ["Built authentication, browsing, cart, and account screens in Flutter.", "Used Firebase services for application data and identity."],
     outcome: ["Completed a navigable mobile prototype and recorded demonstration."],
+    gallery: [
+      { src: '/assets/projects/hotplate/home-screen.webp', alt: 'Hotplate restaurant discovery screen from the Flutter repository', caption: 'Restaurant discovery · repository screenshot' },
+      { src: '/assets/projects/hotplate/cart.webp', alt: 'Hotplate cart with order details', caption: 'Cart · repository screenshot' },
+      { src: '/assets/projects/hotplate/sign-in.webp', alt: 'Hotplate sign-in screen', caption: 'Sign-in · repository screenshot' },
+    ],
   },
   {
     slug: "prostate-cancer-risk-dashboard",
@@ -557,7 +562,7 @@ export const projects: ProjectCaseStudy[] = [
     status: "Live demo",
     featured: false,
     accent: "blue",
-    hero: "/assets/prostate-cancer-dashboard.png",
+    hero: "/assets/projects/risk-dashboard/overview.webp",
     heroAlt: "Prostate cancer risk analysis dashboard",
     stack: ["Python", "Streamlit", "Plotly", "pandas", "scikit-learn"],
     links: [
@@ -568,6 +573,10 @@ export const projects: ProjectCaseStudy[] = [
     approach: ["Built interactive filters and visual summaries in Streamlit.", "Separated exploratory views from model-oriented analysis."],
     outcome: ["Published a reviewable web dashboard for dataset exploration."],
     limitations: "This is an educational analysis tool, not a clinical decision system.",
+    gallery: [
+      { src: '/assets/projects/risk-dashboard/age-distribution.webp', alt: 'Age distribution chart from the analysis repository', caption: 'Dataset age distribution' },
+      { src: '/assets/projects/risk-dashboard/correlations.webp', alt: 'Clinical-variable correlation matrix from the analysis repository', caption: 'Exploratory correlation matrix' },
+    ],
   },
   {
     slug: "isu-lost-and-found",
@@ -648,7 +657,7 @@ export const projects: ProjectCaseStudy[] = [
     accent: "sage",
     hero: "/assets/marialourdes.png",
     heroAlt: "Maria Lourdes Mansion website",
-    stack: ["HTML", "CSS", "JavaScript", "Responsive design"],
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
     links: [
       { label: "Source", href: "https://github.com/GITLAGGUI/Maria-Lourdes-Mansion" },
       { label: "Demo", href: "https://youtu.be/TzNnfLbOnNA" },
@@ -656,6 +665,10 @@ export const projects: ProjectCaseStudy[] = [
     challenge: "Present the property clearly across desktop and mobile without a complex application backend.",
     approach: ["Created an image-led responsive layout with direct property information."],
     outcome: ["Published source code and a recorded walkthrough."],
+    gallery: [
+      { src: '/assets/projects/maria-lourdes/entrance.webp', alt: 'Maria Lourdes Mansion entrance photograph used in the website', caption: 'Entrance · original property asset' },
+      { src: '/assets/projects/maria-lourdes/aerial.webp', alt: 'Maria Lourdes Mansion aerial photograph from the source repository', caption: 'Property aerial · original venue asset' },
+    ],
   },
   {
     slug: "eskwelahan-ph",
@@ -697,6 +710,152 @@ export const projects: ProjectCaseStudy[] = [
     approach: ["Modeled the data and created interactive visual comparisons."],
     outcome: ["Produced a reusable dashboard view for presentation and exploration."],
   },
+  {
+    "slug": "youtube-layout-study",
+    "title": "YouTube Layout Study",
+    "shortTitle": "YouTube Study",
+    "subtitle": "Responsive HTML & CSS interface study",
+    "summary": "A static recreation of a video browsing interface, built to practice responsive grids, navigation and media cards.",
+    "category": "Frontend study",
+    "role": "Front-end development",
+    "year": "2025",
+    "status": "Interface study",
+    "featured": false,
+    "accent": "rose",
+    "hero": "/assets/projects/youtube-layout-study/overview.webp",
+    "heroAlt": "Actual browser capture of the HTML and CSS YouTube layout study",
+    "stack": [
+      "HTML",
+      "CSS",
+      "Responsive layout"
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/GITLAGGUI/Cloning_Youtube"
+      }
+    ],
+    "challenge": "Recreate a dense video interface with consistent thumbnails, channel details and navigation.",
+    "approach": [
+      "Built the header, side navigation and responsive video grid with HTML and CSS."
+    ],
+    "outcome": [
+      "A browser-rendered interface study with the original repository assets."
+    ],
+    "limitations": "Front-end practice project. Search, playback, accounts and uploads are not connected to YouTube services."
+  },
+  {
+    "slug": "creator-marketplace",
+    "title": "Creator Marketplace",
+    "shortTitle": "Marketplace",
+    "subtitle": "Project marketplace with a React & FastAPI stack",
+    "summary": "An in-progress marketplace connecting creator profiles, project listings and proposal-oriented workflows.",
+    "category": "Web application",
+    "role": "Full-stack development",
+    "year": "2025",
+    "status": "In progress",
+    "featured": false,
+    "accent": "blue",
+    "hero": "/assets/projects/creator-marketplace/illustration.svg",
+    "heroAlt": "Original marketplace illustration from the project repository",
+    "stack": [
+      "React",
+      "JavaScript",
+      "FastAPI",
+      "Python",
+      "PostgreSQL",
+      "Docker"
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/GITLAGGUI/Marketplace-Web"
+      }
+    ],
+    "challenge": "Connect a React project marketplace to authenticated APIs and persistent application data.",
+    "approach": [
+      "Built listing and project creation screens with FastAPI routes, SQLAlchemy models and JWT authentication.",
+      "Added optional AI-description and file-upload service integrations."
+    ],
+    "outcome": [
+      "Source includes the client, API, database models and Docker development setup."
+    ],
+    "limitations": "Work in progress; the repository illustration is shown here. Hosted operation, AI requests and upload services have not been verified in this review. Chat remains a demonstration implementation."
+  },
+  {
+    "slug": "webflow-brand-reveal",
+    "title": "Rustico · Brand Reveal",
+    "shortTitle": "Brand Reveal",
+    "subtitle": "Scroll-driven brand motion prototype",
+    "summary": "A standalone GSAP prototype exploring a staged brand reveal intended for a Webflow experience.",
+    "category": "Web animation",
+    "role": "Motion & front-end development",
+    "year": "2026",
+    "status": "Motion prototype",
+    "featured": false,
+    "accent": "amber",
+    "hero": "/assets/projects/webflow-brand-reveal/overview.webp",
+    "heroAlt": "Actual browser capture of the Rustico scroll-driven geometric brand reveal",
+    "stack": [
+      "HTML",
+      "CSS",
+      "SVG",
+      "GSAP",
+      "ScrollTrigger"
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/GITLAGGUI/demo-webflow"
+      }
+    ],
+    "challenge": "Reveal the parts of a brand mark as visitors scroll through one continuous section.",
+    "approach": [
+      "Built a pinned SVG scene with scroll-linked layer reveals and a staged introduction."
+    ],
+    "outcome": [
+      "A standalone browser prototype with a working geometric reveal."
+    ],
+    "limitations": "Concept brand with placeholder artwork. The Webflow IX2 version described in the repository is a plan, not a completed integration."
+  },
+  {
+    "slug": "openrouter-cli",
+    "title": "OpenRouter CLI",
+    "shortTitle": "OpenRouter CLI",
+    "subtitle": "Python terminal assistant & local file tools",
+    "summary": "A Python command-line toolkit for AI-assisted coding, file operations and web retrieval through OpenRouter.",
+    "category": "Developer tool",
+    "role": "Python development",
+    "year": "2025",
+    "status": "Source available",
+    "featured": false,
+    "accent": "sage",
+    "hero": "/assets/projects/openrouter-cli/overview.webp",
+    "heroAlt": "Public GitHub source overview of GITLAGGUI Openrouter-CLI",
+    "stack": [
+      "Python",
+      "Typer",
+      "Rich",
+      "OpenRouter API",
+      "YAML"
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/GITLAGGUI/Openrouter-CLI"
+      }
+    ],
+    "challenge": "Bring model selection, coding help and local file operations into a terminal workflow.",
+    "approach": [
+      "Implemented command groups for chat, code analysis, file operations and web fetching.",
+      "Added configurable model selection, history and file backups."
+    ],
+    "outcome": [
+      "Published Python source and command documentation, shown through its repository overview."
+    ],
+    "limitations": "Source reviewed; no authenticated model requests or local file-changing commands were run during this portfolio audit."
+  },
+
 ];
 
 export const featuredProjects = projects.filter((project) => project.featured);
