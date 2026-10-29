@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { themes, type ThemeId } from '../data/themes';
 import { preloadImage } from '../utils/startup';
+import PageSkeleton from './PageSkeleton';
 
 type Props = { theme: ThemeId; path: string; preparePage: (path: string) => Promise<unknown>; onComplete: () => void };
 const labels = ['Opening the workspace', 'Bringing the visuals into focus', 'Setting the type'];
@@ -45,15 +46,6 @@ export default function StudioLoader({ theme, path, preparePage, onComplete }: P
   }, [leaving, onComplete]);
 
   return <div className={`studio-loader ${leaving ? 'studio-loader--leaving' : ''}`} aria-label="Opening Joel’s portfolio" onAnimationEnd={(event) => { if (leaving && event.target === event.currentTarget) onComplete(); }}>
-    <div className="studio-loader__atmosphere" aria-hidden="true"><div /><div /><span /></div>
-    <div className="studio-loader__top"><span><i /> JOEL’S STUDIO</span><span>{themes.find((item) => item.id === arrival.theme)!.name} / PORTFOLIO</span></div>
-    <div className="studio-loader__center">
-      <div className="studio-loader__sculpture" aria-hidden="true"><div className="studio-loader__orbit studio-loader__orbit--one"><i /></div><div className="studio-loader__orbit studio-loader__orbit--two"><i /></div><div className="studio-loader__halo" /><div className="studio-loader__monogram"><span>J</span><span>L</span><i /></div><span className="studio-loader__coordinate">01 / IN THE MAKING</span></div>
-      <p className="studio-loader__eyebrow">A LITTLE PREPARATION. A LOT TO EXPLORE.</p>
-      <h1>Ideas<span> in motion.</span></h1>
-      <div className="studio-loader__progress" role="progressbar" aria-label="Portfolio loading" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ transform: `scaleX(${progress / 100})` }} /></div>
-      <div className="studio-loader__status"><span role="status">{leaving && progress < 100 ? 'Finishing in the background' : progress === 100 ? 'Welcome to the studio' : labels[finished.findIndex((ready) => !ready)]}</span><span aria-hidden="true">{String(progress).padStart(3, '0')}<small>%</small></span></div>
-    </div>
-    <div className="studio-loader__bottom"><span>SOFTWARE · INTELLIGENCE · MOTION</span><button onClick={() => setLeaving(true)} disabled={leaving}>Enter portfolio <span aria-hidden="true">↗</span></button></div>
+    <div className="startup-skeleton"><div className="startup-skeleton__brand">JOEL’S STUDIO <span>PORTFOLIO</span></div><PageSkeleton path={arrival.path} /><div className="startup-skeleton__status"><div className="studio-loader__progress" role="progressbar" aria-label="Portfolio loading" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ transform: `scaleX(${progress / 100})` }} /></div><span role="status">{leaving && progress < 100 ? 'Finishing in the background' : progress === 100 ? 'Ready to explore' : labels[finished.findIndex((ready) => !ready)]}</span><button onClick={() => setLeaving(true)} disabled={leaving}>Enter portfolio ↗</button></div></div>
   </div>;
 }

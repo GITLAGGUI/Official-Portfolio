@@ -35,3 +35,12 @@ The sidebar and status bar share one request after startup. Persistent random br
 This estimates distinct browsers, not exact individual humans. Clearing storage, another browser/device and sophisticated bots can affect counts. New public totals begin when this release activates; historical uncollected visitors are not invented. Vercel Analytics remains the private dashboard for traffic trends/pageviews and uses its own measurement window.
 
 Tests cover 35 concurrent writes, persistence, repeated identities, shared widget requests, unavailable storage/API behavior, startup, motion scheduling, media references, contact/assistant policy and analytics URL privacy. No email or model request was sent. Final production counter and latest-release PageSpeed verification follows deployment.
+
+
+## Final release verification
+
+Commit c9102e2 deployed READY dpl_Fb65LYLGT2RAKDgLreTVg1g8Z9zi. Final PageSpeed report https://pagespeed.web.dev/analysis/https-joellaggui-vercel-app/qomlzq0dnh?form_factor=desktop measured99 Desktop /99 Mobile, with100 Accessibility/BestPractices/SEO. Desktop FCP404ms,LCP638ms,TBT46ms,CLS0; Mobile FCP1512ms,LCP1844ms,TBT5ms,CLS0. Twelve new asset hashes and four case-study routes verified against production. Original LeadMaps video200. CounterAPI200, invalidPOST400, foreignorigin403. Browser0→1 thenreload/navigation remained1; subsequenttotal3 persisted in independentrequests.
+
+Owner later explicitly requested a starting total of1,343. An atomic Redis update set portfolio:visits to1343 while preserving3tracked browser identities and writing previousTotal/startingTotal/source=owner-provided/adjustedAt to portfolio:baseline. PublicAPI readback200confirmed1343. This initial total is owner-provided, not measured historical traffic. Existing atomicSADD/INCR logic continues adding one per new browser ID; there is no decrement on departure and no expiry on the total.
+
+Latest request replaces loading screens with route-specific responsive skeletons (Home/gallery/detail/tools/about/services/contact). Initial readiness/skip/timeout remains; no extra dependencies or artificial navigation delays. CSS shimmer uses transform and respects reduced motion/paused motion. The supplied find-skills command was executed and its complete output read; leaderboard confirms VercelReact and Emil design skills, already available locally. Skeleton render checks and existing7suites passed. Browser visual review of this latest skeleton change was blocked by Local browser use disabled in Work settings; no alternate automation used.

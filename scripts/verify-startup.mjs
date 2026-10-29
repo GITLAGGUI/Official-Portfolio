@@ -41,7 +41,7 @@ function harness({ home = true, reduced = false, failed = false } = {}) {
     useState(initial) { const index = cursor++; if (!(index in states)) states[index] = typeof initial === 'function' ? initial() : initial; return [states[index], (value) => { states[index] = typeof value === 'function' ? value(states[index]) : value; }]; },
     useEffect(fn, deps) { const index = cursor++; const old = effects[index]; if (!old || deps.some((value, i) => value !== old.deps[i])) queued.push(() => { old?.cleanup?.(); effects[index] = { deps, cleanup: fn() }; }); },
   };
-  const dependencies = (name) => name === 'react' ? react : name.includes('/themes') ? { themes } : name.includes('/projects') ? { getProjectBySlug: (slug) => projects.find((project) => project.slug === slug) } : name.includes('/startup') ? {
+  const dependencies = (name) => name === 'react' ? react : name.includes('PageSkeleton') ? { default: () => null } : name.includes('/themes') ? { themes } : name.includes('/projects') ? { getProjectBySlug: (slug) => projects.find((project) => project.slug === slug) } : name.includes('/startup') ? {
     preloadImage(src, signal) { urls.push(src); activeSignal = signal; return failed ? Promise.reject(new Error('offline')) : assets.promise; },
     waitForScene: () => scene.promise,
   } : require(name);

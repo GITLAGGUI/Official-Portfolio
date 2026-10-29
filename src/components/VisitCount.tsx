@@ -31,5 +31,5 @@ export default function VisitCount({ enabled = true }: { enabled?: boolean }) {
     const timer = setTimeout(() => { void readCount().then((value) => { if (mounted) setCount(value); }).catch(() => { if (mounted) setUnavailable(true); }); }, 800);
     return () => { mounted = false; clearTimeout(timer); };
   }, [enabled]);
-  return <span className="visit-count" title={count === null ? unavailable ? 'Visitor count temporarily unavailable' : 'Visitor counter is connecting' : 'Distinct browser visitors since October 2026. Refreshes count once; cleared browser storage or another device can count again.'}><FiEye /> {count === null ? 'Visitors —' : `${count.toLocaleString()} ${count === 1 ? 'visitor' : 'visitors'}`}</span>;
+  return <span className="visit-count" title={count === null ? unavailable ? 'Visitor count temporarily unavailable' : 'Visitor counter is connecting' : 'Owner-provided starting total plus distinct tracked browser visitors. Refreshes count once; another browser or cleared storage can count again.'}><FiEye /> {count === null ? 'Visitors —' : `${count.toLocaleString()} ${count === 1 ? 'visitor' : 'visitors'}`}</span>;
 }

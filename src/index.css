@@ -8,6 +8,28 @@
   --focus: #a3d6e7; --serif: Georgia, serif; --display: 'Manrope', 'Segoe UI', sans-serif;
   --ease: cubic-bezier(.23,1,.32,1); --sidebar-edge: 256px;
 }
+.page-skeleton { pointer-events:none; }
+.skeleton-block { display:block; position:relative; overflow:hidden; isolation:isolate; min-height:14px; margin:0 0 14px; border-radius:6px; background:var(--panel-3); }
+.skeleton-block:after { content:''; position:absolute; inset:0; background:linear-gradient(105deg,transparent 20%,var(--text) 50%,transparent 80%); opacity:.06; transform:translateX(-100%); animation:skeleton-sweep 1.8s ease-in-out infinite; }
+@keyframes skeleton-sweep { to { transform:translateX(100%); } }
+.skeleton-workbench { height:62px; border-radius:18px; margin-bottom:35px; }
+.skeleton-hero { display:grid; grid-template-columns:1.2fr 1fr; align-items:center; gap:50px; min-height:260px; margin-bottom:30px; }
+.skeleton-caption { width:35%; height:10px; min-height:10px; }
+.skeleton-heading-line { width:95%; height:38px; }.skeleton-short { width:76%; }
+.skeleton-button { width:150px; height:42px; margin-top:24px; }
+.skeleton-portrait { width:75%; aspect-ratio:1.08; justify-self:center; border-radius:14px; }
+.skeleton-heading { max-width:550px; margin-bottom:28px; }
+.skeleton-heading .skeleton-heading-line { width:65%; }
+.skeleton-heading .skeleton-short,.skeleton-heading .skeleton-button { display:none; }
+.skeleton-filters { display:flex; gap:12px; margin-bottom:20px; }.skeleton-chip { width:110px; height:36px; }
+.skeleton-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 24px; }
+.skeleton-grid--home { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.skeleton-media { width:100%; aspect-ratio:1.6; }.skeleton-title { width:65%; height:22px; }
+.skeleton-columns { display:grid; grid-template-columns:1fr 1fr; gap:40px; }.skeleton-columns--detail { grid-template-columns:2.5fr 1fr; }.skeleton-field { height:55px; }
+.startup-skeleton { width:min(1180px,calc(100% - 64px)); margin:auto; }.startup-skeleton .content-page { width:100%; padding:24px 0; }.startup-skeleton__brand { display:flex; justify-content:space-between; color:var(--muted); font-size:10px; letter-spacing:.14em; }.startup-skeleton__status { display:flex; flex-wrap:wrap; align-items:center; gap:16px; font-size:11px; color:var(--muted); }.startup-skeleton__status .studio-loader__progress { flex-basis:100%; margin:0; }.startup-skeleton__status button { margin-left:auto; padding:8px; border:0; background:transparent; }
+@media(max-width:767px) { .skeleton-hero { grid-template-columns:1fr; min-height:190px; gap:0; }.skeleton-portrait { display:none; }.skeleton-heading-line { height:30px; }.skeleton-grid--home { grid-template-columns:repeat(2,minmax(0,1fr)); }.skeleton-grid { gap:24px 14px; }.skeleton-columns,.skeleton-columns--detail { grid-template-columns:1fr; gap:24px; }.skeleton-filters { overflow:hidden; }.skeleton-chip { min-width:70px; }.startup-skeleton { width:calc(100% - 36px); }.startup-skeleton .skeleton-grid .skeleton-card:nth-child(n+5) { display:none; } }
+@media(prefers-reduced-motion:reduce) { .skeleton-block:after { animation:none; } }
+:root[data-motion='paused'] .skeleton-block:after { animation:none; }
 :root[data-theme='light'] { color-scheme: light; --bg:#eceeea; --panel:#f0f1ed; --panel-2:#e6eae5; --panel-3:#dce4df; --editor:#f8f9f5; --text:#253237; --muted:#53666d; --subtle:#62747a; --line:#c9d3ce; --line-soft:#dce3dd; --accent:#21647b; --sage:#21647b; --blue:#21647b; --on-accent:#fff; --focus:#155e75; }
 :root[data-theme='vscode'] { --bg:#181818; --panel:#202020; --panel-2:#272727; --panel-3:#303030; --editor:#1e1e1e; --text:#dedede; --muted:#ababab; --subtle:#969696; --line:#3e3e3e; --line-soft:#303030; --accent:#78baf0; --sage:#78baf0; --blue:#78baf0; --on-accent:#102739; --focus:#78baf0; }
 :root[data-theme='dracula'] { --bg:#20212c; --panel:#242631; --panel-2:#303240; --panel-3:#3b3e50; --editor:#282a36; --text:#f8f8f2; --muted:#b9b8d0; --subtle:#a4a6c1; --line:#484b64; --line-soft:#383b4e; --accent:#bd93f9; --sage:#bd93f9; --blue:#8be9fd; --on-accent:#241831; --focus:#ff79c6; }

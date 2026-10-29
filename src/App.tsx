@@ -7,6 +7,7 @@ import JoelAssistant from './components/JoelAssistant';
 import StudioCommands from './components/StudioCommands';
 import { sections, resume, studioAction } from './utils/studio';
 import VisitCount from './components/VisitCount';
+import PageSkeleton from './components/PageSkeleton';
 import CursorTrail from './components/CursorTrail';
 import MotionOrchestrator from './components/MotionOrchestrator';
 import LandingBackdrop from './components/LandingBackdrop';
@@ -111,7 +112,7 @@ export default function App() {
         return <div className={`editor-tab ${href === location.pathname ? 'editor-tab--active' : ''}`} key={href}><NavLink to={href} end><FiCode /><span>{title}</span></NavLink><button aria-label={`Close ${title} tab`} onClick={() => { const rest = tabs.filter((tab) => tab !== href); setTabs(rest.length ? rest : ['/']); if (href === location.pathname) navigate(rest[rest.length - 1] ?? '/'); }}><FiX /></button></div>;
       })}<button className="tabs-more icon-button" aria-label="Open a page" onClick={() => studioAction('palette')}>+</button></nav>
       <div className="breadcrumbs"><span>portfolio</span><span>/</span><span>{project ? 'projects / ' : ''}{pageTitle}</span><span className="breadcrumbs__right"><span className="availability-dot" /> Available for projects</span></div>
-      <main id="main-content" ref={mainRef} tabIndex={-1} className={`editor-main ${location.pathname === '/contact' ? 'editor-main--contact' : ''}`}><div className="editor-scroll" ref={scrollRef} data-testid="editor-scroll-region"><Suspense fallback={<div className="route-loading">Opening {pageTitle}…</div>}><div className="route-stage" key={location.pathname}><Routes>
+      <main id="main-content" ref={mainRef} tabIndex={-1} className={`editor-main ${location.pathname === '/contact' ? 'editor-main--contact' : ''}`}><div className="editor-scroll" ref={scrollRef} data-testid="editor-scroll-region"><Suspense fallback={<PageSkeleton path={location.pathname} />}><div className="route-stage" key={location.pathname}><Routes>
         <Route path="/" element={<HomePage theme={theme} />} /><Route path="/projects" element={<ProjectsPage />} /><Route path="/projects/:slug" element={<ProjectRoute />} /><Route path="/services" element={<ServicesPage />} /><Route path="/tools" element={<ToolsPage />} /><Route path="/skills" element={<Navigate replace to="/tools?view=skills" />} /><Route path="/about" element={<AboutPage theme={theme} />} /><Route path="/contact" element={<ContactPage />} /><Route path="*" element={<Navigate replace to="/" />} />
       </Routes></div></Suspense></div></main></section>
     </div>
