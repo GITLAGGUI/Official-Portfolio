@@ -12,6 +12,7 @@ import MotionOrchestrator from './components/MotionOrchestrator';
 import LandingBackdrop from './components/LandingBackdrop';
 import { useMotionSettings } from './components/motion-context';
 import StudioLoader from './components/StudioLoader';
+import PortfolioAnalytics from './components/PortfolioAnalytics';
 
 const pages = {
   '/': () => import('./pages/HomePage'), '/projects': () => import('./pages/ProjectsPage'),
@@ -26,7 +27,7 @@ const ContactPage = lazy(pages['/contact']);
 const ToolsPage = lazy(pages['/tools']);
 const ServicesPage = lazy(pages['/services']);
 function preparePage(path: string) {
-  if (path === '/') return Promise.all([pages['/'](), import('./components/HeroScene')]);
+  if (path === '/') return pages['/']();
   if (path.startsWith('/projects/')) return import('./pages/CaseStudyPage');
   return (pages[path === '/skills' ? '/tools' : path as keyof typeof pages] ?? pages['/'])();
 }
@@ -95,7 +96,7 @@ export default function App() {
     region.addEventListener('scroll', update, { passive: true }); media.addEventListener('change', update); update();
     return () => { region.removeEventListener('scroll', update); media.removeEventListener('change', update); cancelAnimationFrame(frame); };
   }, [location.pathname, paused]);
-  return <>{loading && <StudioLoader theme={theme} path={location.pathname} preparePage={preparePage} onComplete={finishStartup} />}<div ref={shellRef} aria-hidden={loading ? true : undefined} className={`app-shell ${location.pathname === '/' ? 'app-shell--home' : ''} ${sidebar ? '' : 'sidebar-hidden'}`}>
+  return <>{!loading && <PortfolioAnalytics />}{loading && <StudioLoader theme={theme} path={location.pathname} preparePage={preparePage} onComplete={finishStartup} />}<div ref={shellRef} aria-hidden={loading ? true : undefined} className={`app-shell ${location.pathname === '/' ? 'app-shell--home' : ''} ${sidebar ? '' : 'sidebar-hidden'}`}>
     <a className="skip-link" href="#main-content">Skip to content</a>
     <header className="title-bar">
       <StudioCommands theme={theme} setTheme={setTheme} toggleSidebar={() => setSidebar((old) => !old)} openAssistant={() => setAssistant(true)} />

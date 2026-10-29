@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { themes, type ThemeId } from '../data/themes';
 import { getProjectBySlug } from '../data/projects';
-import { preloadImage, waitForScene } from '../utils/startup';
+import { preloadImage } from '../utils/startup';
 
 type Props = { theme: ThemeId; path: string; preparePage: (path: string) => Promise<unknown>; onComplete: () => void };
 const labels = ['Opening the workspace', 'Bringing the visuals into focus', 'Setting the type'];
@@ -19,17 +19,17 @@ export default function StudioLoader({ theme, path, preparePage, onComplete }: P
     const start = performance.now(); let revealTimer: ReturnType<typeof setTimeout>;
     const reveal = () => {
       if (cancelled) return;
-      revealTimer = setTimeout(() => { if (!cancelled) setLeaving(true); }, Math.max(0, 950 - (performance.now() - start)));
+      revealTimer = setTimeout(() => { if (!cancelled) setLeaving(true); }, Math.max(0, 300 - (performance.now() - start)));
     };
     const appearance = themes.find((item) => item.id === arrival.theme)!;
     const home = arrival.path === '/';
-    const images = [appearance.avatar, ...(home || arrival.path === '/about' ? [appearance.portrait] : []), ...(home ? ['riceguardai', 'leadmaps', 'video-editing'].map((slug) => getProjectBySlug(slug)!.hero) : [])];
+    const images = [appearance.avatar, ...(arrival.path === '/about' ? [appearance.portrait] : []), ...(home ? ['riceguardai', 'leadmaps'].map((slug) => getProjectBySlug(slug)!.hero) : [])];
     const tasks = [
       () => preparePage(arrival.path),
-      () => Promise.all([...images.map((src) => preloadImage(src, controller.signal)), ...(home ? [waitForScene(controller.signal)] : [])]),
+      () => Promise.all(images.map((src) => preloadImage(src, controller.signal))),
       () => document.fonts ? Promise.all([document.fonts.load('600 16px Manrope'), document.fonts.load('400 16px "DM Sans"')]) : Promise.resolve(),
     ];
-    const timeout = setTimeout(() => { controller.abort(); reveal(); }, 4500);
+    const timeout = setTimeout(() => { controller.abort(); reveal(); }, 2200);
     void Promise.allSettled(tasks.map(async (task, index) => {
       try { await task(); } finally { if (!cancelled && !controller.signal.aborted) setFinished((old) => old.map((ready, i) => i === index || ready)); }
     })).then(() => { if (!controller.signal.aborted) { clearTimeout(timeout); reveal(); } });
@@ -40,7 +40,7 @@ export default function StudioLoader({ theme, path, preparePage, onComplete }: P
     if (!leaving) return;
     // Also release when browser animation events are suppressed or the tab is hidden.
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'paused';
-    const timer = setTimeout(onComplete, reduce ? 100 : 750);
+    const timer = setTimeout(onComplete, reduce ? 100 : 350);
     return () => clearTimeout(timer);
   }, [leaving, onComplete]);
 

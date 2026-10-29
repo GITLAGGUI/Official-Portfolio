@@ -31,8 +31,8 @@
 .studio-loader__bottom button { display:flex; align-items:center; gap:15px; border:0; padding:9px 0 9px 12px; background:none; color:var(--text); font:inherit; font-size:10px; letter-spacing:0; cursor:pointer; }
 .studio-loader__bottom button:focus-visible { outline:2px solid var(--focus); outline-offset:6px; border-radius:2px; }
 .studio-loader__bottom button:disabled { opacity:.45; cursor:default; }
-.studio-loader--leaving { pointer-events:none; animation:loader-exit 650ms var(--ease) both; }
-.studio-loader--leaving .studio-loader__center { animation:loader-content-exit 450ms var(--ease) both; }
+.studio-loader--leaving { pointer-events:none; animation:loader-exit 280ms var(--ease) both; }
+.studio-loader--leaving .studio-loader__center { animation:loader-content-exit 240ms var(--ease) both; }
 html[data-startup='loading'] .app-shell * { animation-play-state:paused!important; }
 @keyframes loader-orbit-one { from { transform:rotateZ(-25deg) rotateX(62deg) rotateZ(0); } to { transform:rotateZ(-25deg) rotateX(62deg) rotateZ(360deg); } }
 @keyframes loader-orbit-two { from { transform:rotateZ(38deg) rotateY(57deg) rotateZ(0); } to { transform:rotateZ(38deg) rotateY(57deg) rotateZ(360deg); } }

@@ -7,7 +7,7 @@ const source = (file) => fs.readFileSync(file, 'utf8');
 const compile = (text) => ts.transpileModule(text, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 const find = (tree, type) => { if (!tree || typeof tree !== 'object') return []; return [...(tree.type === type ? [tree] : []), ...[tree.props?.children].flat(Infinity).flatMap((child) => find(child, type))]; };
 
-function preview({ clip = true, saveData = false } = {}) {
+function preview({ clip = true, saveData = false, wide = true, intent = true } = {}) {
   const slots = [], effects = [], pending = [], frames = new Map(), intervals = new Map();
   let cursor = 0, sequence = 0, active = true, reads = 0, plays = 0, pauses = 0;
   const react = {
@@ -17,11 +17,11 @@ function preview({ clip = true, saveData = false } = {}) {
   };
   const element = { style: {}, parentElement: { getBoundingClientRect() { reads++; return { left:0, top:0, width:100, height:100 }; } } };
   const player = { src:'', getAttribute: () => player.src, play: () => { plays++; return Promise.resolve(); }, pause: () => { pauses++; } };
-  const dependencies = (name) => name === 'react' ? react : name.includes('useMotionVisibility') ? { default: () => active } : require(name);
+  const dependencies = (name) => name === 'react' ? react : name.includes('useMediaQuery') ? { default: () => wide } : name.includes('useMotionVisibility') ? { default: () => active } : require(name);
   const exports = {};
   new Function('require','exports','navigator','requestAnimationFrame','cancelAnimationFrame','setInterval','clearInterval', compile(source('src/components/ProjectPreview.tsx')))(dependencies, exports, { connection:{saveData} }, (fn) => { frames.set(++sequence,fn); return sequence; }, (id) => frames.delete(id), (fn) => { intervals.set(++sequence,fn); return sequence; }, (id) => intervals.delete(id));
   const project = { hero:'/hero.webp', heroAlt:'Project', title:'Project', gallery:[{src:'/one.webp'},{src:'/two.webp'}], ...(clip ? {previewVideo:'/demo.mp4'} : {}) };
-  const render = () => { cursor = 0; const tree = exports.default({project}); tree.ref.current = element; find(tree,'video').forEach((node) => { node.ref.current = player; }); pending.splice(0).forEach((run) => run()); return tree; };
+  const render = () => { cursor = 0; const tree = exports.default({project,intent}); tree.ref.current = element; find(tree,'video').forEach((node) => { node.ref.current = player; }); pending.splice(0).forEach((run) => run()); return tree; };
   return { render, setActive: (value) => { active=value; }, frames, intervals, element, player, reads:()=>reads, plays:()=>plays, pauses:()=>pauses, cleanup:()=>effects.forEach((effect)=>effect?.cleanup?.()) };
 }
 const video = preview(); let tree = video.render();
@@ -36,6 +36,8 @@ tree.props.onPointerLeave({currentTarget:video.element}); assert.equal(video.fra
 video.setActive(false); tree=video.render(); assert.ok(video.pauses()>=1);
 tree.props.onPointerMove({pointerType:'mouse',clientX:50,clientY:50,currentTarget:video.element}); assert.equal(video.frames.size,0); video.cleanup();
 const saver=preview({saveData:true}); saver.render(); assert.equal(saver.plays(),0); assert.equal(saver.player.src,''); saver.cleanup();
+const resting=preview({intent:false}); resting.render(); assert.equal(resting.plays(),0); assert.equal(resting.player.src,'','Desktop cards wait for hover or focus'); resting.cleanup();
+const mobile=preview({wide:false}); mobile.render(); assert.equal(mobile.plays(),0); assert.equal(mobile.player.src,'','Mobile cards must not download videos'); mobile.cleanup();
 const gallery=preview({clip:false}); assert.equal(find(gallery.render(),'img').length,3); assert.equal(gallery.intervals.size,1); gallery.setActive(false); gallery.render(); assert.equal(gallery.intervals.size,0); gallery.cleanup();
 
 // Execute the real adaptive renderer callback with synthetic frame timings.

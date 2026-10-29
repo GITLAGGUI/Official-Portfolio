@@ -59,30 +59,30 @@ function harness({ home = true, reduced = false, failed = false } = {}) {
 const ready = harness();
 ready.route.resolve(); ready.assets.resolve(); ready.fonts.resolve(); await flush();
 let tree = ready.render();
-assert.equal(ready.find(tree, (node) => node.props.role === 'progressbar').props['aria-valuenow'], 45, 'Home must still wait for its 3D scene');
+assert.equal(ready.find(tree, (node) => node.props.role === 'progressbar').props['aria-valuenow'], 100, 'The Home gallery must open independently of the 3D scene');
 ready.scene.resolve(); await flush();
-tree = await ready.advance(949); assert.ok(!tree.props.className.includes('--leaving'));
+tree = await ready.advance(299); assert.ok(!tree.props.className.includes('--leaving'));
 tree = await ready.advance(1); assert.ok(tree.props.className.includes('--leaving'));
-await ready.advance(750); assert.equal(ready.completed(), 1);
-assert.equal(ready.urls.length, 5, 'Only avatar, portrait, and three first-screen posters are preloaded');
+await ready.advance(350); assert.equal(ready.completed(), 1);
+assert.equal(ready.urls.length, 3, 'Only the small avatar and two first-screen project posters are preloaded');
 assert.ok(ready.urls.every((url) => !url.endsWith('.mp4')), 'Videos must not block entry');
 ready.cleanup();
 
 const slow = harness();
-tree = await slow.advance(4500); assert.ok(tree.props.className.includes('--leaving')); assert.equal(slow.signal().aborted, true);
+tree = await slow.advance(2200); assert.ok(tree.props.className.includes('--leaving')); assert.equal(slow.signal().aborted, true);
 assert.equal(slow.find(tree, (node) => node.props.role === 'progressbar').props['aria-valuenow'], 0, 'A timeout must not invent completed progress');
-await slow.advance(750); assert.equal(slow.completed(), 1); slow.cleanup();
+await slow.advance(350); assert.equal(slow.completed(), 1); slow.cleanup();
 
 const skip = harness();
 skip.find(skip.render(), (node) => node.type === 'button').props.onClick(); skip.render();
-await skip.advance(750); assert.equal(skip.completed(), 1); skip.cleanup(); assert.equal(skip.timers.size, 0);
+await skip.advance(350); assert.equal(skip.completed(), 1); skip.cleanup(); assert.equal(skip.timers.size, 0);
 
 const direct = harness({ home: false, reduced: true, failed: true });
 direct.route.resolve(); direct.fonts.resolve(); await flush();
-tree = await direct.advance(950); assert.ok(tree.props.className.includes('--leaving'), 'Image errors must not trap the visitor');
+tree = await direct.advance(300); assert.ok(tree.props.className.includes('--leaving'), 'Image errors must not trap the visitor');
 await direct.advance(100); assert.equal(direct.completed(), 1); assert.equal(direct.urls.length, 1, 'Contact entry must not fetch the Home scene or portraits'); direct.cleanup();
 
 const unmounted = harness(); unmounted.cleanup();
 unmounted.route.resolve(); unmounted.assets.resolve(); unmounted.scene.resolve(); unmounted.fonts.resolve();
 await unmounted.advance(6000); assert.equal(unmounted.completed(), 0); assert.equal(unmounted.timers.size, 0);
-console.log('PASS: real startup readiness, first 3D frame gate, image failures, timeout, skip, reduced motion, direct routes, cancellation, and no blocking video downloads.');
+console.log('PASS: real startup readiness, nonblocking 3D scene, image failures, timeout, skip, reduced motion, direct routes, cancellation, and no blocking video downloads.');

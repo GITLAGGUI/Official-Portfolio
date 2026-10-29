@@ -7,6 +7,7 @@ import ToolsStrip from '../components/ToolsStrip';
 import useMotionVisibility from '../components/useMotionVisibility';
 import { themes, type ThemeId } from '../data/themes';
 import { markSceneReady } from '../utils/startup';
+import useMediaQuery from '../components/useMediaQuery';
 
 const HeroScene = lazy(() => import('../components/HeroScene'));
 const portraitFallback = (theme: ThemeId) => <div className="portrait-fallback"><img src={themes.find((item) => item.id === theme)!.portrait} alt="Joel at his laptop" decoding="async" fetchPriority="high" /></div>;
@@ -26,10 +27,18 @@ function Portrait({ theme }: { theme: ThemeId }) {
   return <div className="workflow-scene" ref={ref} role="img" aria-label={`Joel’s original portrait in a ${themes.find((item) => item.id === theme)!.name} scene with themed 3D objects and pointer parallax.`}><SceneBoundary theme={theme} fallback={fallback}>{supported ? <Suspense fallback={fallback}><HeroScene active={active} theme={theme} /></Suspense> : fallback}</SceneBoundary></div>;
 }
 export default function HomePage({ theme = 'studio' }: { theme?: ThemeId }) {
-  const featured = ['riceguardai', 'leadmaps', 'video-editing'].map((slug) => getProjectBySlug(slug)).filter((item): item is NonNullable<typeof item> => !!item);
+  const desktop = useMediaQuery('(min-width: 768px)');
+  const [entered, setEntered] = useState(() => document.documentElement.dataset.startup === 'ready');
+  useEffect(() => {
+    const update = () => setEntered(document.documentElement.dataset.startup === 'ready');
+    window.addEventListener('joel-studio-visibility', update);
+    return () => window.removeEventListener('joel-studio-visibility', update);
+  }, []);
+  const featured = ['riceguardai', 'leadmaps', 'video-editing', 'sitio-alto-resort'].map((slug) => getProjectBySlug(slug)).filter((item): item is NonNullable<typeof item> => !!item);
   return <div className="home-page content-page">
     <ToolsStrip compact featured />
-    <section className="home-hero"><div className="home-hero__copy"><p className="eyebrow">JOEL LAGGUI JR. <span>/ DEVELOPER & CREATOR</span></p><h1>I turn ambitious ideas.<br /><span>Into real-world solutions.</span></h1><div className="hero-actions"><Link className="button button--primary" to="/projects">Explore my work <FiArrowRight /></Link><Link className="text-link" to="/contact">Get in touch <FiArrowUpRight /></Link></div></div><Portrait theme={theme} /></section>
+    <section className="home-hero"><div className="home-hero__copy"><p className="eyebrow">JOEL LAGGUI JR. <span>/ DEVELOPER & CREATOR</span></p><h1>I turn ambitious ideas.<br /><span>Into real-world solutions.</span></h1><div className="hero-actions"><Link className="button button--primary" to="/projects">Explore my work <FiArrowRight /></Link><Link className="text-link" to="/contact">Get in touch <FiArrowUpRight /></Link></div></div>{desktop && entered && <Portrait theme={theme} />}</section>
     <section id="selected-work" className="home-selected" aria-label="Latest projects"><div className="home-projects">{featured.map((project) => <ProjectCard key={project.slug} project={project} compact />)}</div></section>
+    <nav className="home-collections" aria-label="Explore work by discipline"><Link to="/projects?category=web">Websites & SaaS <FiArrowUpRight /></Link><Link to="/projects?category=data">AI & data <FiArrowUpRight /></Link><Link to="/projects?category=video">Video & motion <FiArrowUpRight /></Link></nav>
   </div>;
 }

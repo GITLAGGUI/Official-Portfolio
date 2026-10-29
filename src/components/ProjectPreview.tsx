@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ProjectCaseStudy } from '../data/projects';
 import useMotionVisibility from './useMotionVisibility';
+import useMediaQuery from './useMediaQuery';
 
-export default function ProjectPreview({ project, contain = false }: { project: ProjectCaseStudy; contain?: boolean }) {
+export default function ProjectPreview({ project, contain = false, intent = true }: { project: ProjectCaseStudy; contain?: boolean; intent?: boolean }) {
   const ref = useRef<HTMLDivElement>(null); const video = useRef<HTMLVideoElement>(null);
   const tiltFrame = useRef(0); const pointer = useRef({ x: 0, y: 0 });
   const active = useMotionVisibility(ref); const [index, setIndex] = useState(0); const [playing, setPlaying] = useState(false);
-  const autoplay = active && !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  const wide = useMediaQuery('(min-width: 768px)');
+  const autoplay = active && wide && intent && !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
   const clip = project.previewVideo ?? project.videos?.[0]?.src;
-  const images = clip ? [project.hero] : [project.hero, ...(project.gallery ?? []).map((item) => item.src)].slice(0, 3);
+  const images = clip || !wide ? [project.hero] : [project.hero, ...(project.gallery ?? []).map((item) => item.src)].slice(0, 3);
   useEffect(() => () => { cancelAnimationFrame(tiltFrame.current); tiltFrame.current = 0; }, [active]);
   useEffect(() => {
     const player = video.current;

@@ -42,6 +42,23 @@ export type ProjectCaseStudy = {
 
 export const projects: ProjectCaseStudy[] = [
   {
+    slug: 'sitio-alto-resort', title: 'Sitio Alto Resort', shortTitle: 'Sitio Alto',
+    subtitle: 'Booking requests, availability & owner operations',
+    summary: 'A resort booking demo that connects venue discovery, six-hour slot selection and a structured request to an owner workspace.',
+    category: 'Web product', role: 'UI design & development', year: '2026', status: 'Live demo', featured: true, accent: 'sage',
+    hero: '/assets/projects/sitio-alto/home.webp', heroAlt: 'Sitio Alto Resort live demo with venue photos and availability search',
+    stack: ['JavaScript', 'HTML', 'CSS', 'Responsive UI', 'Vercel'],
+    links: [{ label: 'Live site', href: 'https://sitio-alto-resort-demo.vercel.app/' }],
+    challenge: 'Turn scattered venue information into a clear booking request with a date, space, guest count and estimated total.',
+    approach: ['Built a four-step booking request, rate calculation, request tracker and owner calendar.', 'Used actual resort photographs with clear labels for simulated availability.'],
+    outcome: ['A working guest-to-owner demo with booking queues, conflict checks and payment-review screens.'],
+    limitations: 'Sales demo with fictional local data. Payments, messages, uploads and confirmed availability are not live services.',
+    gallery: [
+      { src: '/assets/projects/sitio-alto/pool.webp', alt: 'Actual Sitio Alto main pool used by the website', caption: 'Venue photography used in the booking experience' },
+      { src: '/assets/projects/sitio-alto/hall.webp', alt: 'Sitio Alto Simeona Hall', caption: 'Simeona Hall · venue asset' },
+    ],
+  },
+  {
     slug: 'leadmaps', title: 'LeadMaps', shortTitle: 'LeadMaps', subtitle: 'Business research workspace & collection API',
     summary: 'Find, organize and export business records from one focused workspace.', category: 'SaaS', role: 'Product design & full-stack development', year: '2026', status: 'Private beta', featured: true, accent: 'amber',
     hero: '/assets/projects/leadmaps/product.webp', heroAlt: 'LeadMaps business research workspace',
@@ -86,7 +103,8 @@ export const projects: ProjectCaseStudy[] = [
     accent: "sage",
     hero: "/assets/projects/skyglass/home.webp",
     heroAlt: "SkyGlass Hillside Garden desktop homepage",
-    stack: ["React", "TypeScript", "Vite", "Responsive UI", "Vercel"],
+    gallery: [{ src: '/assets/projects/skyglass/pool.webp', alt: 'Actual SkyGlass pool frame used in the venue site', caption: 'Actual venue media used in the website' }],
+    stack: ["React", "JavaScript", "CSS", "Vite", "Vercel"],
     links: [
       {
         label: "Live site",
@@ -121,7 +139,7 @@ export const projects: ProjectCaseStudy[] = [
     accent: "blue",
     hero: "/assets/projects/drones-gadgets/storefront-20261022.jpg",
     heroAlt: "Current Drones and Gadgets PH storefront captured from the live website",
-    stack: ["React", "TypeScript", "Supabase", "PayMongo modes", "Vercel"],
+    stack: ["React", "JavaScript", "Supabase", "PayMongo modes", "Vercel"],
     links: [
       {
         label: "Live site",
@@ -452,7 +470,8 @@ export const projects: ProjectCaseStudy[] = [
     accent: "sage",
     hero: "/assets/projects/zms-place/home.webp",
     heroAlt: "ZM's Place resort and event website",
-    stack: ["React", "TypeScript", "Vite", "Responsive QA", "Vercel"],
+    gallery: [{ src: '/assets/projects/zms-place/pool.webp', alt: 'Actual ZM’s Place pool at night', caption: 'Venue photography used in the website' }],
+    stack: ["React", "JavaScript", "CSS", "Vite", "Vercel"],
     links: [
       { label: "Live site", href: "https://zms-place-resort.vercel.app/" },
     ],
